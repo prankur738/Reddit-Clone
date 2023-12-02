@@ -23,4 +23,12 @@ public class SubRedditServiceImpl implements SubRedditService {
         return  subReddit.orElseThrow();
 
     }
+
+
+    @Override
+    public SubReddit findByName(String name) {
+        Optional<SubReddit> subRedditOptional = subRedditRepository.findByName(name);
+
+        return subRedditOptional.orElseThrow();
+    }
 }

@@ -10,6 +10,7 @@ import io.mountblue.redditclone.service.PostService;
 import io.mountblue.redditclone.service.SubRedditService;
 import io.mountblue.redditclone.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import java.util.HashSet;
@@ -88,4 +89,33 @@ public class PostServiceImpl implements PostService {
 
         return  tags;
     }
+
+    @Override
+    public boolean checkUserAuthorized(UserDetails userDetails, Integer postId) {
+        Post post = findById(postId);
+
+        boolean isAuthorized = false;
+
+        if( userDetails==null){
+            return false;
+        }
+        else if (userDetails.getUsername().equals(post.getUser().getUsername())) {
+            isAuthorized = true;
+        }
+
+        return isAuthorized;
+    }
+    @Override
+    public String getCommaSeperatedTags(Integer postId) {
+        Post post = findById(postId);
+
+        String tagNames = "";
+
+        for(Tag tag : post.getTagList()){
+            tagNames += tag.getName()+", ";
+        }
+
+        return tagNames;
+    }
+
 }
