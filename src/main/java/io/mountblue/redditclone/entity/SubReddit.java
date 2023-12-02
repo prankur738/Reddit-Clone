@@ -7,6 +7,7 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.FieldDefaults;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -32,7 +33,7 @@ public class SubReddit {
             joinColumns = @JoinColumn(name = "subreddit_id"),
             inverseJoinColumns = @JoinColumn(name = "user_id")
     )
-    List<User> userList;
+    List<User> userList = new ArrayList<>();
 
     @OneToMany(mappedBy = "subReddit")
     List<Post> postList;
