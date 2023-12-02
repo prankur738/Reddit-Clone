@@ -1,11 +1,11 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>reddit.com: sign up</title>
 
-    <link rel="stylesheet" href="loginstyle.css" />
+    <link rel="stylesheet" th:href="@{/css/loginstyle.css}" />
 </head>
 <body>
 
@@ -15,16 +15,26 @@
     <section class="contact-form">
         <div class="form-container">
             <h2>Create a new account</h2>
-            <form action="" method="post">
+            <form action="#" th:action="@{/signup/validate}" th:object="${newUser}" method="post">
 
                 <label for="name">Username</label>
-                <input type="text" id="name" placeholder="username" name="usernname" required>
+                <input type="text" id="name" placeholder="username" th:field="*{username}" required>
+                <span class="error" th:each="err : ${#fields.errors('username')}" th:text="'Username ' + ${err}" />
 
                 <label for="email">Email</label>
-                <input type="text" id="email" placeholder="email" name="email" required>
+                <input id="email"  type="text" placeholder="email" th:field="*{email}" required>
+                <span class="error" th:each="err : ${#fields.errors('email')}" th:text="'Email ' + ${err}" />
 
                 <label for="password">Password</label>
-                <input id="password"  name="password" placeholder="password" required>
+                <input id="password" placeholder="password" th:field="*{password}" required>
+                <span class="error" th:each="err : ${#fields.errors('password')}" th:text="'Password ' + ${err}" />
+
+                <label for="confirm-password">Confirm Password</label>
+                <input id="confirm-password" placeholder="Confirm password" name="confirmPassword" required>
+
+                <div th:if="${registrationError}">
+                    <p class="error" th:text="${registrationError}"></p>
+                </div>
                 
                 <input type="submit" class="submit-button" value="SIGN UP">
                 

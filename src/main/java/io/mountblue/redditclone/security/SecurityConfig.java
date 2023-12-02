@@ -24,4 +24,20 @@ public class SecurityConfig {
 
         return auth;
     }
+
+    @Bean
+    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+        return http
+                .authorizeHttpRequests(authConfig ->
+                        authConfig
+                                .requestMatchers("/", "signup/**", "/css/**").permitAll()
+                                .anyRequest().authenticated()
+                ).formLogin(form ->
+                        form
+                                .loginPage("/login")
+                                .loginProcessingUrl("/authenticateUser")
+                                .permitAll()
+                )
+                .build();
+    }
 }
