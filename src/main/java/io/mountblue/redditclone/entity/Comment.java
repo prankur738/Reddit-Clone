@@ -5,6 +5,9 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.FieldDefaults;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.util.Date;
 
@@ -23,9 +26,11 @@ public class Comment {
     String text;
 
     @Column(name = "created_at")
+    @CreationTimestamp
     Date createdAt;
 
     @Column(name = "updated_at")
+    @UpdateTimestamp
     Date updatedAt;
 
     @ManyToOne
