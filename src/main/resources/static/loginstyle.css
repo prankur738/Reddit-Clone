@@ -1,0 +1,88 @@
+* {
+	margin: 0;
+	padding: 0;
+	box-sizing: border-box;
+}
+
+#header-img.default-header {
+    text-indent: -9999px;
+    background-image: url(https://www.redditstatic.com/sprite-reddit.vSUv8UUCI2g.png);
+    background-position: 0px -1323px;
+    background-repeat: no-repeat;
+    height: 40px;
+    width: 120px;
+    display: inline-block;
+    vertical-align: bottom;
+    margin-bottom: 3px;
+  }
+
+body {
+	font-family: Arial, sans-serif;
+	line-height: 1.6;
+}
+
+header {
+	display: flex;
+	padding: 20px;
+	background-color: #ee6927;
+	height: 4em;
+	align-items: center;
+	justify-content: space-between;
+	color: white;	
+}
+
+
+
+
+.contact-form {
+	padding: 40px 0;
+	margin: 0 10px;
+}
+
+.form-container {
+    max-width: 40%;
+	margin: auto;
+    margin-top: 70px;
+	padding: 20px;
+	background-color: #ffffff;
+	border-radius: 10px;
+	box-shadow: 0 0 10px rgba(0,0,0,0.1);	
+}
+
+.contact-form h2 {
+	text-align:center;
+	margin-bottom: 20px;
+    color: #ee6927;
+}
+
+.form-container label {
+	display: block;
+	font-weight: bold;
+}
+
+.form-container label::after {
+  content: " *";
+  color: red;
+}
+.form-container #name, #email, #password {
+	width: 90%;
+	padding: 10px;
+	border: 1px solid #ccc;
+	margin-bottom: 1rem;
+	resize: vertical;
+}
+
+.submit-button {
+	padding: 10px 20px;
+	background-color: #ee6927;
+	border: none;
+	color: white;
+	border-radius: 4px;
+	font-size: 1rem;
+	cursor: pointer;
+}
+
+#not-register{
+	text-align: right;
+	margin-right: 10%;
+}
