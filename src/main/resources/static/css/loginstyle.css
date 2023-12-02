@@ -64,6 +64,7 @@ header {
   content: " *";
   color: red;
 }
+
 .form-container #name, #email, #password, #confirm-password {
 	width: 90%;
 	padding: 10px;
