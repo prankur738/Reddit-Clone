@@ -5,6 +5,8 @@ import io.mountblue.redditclone.repository.CommentRepository;
 import io.mountblue.redditclone.service.CommentService;
 import io.mountblue.redditclone.service.impl.CommentServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -21,13 +23,14 @@ public class CommentController {
     CommentServiceImpl commentServiceImpl;
 
     @GetMapping("/comments")
-    public String createAndSaveComment(@RequestParam("pid")Integer postId, @ModelAttribute("comment") Comment comment){
+    public String createAndSaveComment(@RequestParam("pid")Integer postId,
+                                       @ModelAttribute("comment") Comment comment){
         commentServiceImpl.saveComment(postId,comment);
         return "";
     }
 
     @PostMapping("/comment/update")
-    public String editComment(@RequestParam Integer postId, @ModelAttribute("comment") Comment comment){
+    public String editComment(@RequestParam Integer postId,@ModelAttribute("comment") Comment comment){
         commentServiceImpl.UpdateComment(comment);
         return "";
     }
