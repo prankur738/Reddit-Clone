@@ -1,11 +1,11 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>reddit.com: log in</title>
 
-    <link rel="stylesheet" href="loginstyle.css" />
+    <link rel="stylesheet" th:href="@{/css/loginstyle.css}" />
 </head>
 <body>
 
@@ -15,16 +15,16 @@
     <section class="contact-form">
         <div class="form-container">
             <h2>Login</h2>
-            <form action="" method="post">
+            <form action="#" th:action="@{/authenticateUser}" method="post">
 
                 <label for="name">Username</label>
-                <input type="text" id="name" placeholder="username" name="usernname" required>
+                <input type="text" id="name" placeholder="username" name="username" required>
 
                 <label for="password">Password</label>
                 <input id="password"  name="password" placeholder="password" required>
                 
                 <input type="submit" class="submit-button" value="LOG IN">
-                <div id="not-register">Not registered yet? <a href="/signup.html">Register</a></span>
+                <div id="not-register">Not registered yet? <a th:href="@{/signup}">Register</a></div>
                 </form>
         </div>
     </section>

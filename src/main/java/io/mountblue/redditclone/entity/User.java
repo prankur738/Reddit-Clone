@@ -2,6 +2,7 @@ package io.mountblue.redditclone.entity;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotNull;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
@@ -26,13 +27,16 @@ public class User implements UserDetails {
     Integer id;
 
     @Column(name = "username",unique = true)
+    @NotNull(message = "cannot be empty")
     String username;
 
     @Email
     @Column(name = "email",unique = true)
+    @NotNull(message = "cannot be empty")
     String email;
 
     @Column(name = "password")
+    @NotNull(message = "cannot be empty")
     String password;
 
     @OneToMany(mappedBy = "user",cascade = CascadeType.ALL)
