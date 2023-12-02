@@ -7,4 +7,6 @@ public interface UserService extends UserDetailsService {
     User findByUsername(String username);
 
     void grantModeratorRole(User user);
+
+
 }

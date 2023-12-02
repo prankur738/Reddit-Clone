@@ -6,8 +6,7 @@ import lombok.experimental.FieldDefaults;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 @Entity
 @Getter
@@ -42,7 +41,7 @@ public class Post {
     User user;
 
     @ManyToMany(mappedBy = "postList")
-    List<Tag> tagList;
+    Set<Tag> tagList = new HashSet<>();
 
     @OneToMany(cascade = CascadeType.ALL,mappedBy = "post")
     List<Comment> commentList;
