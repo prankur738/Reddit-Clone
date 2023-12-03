@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -26,7 +27,7 @@ public class SubRedditServiceImpl implements SubRedditService {
     @Override
     public SubReddit findById(Integer subRedditId) {
         Optional<SubReddit> subReddit = subRedditRepository.findById(subRedditId);
-        return  subReddit.orElseThrow();
+        return  subReddit.orElse(null);
 
     }
 
@@ -35,7 +36,7 @@ public class SubRedditServiceImpl implements SubRedditService {
     public SubReddit findByName(String name) {
         Optional<SubReddit> subRedditOptional = subRedditRepository.findByName(name);
 
-        return subRedditOptional.orElseThrow();
+        return subRedditOptional.orElse(null);
     }
 
     @Override
@@ -75,5 +76,10 @@ public class SubRedditServiceImpl implements SubRedditService {
         }
 
         return isAuthorized;
+    }
+
+    @Override
+    public List<SubReddit> findAll() {
+        return subRedditRepository.findAll();
     }
 }

@@ -1,0 +1,56 @@
+<!--<!DOCTYPE html>-->
+<!--<html lang="en">-->
+<!--<head>-->
+<!--    <meta charset="UTF-8">-->
+<!--    <title>Title</title>-->
+<!--</head>-->
+<!--<body>-->
+<!--&lt;!&ndash;    This post should be show when clicked on one post &ndash;&gt;-->
+
+<!--</body>-->
+<!--</html>-->
+
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>New Post</title>
+    <style>
+        form{
+            width: 800px;
+            margin: auto;
+            margin-top: 50px;
+        }
+        label,input,textarea,h1{
+            width: 100%;
+            margin: 10px;
+        }
+        h1{
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+
+<form th:action="@{/savePost}" th:object="${post}" method="POST">
+    <h1>Create new Post</h1>
+    <label for="title">Title</label><br>
+    <input type="text" id="title" th:field="*{title}"/>
+    <span th:if="${#fields.hasErrors('title')}" th:errors="*{title}" class="error"></span><br>
+
+    <label for="content">Description</label><br>
+    <textarea id="content" th:field="*{description}" rows="6"></textarea>
+    <span th:if="${#fields.hasErrors('description')}" th:errors="*{description}" class="error"></span><br>
+
+    <label for="tags">Tags</label><br>
+    <input id="tags" type="text"  name="tagNames" /><br>
+
+    <input type="hidden" name="subRedditName" th:value="${subRedditName}">
+
+    <input type="submit" value="Submit">
+
+</form>
+
+
+</body>
+</html>
