@@ -8,16 +8,14 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.FieldDefaults;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
 
 @Entity
-@Getter
-@Setter
+@Getter @Setter
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Table(name = "users")
 public class User implements UserDetails {
@@ -48,12 +46,16 @@ public class User implements UserDetails {
     @ManyToMany(mappedBy = "userList")
     List<SubReddit> subRedditList;
 
-    @Transient
-    List<SimpleGrantedAuthority> roles = new ArrayList<>(List.of(new SimpleGrantedAuthority("ROLE_USER")));
+    @ManyToMany(fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST, CascadeType.REFRESH,
+                                                    CascadeType.DETACH, CascadeType.DETACH})
+    @JoinTable(name = "users_roles",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "role_id"))
+    Collection<Role> roles = new HashSet<>();
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return roles;
+        return this.roles;
     }
 
     @Override

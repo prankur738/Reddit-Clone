@@ -1,6 +1,8 @@
 package io.mountblue.redditclone.service.impl;
 
+import io.mountblue.redditclone.entity.Role;
 import io.mountblue.redditclone.entity.User;
+import io.mountblue.redditclone.repository.RoleRepository;
 import io.mountblue.redditclone.repository.UserRepository;
 import io.mountblue.redditclone.service.UserService;
 import lombok.AllArgsConstructor;
@@ -17,12 +19,17 @@ import org.springframework.stereotype.Service;
 @AllArgsConstructor
 public class UserServiceImpl implements UserService {
     private UserRepository userRepository;
+    private RoleRepository roleRepository;
     private BCryptPasswordEncoder passwordEncoder;
 
     @Override
     public void save(User user) {
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
         userRepository.save(user);
+    }
+
+    @Override
+    public void encodePassword(User user) {
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
     }
 
     @Override
@@ -40,18 +47,19 @@ public class UserServiceImpl implements UserService {
         return userRepository.findByUsername(username);
     }
 
-    @Override
-    public void grantModeratorRole(User user) {
-        user.getRoles().add(new SimpleGrantedAuthority("ROLE_MOD"));
+    public void grantRoleToUser(String username, String roleName) {
+        User user = this.findByUsername(username);
+        Role role = roleRepository.findByRole("ROLE_" + roleName).orElse(new Role("ROLE_" + roleName));
 
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        Authentication updatedAuth = new UsernamePasswordAuthenticationToken(
-                auth.getPrincipal(),
-                auth.getCredentials(),
-                user.getAuthorities()
-        );
+        user.getRoles().add(role);
 
-        // Set the updated roles for current session
-        SecurityContextHolder.getContext().setAuthentication(updatedAuth);
+        this.save(user);
+    }
+
+    public void revokeRoleFromUser(String username, String roleName) {
+        User user = this.findByUsername(username);
+        user.getRoles().remove(new Role("ROLE_" + roleName));
+
+        this.save(user);
     }
 }
