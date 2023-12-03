@@ -1,10 +1,115 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>view post</title>
+    <style>
+        .post{
+            display: grid;
+
+        }
+    </style>
 </head>
 <body>
+<!--        This page will show when clicked on particular post-->
 
+    <div class="navBar">
+        <div class="bar1">
+            <i class="fa-brands fa-reddit color"></i>
+            <p class="text">reddit</p>
+        </div>
+        <div class="bar2">
+            <i class="fa-solid fa-magnifying-glass"></i>
+            <input type="text" placeholder="Search Reddit">
+        </div>
+
+        <form >
+            <input type="submit" value="Login">
+        </form>
+
+</div>
+<div class="container">
+    <div class="row">
+        <hr />
+        <div class="col-md-9">
+            <div class="row post">
+                <div class="col-md-1">
+                    <div class="col-md-1">
+                        <div class="d-flex flex-column votebox">
+                            <div class="p-2">
+                                <i class="fa-light fa-up upvote"></i>
+                            </div>
+                            <div class="p-2 votecount">1</div>
+                            <div class="p-2">
+                                <i class="fa-light fa-down downvote"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-11">
+            <span>
+              <span class="subreddit-text"><a class="post-url" href="">post.subredditName</a></span>
+              <span> . Posted
+                <span> post.time </span>
+                by
+                <a class="username" href="">post.userName</a>
+              </span>
+            </span>
+                    <hr />
+                    <a routerLink="post.url" class="post-title">post.title</a>
+                    <div>
+                        <p class="post-text" [innerHtml]="post.description">Lorem ipsum dolor sit amet consectetur, adipisicing elit. Officiis veritatis dolorum tempora necessitatibus iste doloremque earum consequuntur quibusdam? Dicta a delectus
+                            voluptatem voluptatum quasi quisquam quam aliquam maiores, minima voluptate.</p>
+                    </div>
+                    <span class="comment-user">Commented as userName</span>
+                    <div class="post-comment">
+                        <form [formGroup]="commentForm" (ngSubmit)="postComment()">
+                            <div class="form-group">
+                                <textarea class="form-control" [formControlName]="'text'" placeholder="Your Thoughts?"></textarea>
+                            </div>
+                            <button type="submit" class="login float-right">Comment</button>
+                        </form>
+                    </div>
+                    <div style="margin-top: 60px;" *ngFor="let comment of comments">
+                        <div class="comment">
+                            <div class="username">
+                                <a routerLink="/user/comment.username">comment.userName</a>
+                            </div>
+                            <div>
+                                <p>comment.time</p>
+                            </div>
+                            <b>comment.text</b>
+                        </div>
+                        <hr />
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="sidebar">
+                <img src="https://www.redditstatic.com/desktop2x/img/id-cards/home-banner@2x.png">
+                <div style="text-align: center; font-size: 1em">Welcome to Spring Reddit Clone home page. Come here to
+                    check in with your favorite subreddits.</div>
+                <div style="text-align: center">
+                    <button class="btnCreatePost" (click)="goToCreatePost()">Create Post</button>
+                </div>
+                <div style="text-align: center">
+                    <button class="btnCreateSubreddit" (click)="goToCreateSubreddit()">Create Subreddit</button>
+                </div>
+            </div>
+            <div class="sidebar-view-subreddit">
+                <div style="color: black; font-weight: bold">Browse Subreddits</div>
+                <hr />
+                <span *ngFor="let subreddit of subreddits">
+                <span class="subreddit-text"><a href="/view-subreddit/{{subreddit.id}}">subreddit.name</a></span>
+                <hr />
+            </span>
+                <div style="text-align: center" *ngIf="displayViewAll">
+                    <a style="font-weight: bold" routerLink="/list-subreddits">View All</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 </body>
 </html>
