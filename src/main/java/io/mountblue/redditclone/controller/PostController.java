@@ -17,6 +17,8 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @Controller
 public class PostController {
 
@@ -37,7 +39,7 @@ public class PostController {
         this.subRedditService = subRedditService;
     }
 
-    @GetMapping("/{subRedditName}/createPost")
+    @GetMapping("/r/{subRedditName}/createPost")
     public String showNewPostPage(Model model,
                                   @AuthenticationPrincipal UserDetails userDetails,
                                   @PathVariable("subRedditName") String subRedditName){
@@ -49,7 +51,7 @@ public class PostController {
         model.addAttribute("post", new Post());
         model.addAttribute("subRedditName", subRedditName);
 
-        return "newPost";
+        return "createNewPost";
     }
 
     @PostMapping("/savePost")
@@ -60,17 +62,17 @@ public class PostController {
                                  @RequestParam(name="tagNames") String tagNames){
 
         if(bindingResult.hasErrors()){
-            return "newPost";
+            return "createNewPost";
         }
         else{
 
             SubReddit subReddit = subRedditService.findByName(subRedditName);
             postService.createNewPost(post,subReddit.getId(), userDetails.getUsername(), tagNames);
-            return "redirect:/" + subRedditName;
+            return "redirect:/r/" + subRedditName ;
         }
     }
 
-    @GetMapping("/{subRedditName}/{postId}")
+    @GetMapping("/r/{subRedditName}/{postId}")
     public String showFullPost(Model model,
                                @PathVariable("postId") Integer postId){
         Post post = postService.findById(postId);
@@ -80,7 +82,7 @@ public class PostController {
         return "viewPost";
     }
 
-    @GetMapping("/{subRedditName}/editPost/{postId}")
+    @GetMapping("/r/{subRedditName}/editPost/{postId}")
     public String showEditPostPage(Model model,
                                    @PathVariable("postId") Integer postId,
                                    @AuthenticationPrincipal UserDetails userDetails){
@@ -101,7 +103,7 @@ public class PostController {
         return "accessDenied";
     }
 
-    @PostMapping("/{subRedditName}/updatePost/{postId}")
+    @PostMapping("/r/{subRedditName}/updatePost/{postId}")
     public String updatePost(@Valid @ModelAttribute("post") Post updatedPost,
                              BindingResult bindingResult,
                              @PathVariable("postId") Integer postId,
@@ -115,11 +117,11 @@ public class PostController {
             SubReddit subReddit = subRedditService.findByName(subRedditName);
             String username = postService.findById(postId).getUser().getUsername();
             postService.updatePost(updatedPost, subReddit.getId(),username,tagNames);
-            return "redirect:/" + subRedditName + "/" + postId;
+            return "redirect:/r/" + subRedditName + "/" + postId;
         }
     }
 
-    @PostMapping("/{subRedditName}/deletePost/{postId}")
+    @PostMapping("/r/{subRedditName}/deletePost/{postId}")
     public String deletePost(@AuthenticationPrincipal UserDetails userDetails,
                              @PathVariable("postId") Integer postId,
                              @PathVariable("subRedditName") String subRedditName) {
@@ -128,10 +130,17 @@ public class PostController {
 
         if(isUserAuthorized){
             postService.deletePost(postId);
-            return "redirect:/"+ subRedditName ;
+            return "redirect:/r/"+ subRedditName ;
         }
 
         return "accessDenied";
+    }
+
+    @GetMapping("/")
+    public String showHomePage(Model model){
+        List<SubReddit> subRedditList = subRedditService.findAll();
+        model.addAttribute("subRedditList",subRedditList);
+        return "homePage";
     }
 
 

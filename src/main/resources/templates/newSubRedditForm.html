@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>New Commmunity</title>
+    <style>
+        form{
+            width: 800px;
+            margin: auto;
+            margin-top: 50px;
+        }
+        label,input,textarea,h1{
+            width: 100%;
+            margin: 10px;
+        }
+        h1{
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+<form th:action="@{/saveSubReddit}" th:object="${subReddit}" method="POST">
+    <h1>Create new SubReddit</h1>
+    <label for="name">Name</label><br>
+    <input type="text" id="name" th:field="*{name}"/>
+<!--    <span th:if="${#fields.hasErrors('title')}" th:errors="*{name}" class="error"></span><br>-->
+
+    <label for="description">Description</label><br>
+    <input type="text" id="description" th:field="*{description}" />
+<!--    <span th:if="${#fields.hasErrors('description')}" th:errors="*{description}" class="error"></span><br>-->
+
+    <input type="submit" value="Submit">
+
+</form>
+
+
+</body>
+</html>

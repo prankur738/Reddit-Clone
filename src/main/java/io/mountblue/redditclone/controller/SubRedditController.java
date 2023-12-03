@@ -24,7 +24,7 @@ public class SubRedditController {
         this.subRedditService = subRedditService;
     }
 
-    @GetMapping("/createNewSubReddit")
+    @GetMapping("/createNewSubreddit")
     public String showNewSubRedditForm(Model model,
                                        @AuthenticationPrincipal UserDetails userDetails){
         if(userDetails == null){ // non-logged in user
@@ -41,7 +41,18 @@ public class SubRedditController {
                                    @AuthenticationPrincipal UserDetails userDetails){
         String username = userDetails.getUsername();
         subRedditService.createSubReddit(subReddit,username);
-        return "";
+        return "redirect:/r/" + subReddit.getName();
+    }
+
+
+    @GetMapping("/r/{subRedditName}")
+    public String showSubReddit(Model model,
+                                @PathVariable("subRedditName") String subRedditName){
+        SubReddit subReddit = subRedditService.findByName(subRedditName);
+
+        model.addAttribute("subReddit",subReddit);
+
+        return "viewSubReddit";
     }
 
     @PostMapping("/deleteSubReddit/{subRedditId}")

@@ -24,6 +24,9 @@ public class SubReddit {
     @Column(name = "name")
     String name;
 
+    @Column(name="description")
+    String description;
+
     @Column(name = "admin_id")
     Integer adminUserId;
 
