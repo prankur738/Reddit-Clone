@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>New Commmunity</title>
@@ -19,7 +19,7 @@
     </style>
 </head>
 <body>
-<form th:action="@{/saveSubReddit}" th:object="${subReddit}" method="POST">
+<form th:action="@{/saveSubReddit}" th:object="${subReddit}" method="POST" >
     <h1>Create new SubReddit</h1>
     <label for="name">Name</label><br>
     <input type="text" id="name" th:field="*{name}"/>
