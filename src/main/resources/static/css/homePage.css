@@ -192,6 +192,12 @@ input[type=submit] {
     padding-left: 20px;
 }
 
+
+.anchor {
+   text-decoration: none;
+   color: black;
+}
+
 .icon-button {
     background: none;
     border: none;

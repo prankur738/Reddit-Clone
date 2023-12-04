@@ -37,8 +37,6 @@
 </div>
 
 
-
-
 <div class="body">
     <aside id="filter">
         <h2>Filter Section</h2>
@@ -60,6 +58,7 @@
         </div>
 
         <div th:each="post : ${allPosts}">
+           <a class ="anchor" th:href="@{'/r/subRedditName/'+${post.id}}">
             <div class="post">
                 <div class = "vote">
                     <form  th:action="@{/processPostVote}" method="post">
@@ -77,29 +76,24 @@
                         <!-- Styled button with Font Awesome icon -->
                         <button type="submit" class="icon-button"><i class="fa-solid fa-down-long"></i></button>
                     </form>
-
-
-                </div>
-                <div class = "post-container">
-                    <div>
-                        VY <hr>
                     </div>
-                    <div class = "post-bucket">
-                        <a th:href="@{'/r/subRedditName/'+${post.id}}">
+                    <div class = "post-container">
+                        <div>
+                             VY <hr>
+                        </div>
+                        <div class = "post-bucket">
                             <div class="post-title" th:text="${post.getTitle()}"></div>
                             <div class="post-content">
                                 <p th:text="${post.getDescription()}"></p>
                             </div>
-                        </a>
-                    </div>
-
-                    <div>
-                        <hr>
-<!--                        <span th:href="@{'/commentCount/' + ${subRedditId} + '/' + ${postId}" ></span>-->
-                        <i class="fa-regular fa-message"></i>
+                        </div>
+                        <div>
+                            <hr>
+                            <i class="fa-regular fa-message"></i>
+                        </div>
                     </div>
                 </div>
-            </div>
+            </a>
         </div>
     </main>
 
