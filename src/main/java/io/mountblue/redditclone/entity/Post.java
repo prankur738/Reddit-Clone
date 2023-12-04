@@ -38,7 +38,7 @@ public class Post {
     String image;
 
     @Column(name = "vote_count")
-    Integer voteCount;
+    Integer voteCount = 0;
 
     @ManyToOne
     @JoinColumn(name = "user_id")

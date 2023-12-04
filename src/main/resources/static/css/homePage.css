@@ -189,3 +189,12 @@ input[type=submit] {
 .profile-div > form {
     padding-left: 20px;
 }
+
+.icon-button {
+    background: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    font-size: inherit;
+    color: inherit;
+}

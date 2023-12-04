@@ -130,4 +130,14 @@ public class PostServiceImpl implements PostService {
     public List<Post> findAllPosts() {
         return postRepository.findAll();
     }
+
+    @Override
+    public void updatePost(Integer postId, Integer voteCountChange) {
+        Post post = postRepository.findById(postId).get();
+        System.out.println(voteCountChange);
+        post.setVoteCount(post.getVoteCount()+voteCountChange);
+        System.out.println(post.getVoteCount());
+        postRepository.save(post);
+
+    }
 }
