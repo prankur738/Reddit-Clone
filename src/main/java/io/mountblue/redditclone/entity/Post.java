@@ -34,6 +34,9 @@ public class Post {
     @UpdateTimestamp
     Date updatedAt;
 
+    @Column(name = "image_name")
+    String image;
+
     @Column(name = "vote_count")
     Integer voteCount;
 

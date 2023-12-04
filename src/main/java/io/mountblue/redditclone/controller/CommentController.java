@@ -29,6 +29,9 @@ public class CommentController {
         return "";
     }
 
+//    @PostMapping("/commentsShow")
+//    public String showComments()
+
     @PostMapping("/comment/update")
     public String editComment(@RequestParam Integer postId,@ModelAttribute("comment") Comment comment){
         commentServiceImpl.UpdateComment(comment);

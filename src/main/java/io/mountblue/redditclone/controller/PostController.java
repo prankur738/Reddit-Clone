@@ -9,6 +9,7 @@ import io.mountblue.redditclone.service.UserService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.StringTrimmerEditor;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
@@ -16,6 +17,15 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
+import java.util.List;
 
 import java.util.List;
 
@@ -56,11 +66,10 @@ public class PostController {
 
     @PostMapping("/savePost")
     public String processNewPost(@Valid @ModelAttribute("post") Post post,
-                                 BindingResult bindingResult,
                                  @RequestParam("subRedditName") String subRedditName,
                                  @AuthenticationPrincipal UserDetails userDetails,
-                                 @RequestParam(name="tagNames") String tagNames){
-
+                                 @RequestParam(name="tagNames") String tagNames,
+                                 BindingResult bindingResult) {
         if(bindingResult.hasErrors()){
             return "createNewPost";
         }
@@ -146,6 +155,5 @@ public class PostController {
 
         return "homePage";
     }
-
 
 }

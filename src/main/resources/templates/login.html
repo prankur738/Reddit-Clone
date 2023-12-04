@@ -16,6 +16,9 @@
         <div class="form-container">
             <h2>Login</h2>
             <form action="#" th:action="@{/authenticateUser}" method="post">
+                <div th:if="${param.error}">
+                    <i class="error">Sorry! You entered invalid email/password.</i>
+                </div>
 
                 <label for="name">Username</label>
                 <input type="text" id="name" placeholder="username" name="username" required>

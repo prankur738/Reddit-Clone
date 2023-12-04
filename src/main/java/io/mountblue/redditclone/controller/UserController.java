@@ -1,5 +1,6 @@
 package io.mountblue.redditclone.controller;
 
+import io.mountblue.redditclone.entity.Role;
 import io.mountblue.redditclone.entity.User;
 import io.mountblue.redditclone.service.UserService;
 import jakarta.validation.Valid;
@@ -62,7 +63,9 @@ public class UserController {
             return "signup";
         }
 
+        userService.encodePassword(newUser);
         userService.save(newUser);
+        userService.grantRoleToUser(newUser.getUsername(), "USER");
 
         return "redirect:/login";
     }
