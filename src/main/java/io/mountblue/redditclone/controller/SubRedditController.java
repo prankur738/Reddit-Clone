@@ -32,10 +32,7 @@ public class SubRedditController {
     @GetMapping("/createNewSubReddit")
     public String showNewSubRedditForm(Model model,
                                        @AuthenticationPrincipal UserDetails userDetails){
-        if(userDetails == null){ // non-logged in user
-            return "accessDenied";
-        }
-
+        model.addAttribute("subRedditList", subRedditService.findAll());
         model.addAttribute("subReddit", new SubReddit());
         return "newSubRedditForm";
     }

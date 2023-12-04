@@ -1,47 +1,95 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     <meta charset="UTF-8">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+          integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA=="
+          crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" th:href="@{/css/createNewPost.css}" />
     <title>New Post</title>
-    <style>
-        form{
-            width: 800px;
-            margin: auto;
-            margin-top: 50px;
-        }
-        label,input,textarea,h1{
-            width: 100%;
-            margin: 10px;
-        }
-        h1{
-            text-align: center;
-        }
-    </style>
 </head>
 <body>
 
+<nav class="navBar">
+    <div class="bar1">
+        <i class="fa-brands fa-reddit color"></i>
+        <p class="text">reddit</p>
+    </div>
+    <div class="bar2">
+        <i class="fa-solid fa-magnifying-glass"></i>
+        <input type="text" placeholder="Search Reddit">
+    </div>
 
-<form th:action="@{/savePost}" th:object="${post}" method="POST" enctype="multipart/form-data">
-    <h1>Create new Post</h1>
-    <label for="title">Title</label><br>
-    <input type="text" id="title" th:field="*{title}"/>
-    <!--    <span th:if="${#fields.hasErrors('title')}" th:errors="*{title}" class="error"></span><br>-->
+    <form sec:authorize="${!isAuthenticated()}" th:action="@{/login}">
+        <input type="submit" value="Login">
+    </form>
+    <div sec:authorize="isAuthenticated()" class="profile-div">
+        <p class="profile">
+            <i class="fa-brands fa-square-reddit"></i>&nbsp;
+            u/<strong sec:authentication="principal.username" />
+        </p>
+        <form th:action="@{/logout}" method="POST">
+            <input type="submit" value="Logout">
+        </form>
+    </div>
+</nav>
 
-    <label for="content">Description</label><br>
-    <textarea id="content" th:field="*{description}" rows="6"></textarea>
-    <!--    <span th:if="${#fields.hasErrors('description')}" th:errors="*{description}" class="error"></span><br>-->
+<div class="body">
+    <aside id="filter">
+        <h2>Filter Section</h2>
+        <div><h2>Popular</h2></div>
+        <div>Popular</div>
+    </aside>
 
-    <label for="im"></label>
-    <input type="file" id="im" name="imageName"  accept="image/**" >
+    <main id="post-form-container">
+        <form id="post-form" th:action="@{/savePost}" th:object="${post}" method="POST" enctype="multipart/form-data">
+            <h1>Create new Post</h1>
+            <select th:if="${subReddit == null}" name="subRedditName" required>
+                <option value="">-- Select Community --</option>
+                <option th:each="community : ${allSubReddits}"
+                        th:value="${community.getName()}"
+                        th:text="${'r/' + community.getName()}" />
+            </select><br>
 
-    <label for="tags">Tags</label><br>
-    <input id="tags" type="text"  name="tagNames" /><br>
+            <label for="title">Title</label><br>
+            <input type="text" id="title" th:field="*{title}" required />
+            <span th:if="${#fields.hasErrors('title')}" th:errors="*{title}" class="error"></span><br>
 
-    <input type="hidden" name="subRedditName" th:value="${subRedditName}">
+            <label for="description">Content</label><br>
+            <textarea id="description" th:field="*{description}" required />
+            <span th:if="${#fields.hasErrors('description')}" th:errors="*{description}" class="error"></span><br>
 
-    <input type="submit" value="Submit">
+            <label for="file">Image (Optional)</label><br>
+            <input type="file" id="file" name="imageName"  accept="image/**" ><br><br>
 
-</form>
+            <label for="tags">Tags (Optional)</label><br>
+            <input id="tags" type="text"  name="tagNames" /><br>
+
+            <input th:if="${subReddit}" type="hidden" name="subRedditName" th:value="${subReddit.getName()}">
+
+            <input type="submit" value="Submit">
+
+        </form>
+    </main>
+    <aside th:if="${subreddit == null}" id="community">
+        <h2>Community Section</h2>
+        <div class="community-container">
+            <div class="community-item" th:each="community : ${allSubReddits}">
+                <!--                <a th:href="@{'/r/' + ${subReddit.getName()} }">-->
+                <a th:href="@{${community.getName()} }">
+                    <span th:text="${community.getName()}"></span>
+                </a>
+            </div>
+        </div>
+    </aside>
+    <aside th:if="${subReddit}" id="community">
+        <h2>Community Section</h2>
+        <h3>Name</h3>
+        <span th:text="${subReddit.getName()}"></span>
+        <h3>Description</h3>
+        <span th:text="${subReddit.getDescription()}"></span>
+    </aside>
+</div>
 
 
 </body>
