@@ -49,7 +49,7 @@ public class UserServiceImpl implements UserService {
 
     public void grantRoleToUser(String username, String roleName) {
         User user = this.findByUsername(username);
-        Role role = roleRepository.findByRole("ROLE_" + roleName).orElse(new Role("ROLE_" + roleName));
+        Role role = roleRepository.findByRole("ROLE_" + roleName).orElseThrow();
 
         user.getRoles().add(role);
 

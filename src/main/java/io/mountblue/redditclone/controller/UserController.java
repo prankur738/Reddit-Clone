@@ -1,11 +1,12 @@
 package io.mountblue.redditclone.controller;
 
-import io.mountblue.redditclone.entity.Role;
 import io.mountblue.redditclone.entity.User;
 import io.mountblue.redditclone.service.UserService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.propertyeditors.StringTrimmerEditor;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -19,15 +20,13 @@ public class UserController {
     UserService userService;
 
     @GetMapping("login")
-    public String loginPage() {
-        return "login";
+    public String loginPage(@AuthenticationPrincipal UserDetails userDetails) {
+        return userDetails == null ? "login" : "redirect:/";
     }
 
     @InitBinder
     public void initBinder(WebDataBinder dataBinder) {
-
         StringTrimmerEditor stringTrimmerEditor = new StringTrimmerEditor(true);
-
         dataBinder.registerCustomEditor(String.class, stringTrimmerEditor);
     }
 
@@ -68,5 +67,10 @@ public class UserController {
         userService.grantRoleToUser(newUser.getUsername(), "USER");
 
         return "redirect:/login";
+    }
+
+    @GetMapping("/access-denied")
+    public String accessDenied() {
+        return "accessDenied";
     }
 }
