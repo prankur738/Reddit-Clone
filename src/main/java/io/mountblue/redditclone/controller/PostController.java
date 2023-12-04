@@ -27,6 +27,8 @@ import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.List;
 
+import java.util.List;
+
 @Controller
 public class PostController {
 
@@ -63,34 +65,21 @@ public class PostController {
     }
 
     @PostMapping("/savePost")
-    public String processNewPost( @ModelAttribute("post") Post post,
+    public String processNewPost(@Valid @ModelAttribute("post") Post post,
                                  @RequestParam("subRedditName") String subRedditName,
                                  @AuthenticationPrincipal UserDetails userDetails,
                                  @RequestParam(name="tagNames") String tagNames,
-                                 @RequestParam("imageName") MultipartFile file) throws IOException {
-//        if(bindingResult.hasErrors()){
-//            System.out.println("1");
-//            return "createNewPost";
-//        }
-//        else {
-            if (file.isEmpty()) {
-                System.out.println("2");
-                System.out.println("file empty");
-            }
-            System.out.println(file.getOriginalFilename());
-                post.setImage(file.getOriginalFilename());
-                //path where image store
-                File file1 = new ClassPathResource("static/css/image").getFile();
+                                 BindingResult bindingResult) {
+        if(bindingResult.hasErrors()){
+            return "createNewPost";
+        }
+        else{
 
-                Path path = Paths.get(file1.getAbsolutePath() + File.separator + file.getOriginalFilename());//create a path
-                Files.copy(file.getInputStream(), path, StandardCopyOption.REPLACE_EXISTING);
-
-                SubReddit subReddit = subRedditService.findByName(subRedditName);
-                postService.createNewPost(post, subReddit.getId(), userDetails.getUsername(), tagNames);
-                return "redirect:/r/" + subRedditName;
-            }
-
-
+            SubReddit subReddit = subRedditService.findByName(subRedditName);
+            postService.createNewPost(post,subReddit.getId(), userDetails.getUsername(), tagNames);
+            return "redirect:/r/" + subRedditName ;
+        }
+    }
 
     @GetMapping("/r/{subRedditName}/{postId}")
     public String showFullPost(Model model,
@@ -159,9 +148,12 @@ public class PostController {
     @GetMapping("/")
     public String showHomePage(Model model){
         List<SubReddit> subRedditList = subRedditService.findAll();
-        model.addAttribute("subRedditList",subRedditList);
+        List<Post> allPosts = postService.findAllPosts();
+
+        model.addAttribute("allPosts", allPosts);
+        model.addAttribute("subRedditList", subRedditList);
+
         return "homePage";
     }
-
 
 }

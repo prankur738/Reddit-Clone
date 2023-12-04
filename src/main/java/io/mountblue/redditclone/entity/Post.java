@@ -44,13 +44,18 @@ public class Post {
     @JoinColumn(name = "user_id")
     User user;
 
-    @ManyToMany(mappedBy = "postList")
+    @ManyToMany()
+    @JoinTable(
+            name = "post_tag",
+            joinColumns = @JoinColumn(name = "post_id"),
+            inverseJoinColumns = @JoinColumn(name = "tag_id")
+    )
     Set<Tag> tagList = new HashSet<>();
 
     @OneToMany(cascade = CascadeType.ALL,mappedBy = "post")
     List<Comment> commentList;
 
-    @ManyToOne
+    @ManyToOne(cascade={CascadeType.PERSIST, CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH})
     @JoinColumn(name = "subreddit_id")
     SubReddit subReddit;
 }

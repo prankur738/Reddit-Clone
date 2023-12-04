@@ -24,7 +24,7 @@ public class SubRedditController {
         this.subRedditService = subRedditService;
     }
 
-    @GetMapping("/createNewSubreddit")
+    @GetMapping("/createNewSubReddit")
     public String showNewSubRedditForm(Model model,
                                        @AuthenticationPrincipal UserDetails userDetails){
         if(userDetails == null){ // non-logged in user
@@ -49,7 +49,6 @@ public class SubRedditController {
     public String showSubReddit(Model model,
                                 @PathVariable("subRedditName") String subRedditName){
         SubReddit subReddit = subRedditService.findByName(subRedditName);
-
         model.addAttribute("subReddit",subReddit);
 
         return "viewSubReddit";

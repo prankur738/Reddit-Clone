@@ -45,6 +45,11 @@
 }
 
 .post {
+<<<<<<< HEAD
+    display: grid;
+    grid-template-columns: 10% 90%;
+=======
+>>>>>>> main
     border: 1px solid #dcdcdc;
     background-color: #ffffff;
     margin-bottom: 15px;
@@ -53,6 +58,15 @@
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
+<<<<<<< HEAD
+.post-container {
+    display: grid;
+    grid-template-rows: 10% 80% 10%;
+
+}
+
+=======
+>>>>>>> main
 .post-title {
     font-size: 18px;
     font-weight: bold;
@@ -63,7 +77,21 @@
     font-size: 16px;
 }
 
+<<<<<<< HEAD
+.vote {
+    display: flex;
+    flex-direction: column;
+}
 
+.post-bucket {
+    padding-top: 20px;
+    max-height: 250px;
+    overflow-y: scroll;
+
+}
+=======
+
+>>>>>>> main
 
 body{
 
