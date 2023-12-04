@@ -22,4 +22,6 @@ public interface PostService {
 
     public List<Post> findAllPosts();
 
+    public void updatePost(Integer postId, Integer voteCountChange);
+
 }

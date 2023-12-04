@@ -55,16 +55,30 @@
                     <input class="createPost"  type="text" placeholder="Create Post">
                     <i class="fa-solid fa-image image1"></i>
                     <i class="fa-solid fa-link image1"></i>
-                </a>
+                </a>r/Java
             </div>
         </div>
 
         <div th:each="post : ${allPosts}">
             <div class="post">
                 <div class = "vote">
-                    <i class="fa-solid fa-up-long"></i>
-                    <span>0</span>
-                    <i class="fa-solid fa-down-long"></i>
+                    <form  th:action="@{/processPostVote}" method="post">
+                        <input type="hidden" name="postId" th:value="${post.getId()}">
+                        <input type="hidden" name="vote" value="1">
+                        <!-- Styled button with Font Awesome icon -->
+                        <button type="submit" class="icon-button"><i class="fa-solid fa-up-long"></i></button>
+                    </form>
+
+                    <span th:text="${post.getVoteCount()}">  </span>
+
+                    <form  th:action="@{/processPostVote}" method="post">
+                        <input type="hidden" name="postId" th:value="${post.getId()}">
+                        <input type="hidden" name="vote" value="-1">
+                        <!-- Styled button with Font Awesome icon -->
+                        <button type="submit" class="icon-button"><i class="fa-solid fa-down-long"></i></button>
+                    </form>
+
+
                 </div>
                 <div class = "post-container">
                     <div>
