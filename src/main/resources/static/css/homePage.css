@@ -191,3 +191,8 @@ input[type=submit] {
 .profile-div > form {
     padding-left: 20px;
 }
+
+.anchor {
+   text-decoration: none;
+   color: black;
+}

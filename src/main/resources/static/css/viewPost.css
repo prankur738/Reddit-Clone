@@ -66,6 +66,7 @@ input[type=submit]{
   }
 
   .post-url {
+    text-decoration:none;
     color: black;
   }
 
@@ -78,25 +79,22 @@ input[type=submit]{
   }
 
   .post{
-      --post-line-color: #ccc;
-      border: 1px solid #ccc;
-      margin-top: 10px;
-      margin-bottom: 10px;
+      border: 1px solid black;
+      margin: 10px 10px 10px auto;
       overflow: hidden;
       background-color: rgba(255,255,255,0.8);
-      color: #878A8C;
+      color: black;
       position: relative;
       border-radius: 4px;
-      padding:5px;
+      padding:10px;
   }
 
   .comment{
-      --post-line-color: #ccc;
-      border: 1px solid #ccc;
+      border: 1px solid black;
       margin-bottom: 10px;
       overflow: hidden;
       background-color: rgba(255,255,255,0.8);
-      color: #878A8C;
+      color: black;
       position: relative;
       border-radius: 4px;
       padding:5px;
@@ -203,6 +201,6 @@ input[type=submit]{
     font-size: 12px;
     font-weight: 400;
     line-height: 18px;
-    color: var(--newCommunityTheme-bodyText);
+    color: black;
     margin-right: 4px;
   }
