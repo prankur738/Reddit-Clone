@@ -14,6 +14,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
@@ -49,6 +50,12 @@ public class PostServiceImpl implements PostService {
     public Post findById(Integer userId) {
         Optional<Post> post = postRepository.findById(userId);
         return post.orElseThrow();
+    }
+
+    @Override
+    public List<Post> findBySubRedditId(Integer subRedditId) {
+        List<Post> post = postRepository.findBySubRedditId(subRedditId);
+        return post;
     }
 
     @Override

@@ -8,6 +8,7 @@ import io.mountblue.redditclone.service.CommentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -18,6 +19,11 @@ public class CommentServiceImpl implements CommentService {
 
     @Autowired
     PostRepository postRepository;
+
+    @Override
+    public List<Comment> findById(Integer postId){
+        return commentRepository.findByPostId(postId);
+    }
 
     @Override
     public void saveComment(Integer postId, Comment comment){
