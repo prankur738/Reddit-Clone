@@ -77,36 +77,37 @@
                         <button type="submit" class="icon-button"><i class="fa-solid fa-down-long"></i></button>
                     </form>
                     </div>
+              
                     <div class = "post-container">
                         <div>
                              VY <hr>
-                        </div>
+                      </div>
                         <div class = "post-bucket">
+                        <a th:href="@{'posts/' + ${post.getId()} }">
                             <div class="post-title" th:text="${post.getTitle()}"></div>
                             <div class="post-content">
                                 <p th:text="${post.getDescription()}"></p>
                             </div>
+                        </a>
                         </div>
                         <div>
                             <hr>
                             <i class="fa-regular fa-message"></i>
                         </div>
                     </div>
-                </div>
-            </a>
+             </div>
         </div>
     </main>
 
     <aside id="community">
         <h2>Community Section</h2>
         <div class="aside-button">
-            <a th:href="@{/createNewSubReddit}"> <button>Create Community</button></a>
+            <a th:href="@{/community/createCommunity}"> <button>Create Community</button></a>
         </div>
 
         <div class="community-container">
             <div class="community-item" th:each="subReddit : ${subRedditList}">
-<!--                <a th:href="@{'/r/' + ${subReddit.getName()} }">-->
-                <a th:href="@{${subReddit.getName()} }">
+                <a th:href="@{'community/' + ${subReddit.getName()} }">
                     <span th:text="${subReddit.getName()}"></span>
                 </a>
             </div>

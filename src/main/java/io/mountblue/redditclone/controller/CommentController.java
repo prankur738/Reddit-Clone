@@ -33,7 +33,7 @@ public class CommentController {
     @Autowired
     CommentServiceImpl commentServiceImpl;
 
-    @GetMapping("/r/subRedditName/{postId}/comments")
+    @GetMapping("/posts/{postId}/comments")
     public String showComments(Model model, @PathVariable("postId")Integer postId){
 
         Post post = postServiceImpl.findById(postId);
@@ -47,7 +47,7 @@ public class CommentController {
         return "viewPost";
     }
 
-    @PostMapping("/r/subRedditName/{postId}/comments")
+    @PostMapping("/posts/{postId}/saveComment")
     public String createAndSaveComment(Model model,@PathVariable("postId")Integer postId, @ModelAttribute("newComment") Comment comment, @ModelAttribute("post")Post post){
         System.out.println("comment get:"+comment.getText());
         commentServiceImpl.saveComment(postId, comment);
@@ -57,7 +57,7 @@ public class CommentController {
 
         model.addAttribute("post", post);
         model.addAttribute("commentList", commentList);
-        return "redirect:/r/subRedditName/" + postId + "/comments";
+        return "redirect:/posts/" + postId ;
     }
 
     @PostMapping("/comment/update")
