@@ -69,8 +69,10 @@
 
 .post-bucket {
     padding-top: 20px;
-    max-height: 250px;
-    overflow-y: scroll;
+  /**  max-height: 250px;
+    overflow-y: scroll; **/
+    height:auto;
+
 }
 
 body {

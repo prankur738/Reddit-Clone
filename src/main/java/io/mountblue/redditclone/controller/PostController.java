@@ -66,19 +66,34 @@ public class PostController {
 
     @PostMapping("/savePost")
     public String processNewPost(@Valid @ModelAttribute("post") Post post,
+                                 BindingResult bindingResult,
                                  @RequestParam("subRedditName") String subRedditName,
                                  @AuthenticationPrincipal UserDetails userDetails,
                                  @RequestParam(name="tagNames") String tagNames,
-                                 BindingResult bindingResult) {
-        if(bindingResult.hasErrors()){
+                                 @RequestParam(value = "imageName",required = false
+                                 ) MultipartFile file) throws IOException {
+        if (bindingResult.hasErrors()) {
             return "createNewPost";
+
         }
-        else{
+        if(file.isEmpty()){
+            SubReddit subReddit = subRedditService.findByName(subRedditName);
+            postService.createNewPost(post, subReddit.getId(), userDetails.getUsername(), tagNames);
+
+        }
+        else  {
+            post.setImage(file.getOriginalFilename());
+            //path where image store
+            File file1 = new ClassPathResource("static/image").getFile();
+            Path path = Paths.get(file1.getAbsolutePath() + File.separator + file.getOriginalFilename());//create a path
+            Files.copy(file.getInputStream(), path, StandardCopyOption.REPLACE_EXISTING);
 
             SubReddit subReddit = subRedditService.findByName(subRedditName);
-            postService.createNewPost(post,subReddit.getId(), userDetails.getUsername(), tagNames);
-            return "redirect:/r/" + subRedditName ;
+            postService.createNewPost(post, subReddit.getId(), userDetails.getUsername(), tagNames);
+
         }
+        System.out.println(post.getImage());
+        return "redirect:/r/" + subRedditName;
     }
 
     @GetMapping("/r/{subRedditName}/{postId}")
