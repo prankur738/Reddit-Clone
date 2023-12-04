@@ -139,7 +139,11 @@ public class PostController {
     @GetMapping("/")
     public String showHomePage(Model model){
         List<SubReddit> subRedditList = subRedditService.findAll();
-        model.addAttribute("subRedditList",subRedditList);
+        List<Post> allPosts = postService.findAllPosts();
+
+        model.addAttribute("allPosts", allPosts);
+        model.addAttribute("subRedditList", subRedditList);
+
         return "homePage";
     }
 

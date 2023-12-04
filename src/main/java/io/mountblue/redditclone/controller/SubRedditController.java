@@ -52,6 +52,7 @@ public class SubRedditController {
 
         model.addAttribute("subReddit",subReddit);
 
+
         return "viewSubReddit";
     }
 

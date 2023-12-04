@@ -22,11 +22,6 @@ public class Tag {
     @Column(name = "name")
     String name;
 
-    @ManyToMany
-    @JoinTable(
-            name = "post_tag",
-            joinColumns = @JoinColumn(name = "tag_id"),
-            inverseJoinColumns = @JoinColumn(name = "post_id")
-    )
+    @ManyToMany(mappedBy = "tagList")
     List<Post> postList;
 }
