@@ -56,7 +56,7 @@
                     </div>
                     <span class="comment-user">Commented as userName</span>
                     <div class="post-comment">
-                        <form method="POST" th:object="${newComment}" th:action="@{'/r/subRedditName/'+ ${postId} +'/comments'}">
+                        <form method="POST" th:object="${newComment}" th:action="@{'/posts/'+ ${postId} +'/saveComment'}">
                             <div class="comment-text">
                                 <textarea name="text" th:field="*{text}" placeholder="Your Thoughts?"></textarea>
                             </div>

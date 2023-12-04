@@ -85,7 +85,7 @@
                         VY <hr>
                     </div>
                     <div class = "post-bucket">
-                        <a th:href="@{'/r/subRedditName/'+${post.id}}">
+                        <a th:href="@{'posts/' + ${post.getId()} }">
                             <div class="post-title" th:text="${post.getTitle()}"></div>
                             <div class="post-content">
                                 <p th:text="${post.getDescription()}"></p>
@@ -106,13 +106,12 @@
     <aside id="community">
         <h2>Community Section</h2>
         <div class="aside-button">
-            <a th:href="@{/createNewSubReddit}"> <button>Create Community</button></a>
+            <a th:href="@{/community/createCommunity}"> <button>Create Community</button></a>
         </div>
 
         <div class="community-container">
             <div class="community-item" th:each="subReddit : ${subRedditList}">
-<!--                <a th:href="@{'/r/' + ${subReddit.getName()} }">-->
-                <a th:href="@{${subReddit.getName()} }">
+                <a th:href="@{'community/' + ${subReddit.getName()} }">
                     <span th:text="${subReddit.getName()}"></span>
                 </a>
             </div>

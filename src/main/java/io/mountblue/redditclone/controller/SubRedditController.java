@@ -29,7 +29,7 @@ public class SubRedditController {
         this.postService = postService;
     }
 
-    @GetMapping("/createNewSubReddit")
+    @GetMapping("/community/createCommunity")
     public String showNewSubRedditForm(Model model,
                                        @AuthenticationPrincipal UserDetails userDetails){
         if(userDetails == null){ // non-logged in user
@@ -40,17 +40,17 @@ public class SubRedditController {
         return "newSubRedditForm";
     }
 
-    @PostMapping("/saveSubReddit")
+    @PostMapping("/community/saveCommunity")
     public String saveNewSubReddit(@Valid @ModelAttribute("subReddit") SubReddit  subReddit,
                                    BindingResult bindingResult,
                                    @AuthenticationPrincipal UserDetails userDetails){
         String username = userDetails.getUsername();
         subRedditService.createSubReddit(subReddit,username);
-        return "redirect:/r/" + subReddit.getName();
+        return "redirect:/community/" + subReddit.getName();
     }
 
 
-    @GetMapping("/{subRedditName}")
+    @GetMapping("/community/{subRedditName}")
     public String showSubReddit(Model model,
                                 @PathVariable("subRedditName") String subRedditName){
         SubReddit subReddit = subRedditService.findByName(subRedditName);
@@ -58,14 +58,14 @@ public class SubRedditController {
         return "viewSubReddit";
     }
 
-    @PostMapping("/deleteSubReddit/{subRedditId}")
+    @PostMapping("community/deleteCommunity/{subRedditId}")
     public String deleteSubReddit(@PathVariable("subRedditId") Integer subRedditId,
                                   @AuthenticationPrincipal UserDetails userDetails){
         boolean isUserAuthorized = subRedditService.checkUserAuthorized(userDetails, subRedditId);
 
         if(isUserAuthorized){
             subRedditService.deleteById(subRedditId);
-            return "";
+            return "redirect:/";
         }
 
         else {
@@ -73,8 +73,8 @@ public class SubRedditController {
         }
     }
 
-    @GetMapping("/editSubReddit/{subRedditId}")
-    public  String editsubReddit(@PathVariable("subRedditId") Integer subRedditId,
+    @GetMapping("/community/editCommunity/{subRedditId}")
+    public  String editSubReddit(@PathVariable("subRedditId") Integer subRedditId,
                                  @AuthenticationPrincipal UserDetails userDetails,
                                  Model model) {
         SubReddit subReddit = subRedditService.findById(subRedditId);
@@ -84,19 +84,19 @@ public class SubRedditController {
             model.addAttribute("subReddit",subReddit);
             model.addAttribute("subRedditId",subRedditId);
 
-            return "";
+            return "editSubReddit";
         }
 
         return "accessDenied";
 
     }
 
-    @PostMapping("/updateSubReddit")
+    @PostMapping("/community/update")
     public String updateSubReddit(@Valid @ModelAttribute("subReddit") SubReddit  subReddit,
                                   BindingResult bindingResult,
                                   @AuthenticationPrincipal UserDetails userDetails){
 
         subRedditService.updateSubReddit(subReddit,userDetails.getUsername());
-        return "";
+        return "redirect:/community/" + subReddit.getName();
     }
 }

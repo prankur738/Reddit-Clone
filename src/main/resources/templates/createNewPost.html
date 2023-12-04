@@ -21,7 +21,7 @@
 <body>
 
 
-<form th:action="@{/savePost}" th:object="${post}" method="POST" enctype="multipart/form-data">
+<form th:action="@{/posts/savePost}" th:object="${post}" method="POST" enctype="multipart/form-data">
     <h1>Create new Post</h1>
     <label for="title">Title</label><br>
     <input type="text" id="title" th:field="*{title}"/>

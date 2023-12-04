@@ -50,10 +50,10 @@ public class PostController {
         this.subRedditService = subRedditService;
     }
 
-    @GetMapping("/r/{subRedditName}/createPost")
+    @GetMapping("/posts/createPost")
     public String showNewPostPage(Model model,
                                   @AuthenticationPrincipal UserDetails userDetails,
-                                  @PathVariable("subRedditName") String subRedditName){
+                                  @RequestParam("subRedditName") String subRedditName){
 
         if(userDetails == null){ // non-logged in user
             return "accessDenied";
@@ -65,7 +65,7 @@ public class PostController {
         return "createNewPost";
     }
 
-    @PostMapping("/savePost")
+    @PostMapping("/posts/savePost")
     public String processNewPost(@Valid @ModelAttribute("post") Post post,
                                  BindingResult bindingResult,
                                  @RequestParam("subRedditName") String subRedditName,
@@ -94,18 +94,18 @@ public class PostController {
 
         }
         System.out.println(post.getImage());
-        return "redirect:/r/" + subRedditName;
+        return "redirect:/community/" + subRedditName;
     }
 
-    @GetMapping("/r/subRedditName/{postId}")
+    @GetMapping("/posts/{postId}")
     public String showFullPost(Model model, @PathVariable("postId") Integer postId, RedirectAttributes redirectAttributes){
         Post post = postService.findById(postId);
         model.addAttribute("post",post);
         redirectAttributes.addFlashAttribute("post", post);
-        return "redirect:/r/subRedditName/" + postId + "/comments";
+        return "redirect:/posts/" + postId + "/comments";
     }
 
-    @GetMapping("/r/{subRedditName}/editPost/{postId}")
+    @GetMapping("/posts/editPost/{postId}")
     public String showEditPostPage(Model model,
                                    @PathVariable("postId") Integer postId,
                                    @AuthenticationPrincipal UserDetails userDetails){
@@ -126,7 +126,7 @@ public class PostController {
         return "accessDenied";
     }
 
-    @PostMapping("/r/{subRedditName}/updatePost/{postId}")
+    @PostMapping("/posts/updatePost/{postId}")
     public String updatePost(@Valid @ModelAttribute("post") Post updatedPost,
                              BindingResult bindingResult,
                              @PathVariable("postId") Integer postId,
@@ -140,20 +140,19 @@ public class PostController {
             SubReddit subReddit = subRedditService.findByName(subRedditName);
             String username = postService.findById(postId).getUser().getUsername();
             postService.updatePost(updatedPost, subReddit.getId(),username,tagNames);
-            return "redirect:/r/" + subRedditName + "/" + postId;
+            return "redirect:/posts/" + postId;
         }
     }
 
-    @PostMapping("/r/{subRedditName}/deletePost/{postId}")
+    @PostMapping("/posts/deletePost/{postId}")
     public String deletePost(@AuthenticationPrincipal UserDetails userDetails,
-                             @PathVariable("postId") Integer postId,
-                             @PathVariable("subRedditName") String subRedditName) {
+                             @PathVariable("postId") Integer postId){
 
         boolean isUserAuthorized = postService.checkUserAuthorized(userDetails, postId);
 
         if(isUserAuthorized){
             postService.deletePost(postId);
-            return "redirect:/r/"+ subRedditName ;
+            return "redirect:/" ;
         }
 
         return "accessDenied";
