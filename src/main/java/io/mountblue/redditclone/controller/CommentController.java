@@ -13,10 +13,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.List;
@@ -36,25 +33,31 @@ public class CommentController {
     @Autowired
     CommentServiceImpl commentServiceImpl;
 
-    @GetMapping("/comments")
-    public String createAndSaveComment(@RequestParam("pid")Integer postId,
-                                       @ModelAttribute("comment") Comment comment){
-        commentServiceImpl.saveComment(postId,comment);
-        return "";
+    @GetMapping("/r/subRedditName/{postId}/comments")
+    public String showComments(Model model, @PathVariable("postId")Integer postId){
+
+        Post post = postServiceImpl.findById(postId);
+        List<Comment> commentList = post.getCommentList();
+
+        model.addAttribute("post", post);
+        model.addAttribute("postId", postId);
+        model.addAttribute("newComment", new Comment());
+        model.addAttribute("commentList", commentList);
+
+        return "viewPost";
     }
 
-    @PostMapping("/commentsShow/{subRedditId}/{postId}")
-    public String showComments(@RequestParam("subRedditId")Integer subRedditId, @RequestParam("postId")Integer postId, Model model, RedirectAttributes redirectAttributes){
-        SubReddit subReddit= subRedditServiceImpl.findById(subRedditId);
-        List<Post> post = postServiceImpl.findBySubRedditId(subReddit.getId());
-        List<Comment> commentList = null;
-        for(Post postList : post)
-            if(postList.getId().equals(postId))
-                commentList = commentServiceImpl.findById(postId);
+    @PostMapping("/r/subRedditName/{postId}/comments")
+    public String createAndSaveComment(Model model,@PathVariable("postId")Integer postId, @ModelAttribute("newComment") Comment comment, @ModelAttribute("post")Post post){
+        System.out.println("comment get:"+comment.getText());
+        commentServiceImpl.saveComment(postId, comment);
 
-        redirectAttributes.addFlashAttribute("commentsCounts", commentList.size());
-        redirectAttributes.addFlashAttribute("commentsList", commentList);
-        return "";
+        //Post post = postServiceImpl.findById(postId);
+        List<Comment> commentList = post.getCommentList();
+
+        model.addAttribute("post", post);
+        model.addAttribute("commentList", commentList);
+        return "redirect:/r/subRedditName/" + postId + "/comments";
     }
 
     @PostMapping("/comment/update")

@@ -8,7 +8,6 @@
     <link rel="stylesheet" type="text/css" th:href="@{/css/viewPost.css}" />
 </head>
 <body>
-<!--        This page will show when clicked on particular post-->
 
 <div class="navBar">
     <div class="bar1">
@@ -19,12 +18,11 @@
         <i class="fa-solid fa-magnifying-glass"></i>
         <input type="text" placeholder="Search Reddit">
     </div>
-
     <form th:action="@{/login}">
         <input type="submit" value="Login">
     </form>
-
 </div>
+
 <div class="container">
     <div class="row">
         <hr />
@@ -33,55 +31,53 @@
                 <div class="col-md-1">
                     <div class="col-md-1">
                         <div class="d-flex flex-column votebox">
-                            <div class="p-2">
-                                <i class="fa-light fa-up upvote"></i>
-                            </div>
-                            <div class="p-2 votecount">1</div>
-                            <div class="p-2">
-                                <i class="fa-light fa-down downvote"></i>
+                            <div class = "vote">
+                                <i class="fa-solid fa-up-long"></i>
+                                <span>0</span>
+                                <i class="fa-solid fa-down-long"></i>
                             </div>
                         </div>
                     </div>
                 </div>
                 <div class="col-md-11">
-            <span>
-              <span class="subreddit-text"><a class="post-url" href="">post.subredditName</a></span>
-              <span> . Posted
-                <span> post.time </span>
-                by
-                <a class="username" href="">post.userName</a>
-              </span>
-            </span>
+                    <span>
+                        <span class="subreddit-text"><a class="post-url" href="">post.subredditName</a></span>
+                        <span> . Posted<span> post.time </span>by<a class="username" href="">post.userName</a></span>
+                    </span>
                     <hr />
-                    <a routerLink="post.url" class="post-title">post.title</a>
-                    <div>
-                        <p class="post-text" [innerHtml]="post.description">Lorem ipsum dolor sit amet consectetur, adipisicing elit. Officiis veritatis dolorum tempora necessitatibus iste doloremque earum consequuntur quibusdam? Dicta a delectus
-                            voluptatem voluptatum quasi quisquam quam aliquam maiores, minima voluptate.</p>
+                    <div class = "post-container">
+                        <div class="post-title" th:text="${post.title}"></div>
+                        <div>
+                            <p class="post-text" th:text="${post.description}"></p>
+                        </div>
+                        <div class="comment-count">
+                            <i class="fa-regular fa-message"></i>
+                        </div>
                     </div>
                     <span class="comment-user">Commented as userName</span>
                     <div class="post-comment">
-                        <form [formGroup]="commentForm" (ngSubmit)="postComment()">
-                            <div class="form-group">
-                                <textarea class="form-control" [formControlName]="'text'" placeholder="Your Thoughts?"></textarea>
+                        <form method="POST" th:object="${newComment}" th:action="@{'/r/subRedditName/'+ ${postId} +'/comments'}">
+                            <div class="comment-text">
+                                <textarea name="text" th:field="*{text}" placeholder="Your Thoughts?"></textarea>
                             </div>
                             <button type="submit" class="login float-right">Comment</button>
                         </form>
                     </div>
-                    <div style="margin-top: 60px;" *ngFor="let comment of comments">
-                        <div class="comment">
-                            <div class="username">
-                                <a routerLink="/user/comment.username">comment.userName</a>
-                            </div>
-                            <div>
-                                <p>comment.time</p>
-                            </div>
-                            <b>comment.text</b>
+                <div style="margin-top: 60px;" th:each="comments: ${commentList}">
+                    <div class="comment">
+                        <div class="username">
+                            <a th:text="${session.username}">comment.userName</a>
                         </div>
-                        <hr />
+                        <div>
+                            <p>comment.time</p>
+                        </div>
+                        <p th:text="${comments.text}"></p>
                     </div>
+                    <hr />
                 </div>
             </div>
         </div>
+    </div>
         <div class="col-md-3">
             <div class="sidebar">
                 <img src="https://www.redditstatic.com/desktop2x/img/id-cards/home-banner@2x.png">
@@ -98,9 +94,9 @@
                 <div style="color: black; font-weight: bold">Browse Subreddits</div>
                 <hr />
                 <span *ngFor="let subreddit of subreddits">
-                <span class="subreddit-text"><a href="/view-subreddit/{{subreddit.id}}">subreddit.name</a></span>
-                <hr />
-            </span>
+                    <span class="subreddit-text"><a href="/view-subreddit/{{subreddit.id}}">subreddit.name</a></span>
+                    <hr />
+                </span>
                 <div style="text-align: center" *ngIf="displayViewAll">
                     <a style="font-weight: bold" routerLink="/list-subreddits">View All</a>
                 </div>
