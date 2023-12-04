@@ -59,6 +59,7 @@
                         <form method="POST" th:object="${newComment}" th:action="@{'/posts/'+ ${postId} +'/saveComment'}">
                             <div class="comment-text">
                                 <textarea name="text" th:field="*{text}" placeholder="Your Thoughts?"></textarea>
+
                             </div>
                             <button type="submit" class="login float-right">Comment</button>
                         </form>
