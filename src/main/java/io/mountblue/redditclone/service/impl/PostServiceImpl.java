@@ -54,6 +54,12 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
+    public List<Post> findBySubRedditId(Integer subRedditId) {
+        List<Post> post = postRepository.findBySubRedditId(subRedditId);
+        return post;
+    }
+
+    @Override
     public void updatePost(Post post, Integer subredditId, String username, String tagNames) {
         Set<Tag> tagFromString = getTagFromString(tagNames);
         User user = userService.findByUsername(username);
