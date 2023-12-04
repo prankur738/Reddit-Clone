@@ -18,6 +18,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.io.File;
 import java.io.IOException;
@@ -81,14 +82,12 @@ public class PostController {
         }
     }
 
-    @GetMapping("/r/{subRedditName}/{postId}")
-    public String showFullPost(Model model,
-                               @PathVariable("postId") Integer postId){
+    @GetMapping("/r/subRedditName/{postId}")
+    public String showFullPost(Model model, @PathVariable("postId") Integer postId, RedirectAttributes redirectAttributes){
         Post post = postService.findById(postId);
         model.addAttribute("post",post);
-        model.addAttribute("newComment", new Comment());
-
-        return "viewPost";
+        redirectAttributes.addFlashAttribute("post", post);
+        return "redirect:/r/subRedditName/" + postId + "/comments";
     }
 
     @GetMapping("/r/{subRedditName}/editPost/{postId}")
