@@ -6,17 +6,9 @@
     margin: 0;
     padding: 0;
     background-color: #f8f9fa;
-    /* display: grid;
-    grid-template-columns:  1fr 250px;
-    grid-template-rows: auto;
-    grid-template-areas: "filter posts community"; */
     display: flex;
 }
-
-
-
 #filter {
-    /* grid-area: filter; */
     background-color: #ffffff;
     padding: 15px;
     box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
@@ -24,9 +16,7 @@
     height: 100%;
     width: 18%;
 }
-
 #posts {
-    /* grid-area: posts; */
     overflow-y: auto;
     padding: 15px;
     width: 60%;
@@ -34,7 +24,6 @@
 }
 
 #community {
-    /* grid-area: community; */
     background-color: #ffffff;
     padding: 15px;
     box-shadow: -2px 0 5px rgba(0, 0, 0, 0.1);
@@ -43,13 +32,9 @@
     height: 100%;
     width: 18%;
 }
-
 .post {
-<<<<<<< HEAD
     display: grid;
     grid-template-columns: 10% 90%;
-=======
->>>>>>> main
     border: 1px solid #dcdcdc;
     background-color: #ffffff;
     margin-bottom: 15px;
@@ -57,27 +42,18 @@
     border-radius: 5px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
-
-<<<<<<< HEAD
 .post-container {
     display: grid;
     grid-template-rows: 10% 80% 10%;
-
 }
-
-=======
->>>>>>> main
 .post-title {
     font-size: 18px;
     font-weight: bold;
     margin-bottom: 10px;
 }
-
 .post-content {
     font-size: 16px;
 }
-
-<<<<<<< HEAD
 .vote {
     display: flex;
     flex-direction: column;
@@ -87,20 +63,13 @@
     padding-top: 20px;
     max-height: 250px;
     overflow-y: scroll;
-
 }
-=======
-
->>>>>>> main
 
 body{
-
     margin: 0;
     padding: 0;
     font-family: Arial, sans-serif;
-    /* padding-top: 80px;  */
 }
-
 .navBar{
     display: flex;
     align-items: center;
@@ -111,7 +80,6 @@ body{
     width: 100%; /* Make the navbar span the full width of the viewport */
     background-color: white; /* Optional: Add a background color */
     z-index: 1000;
-
 }
 
 .color{
@@ -124,26 +92,12 @@ body{
 .bar1{
     display: flex;
     align-items: center;
-
 }
-
 .text{
     color: orangered;
     font-size: 25px;
     font-weight: bolder
-
 }
-
-/* .bar2{
-   padding-top: 10px;
-   padding-left: 10px;
-   border: 1px solid black;
-   width: 550px;
-   border-radius: 35px;
-   height: 25px;
-   background-color: rgb(250, 248, 248);
-} */
-
 input[type=text]{
     border: none;
     font-size: 17px;
@@ -158,7 +112,6 @@ input[type=text]{
     left: 25px;
 }
 input[type=submit]{
-
     margin-right: 30px;
     padding: 8px 16px;
     background-color: orangered;
@@ -169,24 +122,19 @@ input[type=submit]{
     font-size: 14px;
     font-weight: bolder;
     border-radius: 10px;
-
 }
-
 .create{
     display: flex;
     justify-content: space-between;
     align-items: center;
 }
-
 .image{
     font-size: 30px;
     background-color: white;
     color: gray;
-
 }
 .image1{
     font-size: 20px;
-
 }
 .createPost{
     width: 830px;
@@ -194,7 +142,6 @@ input[type=submit]{
     background-color: gray;
     padding-left: 20px;
 }
-
 .aside-button button {
     width: 100%;
     padding: 10px 20px;
@@ -205,7 +152,6 @@ input[type=submit]{
     font-size: 1rem;
     cursor: pointer;
 }
-
 .community-item span{
     font-size: 20px;
     color: black;

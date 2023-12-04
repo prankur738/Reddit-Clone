@@ -1,15 +1,3 @@
-<!--<!DOCTYPE html>-->
-<!--<html lang="en">-->
-<!--<head>-->
-<!--    <meta charset="UTF-8">-->
-<!--    <title>Title</title>-->
-<!--</head>-->
-<!--<body>-->
-<!--&lt;!&ndash;    This post should be show when clicked on one post &ndash;&gt;-->
-
-<!--</body>-->
-<!--</html>-->
-
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
@@ -32,17 +20,7 @@
 </head>
 <body>
 
-<<<<<<< HEAD
-<form th:action="@{/savePost}" th:object="${post}" method="POST">
-    <h1>Create new Post</h1>
-    <label for="title">Title</label><br>
-    <input type="text" id="title" th:field="*{title}"/>
-    <span th:if="${#fields.hasErrors('title')}" th:errors="*{title}" class="error"></span><br>
 
-    <label for="content">Description</label><br>
-    <textarea id="content" th:field="*{description}" rows="6"></textarea>
-    <span th:if="${#fields.hasErrors('description')}" th:errors="*{description}" class="error"></span><br>
-=======
 <form th:action="@{/savePost}" th:object="${post}" method="POST" enctype="multipart/form-data">
     <h1>Create new Post</h1>
     <label for="title">Title</label><br>
@@ -55,7 +33,6 @@
 
     <label for="im"></label>
     <input type="file" id="im" name="imageName"  accept="image/**">
->>>>>>> main
 
     <label for="tags">Tags</label><br>
     <input id="tags" type="text"  name="tagNames" /><br>
