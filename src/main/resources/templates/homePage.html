@@ -63,8 +63,14 @@
                     </div>
                     <div class = "post-bucket">
                         <div class="post-title" th:text="${post.getTitle()}"></div>
+
                         <div class="post-content">
                             <p th:text="${post.getDescription()}"></p>
+                        </div>homePage
+                        <div th:if="${post.image != null}" >
+
+                            <img th:src="@{'image/'+${post.image}}" alt="reddit" width="500px" height="350px">
+
                         </div>
                     </div>
                     <div>
@@ -84,7 +90,8 @@
 
         <div class="community-container">
             <div class="community-item" th:each="subReddit : ${subRedditList}">
-                <a th:href="@{'/r/' + ${subReddit.getName()} }">
+<!--                <a th:href="@{'/r/' + ${subReddit.getName()} }">-->
+                <a th:href="@{${subReddit.getName()} }">
                     <span th:text="${subReddit.getName()}"></span>
                 </a>
             </div>
