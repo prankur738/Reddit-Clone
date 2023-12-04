@@ -37,6 +37,13 @@ public class SecurityConfig {
                                 .loginPage("/login")
                                 .loginProcessingUrl("/authenticateUser")
                                 .permitAll()
+                ).logout(logout ->
+                    logout
+                            .logoutSuccessUrl("/")
+                            .permitAll()
+                ).exceptionHandling(exceptionConfig ->
+                        exceptionConfig
+                                .accessDeniedPage("/access-denied")
                 )
                 .build();
     }

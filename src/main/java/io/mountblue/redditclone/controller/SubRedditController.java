@@ -2,6 +2,7 @@ package io.mountblue.redditclone.controller;
 
 import io.mountblue.redditclone.entity.Post;
 import io.mountblue.redditclone.entity.SubReddit;
+import io.mountblue.redditclone.service.PostService;
 import io.mountblue.redditclone.service.SubRedditService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,13 +16,17 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 
+import java.util.List;
+
 @Controller
 public class SubRedditController {
 
     SubRedditService subRedditService;
+    PostService postService;
     @Autowired
-    public SubRedditController(SubRedditService subRedditService) {
+    public SubRedditController(SubRedditService subRedditService, PostService postService) {
         this.subRedditService = subRedditService;
+        this.postService = postService;
     }
 
     @GetMapping("/createNewSubReddit")
@@ -45,12 +50,11 @@ public class SubRedditController {
     }
 
 
-    @GetMapping("/r/{subRedditName}")
+    @GetMapping("/{subRedditName}")
     public String showSubReddit(Model model,
                                 @PathVariable("subRedditName") String subRedditName){
         SubReddit subReddit = subRedditService.findByName(subRedditName);
         model.addAttribute("subReddit",subReddit);
-
         return "viewSubReddit";
     }
 
