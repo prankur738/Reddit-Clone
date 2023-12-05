@@ -82,9 +82,7 @@
         </div>
     </aside>
     <aside th:if="${subReddit}" id="community">
-        <h2>Community Section</h2>
-        <h3>Name</h3>
-        <span th:text="${subReddit.getName()}"></span>
+        <h2>r/[[${subReddit.getName()}]]</h2>
         <h3>Description</h3>
         <span th:text="${subReddit.getDescription()}"></span>
     </aside>

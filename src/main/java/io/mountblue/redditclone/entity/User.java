@@ -43,7 +43,8 @@ public class User implements UserDetails {
     @OneToMany(mappedBy = "user",cascade = CascadeType.ALL)
     List<Comment> comments;
 
-    @ManyToMany(mappedBy = "userList")
+    @ManyToMany(mappedBy = "subscribers", cascade = {CascadeType.PERSIST, CascadeType.MERGE,
+                                                     CascadeType.REFRESH, CascadeType.DETACH})
     List<SubReddit> subRedditList;
 
     @ManyToMany(fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST, CascadeType.REFRESH,
