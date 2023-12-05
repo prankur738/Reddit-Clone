@@ -81,8 +81,13 @@ public class UserController {
 
     @GetMapping("user/{username}/{action}")
     public String showProfilePage(Model model,
-                                      @PathVariable("username") String username,
-                                      @PathVariable("action") String action){
+                                  @PathVariable("username") String username,
+                                  @PathVariable("action") String action,
+                                  @AuthenticationPrincipal UserDetails userDetails
+    ){
+        if(userDetails == null || !userDetails.getUsername().equals(username)){
+            return "accessDenied";
+        }
         User user = userService.findByUsername(username);
         List<Post> posts1 = user.getPosts();
 

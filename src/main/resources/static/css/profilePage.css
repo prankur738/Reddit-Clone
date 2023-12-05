@@ -235,23 +235,36 @@ img{
 
 .comments-date{
 font-size:20px;
-font-weight:bolder
+font-weight:bolder;
 margin-bottom:10px;
 
 }
 .comments-content{
 font-size:24px;
 }
-.comments{
-    display:flex;
-    padding:20px;
+.comments {
+    display: flex;
+    padding: 20px;
     background-color: #fff;
     margin-bottom: 30px;
     border-radius: 5px;
-    width:700px;
-    margin-left:50px;
+    width: 700px;
+    margin-left: 50px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-
-.post-container .author h3 {
-    display: inline;
 }
+    .post-container .author h3 {
+        display: inline;
+    }
+
+    #edit-button, #delete-button {
+        width: 90%;
+        height: 25px;
+        border-radius: 30px;
+        background-color: orangered;
+        border: none;
+        font-size: 17px;
+        color:white;
+        margin-left: 20px;
+        margin-bottom: 20px;
+    }
+
