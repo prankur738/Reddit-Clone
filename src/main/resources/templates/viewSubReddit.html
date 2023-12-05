@@ -98,14 +98,19 @@
         </div>
     </main>
     <aside id="community">
-        <h2>Community Section</h2>
-        <h3>Name</h3>
-        <span th:text="${subReddit.getName()}"></span>
+        <form th:if="${subscribedUser == null}"
+              th:action="@{'/community/' + ${subReddit.getName()} + '/join'}" method="POST">
+            <button type="submit" class="create-post-button">Join this Community</button>
+        </form>
+        <form th:if="${subscribedUser}" th:action="@{'/community/' + ${subReddit.getName()} + '/leave'}" method="POST">
+            <button type="submit" class="create-post-button">Leave this Community</button>
+        </form>
+        <h2>r/[[${subReddit.getName()}]]</h2>
         <h3>Description</h3>
         <span th:text="${subReddit.getDescription()}"></span>
-            <form th:action="@{/posts/createPost}">
+            <form th:action="@{'/community/' + ${subReddit.getName()} + '/createPost'}">
                 <input type="hidden" name="subRedditName" th:value="${subReddit.getName()}">
-            <button type="submit" class="create-post-button">Create Post</button>
+                <button type="submit" class="create-post-button">Create Post</button>
             </form>
     </aside>
 </div>

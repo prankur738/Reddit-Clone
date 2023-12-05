@@ -1,14 +1,14 @@
 package io.mountblue.redditclone.entity;
 
 import jakarta.persistence.*;
-import jakarta.persistence.criteria.CriteriaBuilder;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.FieldDefaults;
 
-import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Getter
@@ -24,19 +24,19 @@ public class SubReddit {
     @Column(name = "name")
     String name;
 
-    @Column(name="description")
+    @Column(name="description", columnDefinition = "TEXT")
     String description;
 
     @Column(name = "admin_id")
     Integer adminUserId;
 
-    @ManyToMany
+    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.REFRESH, CascadeType.MERGE, CascadeType.DETACH})
     @JoinTable(
             name = "user_subreddit",
             joinColumns = @JoinColumn(name = "subreddit_id"),
             inverseJoinColumns = @JoinColumn(name = "user_id")
     )
-    List<User> userList = new ArrayList<>();
+    Set<User> subscribers = new HashSet<>();
 
     @OneToMany(mappedBy = "subReddit")
     List<Post> postList;

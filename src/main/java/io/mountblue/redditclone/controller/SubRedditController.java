@@ -1,9 +1,10 @@
 package io.mountblue.redditclone.controller;
 
-import io.mountblue.redditclone.entity.Post;
 import io.mountblue.redditclone.entity.SubReddit;
+import io.mountblue.redditclone.entity.User;
 import io.mountblue.redditclone.service.PostService;
 import io.mountblue.redditclone.service.SubRedditService;
+import io.mountblue.redditclone.service.UserService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -23,10 +24,12 @@ public class SubRedditController {
 
     SubRedditService subRedditService;
     PostService postService;
+    UserService userService;
     @Autowired
-    public SubRedditController(SubRedditService subRedditService, PostService postService) {
+    public SubRedditController(SubRedditService subRedditService, PostService postService, UserService userService) {
         this.subRedditService = subRedditService;
         this.postService = postService;
+        this.userService = userService;
     }
 
     @GetMapping("/community/createCommunity")
@@ -49,9 +52,16 @@ public class SubRedditController {
 
     @GetMapping("/community/{subRedditName}")
     public String showSubReddit(Model model,
-                                @PathVariable("subRedditName") String subRedditName){
+                                @PathVariable("subRedditName") String subRedditName,
+                                @AuthenticationPrincipal UserDetails userDetails){
         SubReddit subReddit = subRedditService.findByName(subRedditName);
         model.addAttribute("subReddit",subReddit);
+
+        User user = userService.findByUsername(userDetails.getUsername());
+        if (subReddit.getSubscribers().contains(user)) {
+            model.addAttribute("subscribedUser", true);
+        }
+
         return "viewSubReddit";
     }
 
@@ -85,7 +95,6 @@ public class SubRedditController {
         }
 
         return "accessDenied";
-
     }
 
     @PostMapping("/community/update")
@@ -95,5 +104,25 @@ public class SubRedditController {
 
         subRedditService.updateSubReddit(subReddit,userDetails.getUsername());
         return "redirect:/community/" + subReddit.getName();
+    }
+
+    @PostMapping("/community/{communityName}/join")
+    public String joinCommunity(@PathVariable String communityName,
+                                @AuthenticationPrincipal UserDetails userDetails) {
+        User user = userService.findByUsername(userDetails.getUsername());
+
+        subRedditService.addSubscriber(user, communityName);
+
+        return "redirect:/community/" + communityName;
+    }
+
+    @PostMapping("/community/{communityName}/leave")
+    public String leaveCommunity(@PathVariable String communityName,
+                                @AuthenticationPrincipal UserDetails userDetails) {
+        User user = userService.findByUsername(userDetails.getUsername());
+
+        subRedditService.removeSubscriber(user, communityName);
+
+        return "redirect:/community/" + communityName;
     }
 }

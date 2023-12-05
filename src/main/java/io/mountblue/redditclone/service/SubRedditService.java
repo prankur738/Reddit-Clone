@@ -1,22 +1,27 @@
 package io.mountblue.redditclone.service;
 
 import io.mountblue.redditclone.entity.SubReddit;
+import io.mountblue.redditclone.entity.User;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.List;
 
 public interface SubRedditService {
 
-    public SubReddit findById(Integer subRedditId);
-    public SubReddit findByName(String name);
+    SubReddit findById(Integer subRedditId);
 
-    public void createSubReddit(SubReddit subReddit,String username);
+    SubReddit findByName(String name);
 
-    public void updateSubReddit(SubReddit subReddit,String username);
+    void createSubReddit(SubReddit subReddit,String username);
 
-    public void deleteById(Integer subRedditId);
-    public boolean checkUserAuthorized(UserDetails userDetails, Integer subRedditId);
+    void updateSubReddit(SubReddit subReddit,String username);
+
+    void deleteById(Integer subRedditId);
+
+    boolean checkUserAuthorized(UserDetails userDetails, Integer subRedditId);
+
     List<SubReddit> findAll();
 
-
+    void addSubscriber(User user, String subRedditName);
+    void removeSubscriber(User user, String subRedditName);
 }

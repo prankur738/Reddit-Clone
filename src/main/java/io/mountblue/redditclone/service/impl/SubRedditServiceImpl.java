@@ -42,7 +42,7 @@ public class SubRedditServiceImpl implements SubRedditService {
     @Override
     public void createSubReddit(SubReddit subReddit, String username) {
         User user = userRepository.findByUsername(username);
-        subReddit.getUserList().add(user);
+        subReddit.getSubscribers().add(user);
         subReddit.setAdminUserId(user.getId());
         subRedditRepository.save(subReddit);
     }
@@ -50,7 +50,7 @@ public class SubRedditServiceImpl implements SubRedditService {
     @Override
     public void updateSubReddit(SubReddit subReddit, String username) {
         User user = userRepository.findByUsername(username);
-        subReddit.getUserList().add(user);
+        subReddit.getSubscribers().add(user);
         subReddit.setAdminUserId(user.getId());
         subRedditRepository.save(subReddit);
 
@@ -81,5 +81,23 @@ public class SubRedditServiceImpl implements SubRedditService {
     @Override
     public List<SubReddit> findAll() {
         return subRedditRepository.findAll();
+    }
+
+    @Override
+    public void addSubscriber(User user, String subRedditName) {
+        SubReddit subReddit = subRedditRepository.findByName(subRedditName).orElseThrow();
+
+        subReddit.getSubscribers().add(user);
+
+        subRedditRepository.save(subReddit);
+    }
+
+    @Override
+    public void removeSubscriber(User user, String subRedditName) {
+        SubReddit subReddit = subRedditRepository.findByName(subRedditName).orElseThrow();
+
+        subReddit.getSubscribers().remove(user);
+
+        subRedditRepository.save(subReddit);
     }
 }
