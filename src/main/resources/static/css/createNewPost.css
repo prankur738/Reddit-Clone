@@ -162,3 +162,8 @@ input[type=submit] {
 .profile-div > form {
     padding-left: 20px;
 }
+
+a {
+    text-decoration: none;
+    color: black;
+}

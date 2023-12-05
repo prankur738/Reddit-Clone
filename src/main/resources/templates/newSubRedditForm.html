@@ -42,7 +42,7 @@
     </aside>
 
     <main id="subreddit-form-container">
-        <form id="subreddit-form" th:action="@{/saveSubReddit}" th:object="${subReddit}" method="POST" >
+        <form id="subreddit-form" th:action="@{/community/saveCommunity}" th:object="${subReddit}" method="POST" >
             <h1>Create a Community</h1>
             <label for="name">Name</label><br>
             <input type="text" id="name" th:field="*{name}"/>
@@ -60,8 +60,7 @@
         <h2>Community Section</h2>
         <div class="community-container">
             <div class="community-item" th:each="subReddit : ${subRedditList}">
-                <!--                <a th:href="@{'/r/' + ${subReddit.getName()} }">-->
-                <a th:href="@{${subReddit.getName()} }">
+                <a th:href="@{'/community/' + ${subReddit.getName()} }">
                     <span th:text="${subReddit.getName()}"></span>
                 </a>
             </div>

@@ -42,7 +42,7 @@
     </aside>
 
     <main id="post-form-container">
-        <form id="post-form" th:action="@{/savePost}" th:object="${post}" method="POST" enctype="multipart/form-data">
+        <form id="post-form" th:action="@{/posts/savePost}" th:object="${post}" method="POST" enctype="multipart/form-data">
             <h1>Create new Post</h1>
             <select th:if="${subReddit == null}" name="subRedditName" required>
                 <option value="">-- Select Community --</option>
@@ -75,8 +75,7 @@
         <h2>Community Section</h2>
         <div class="community-container">
             <div class="community-item" th:each="community : ${allSubReddits}">
-                <!--                <a th:href="@{'/r/' + ${subReddit.getName()} }">-->
-                <a th:href="@{${community.getName()} }">
+                <a th:href="@{'/community/' + ${community.getName()} }">
                     <span th:text="${community.getName()}"></span>
                 </a>
             </div>
