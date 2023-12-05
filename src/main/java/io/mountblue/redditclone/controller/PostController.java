@@ -172,7 +172,7 @@ public class PostController {
 
         if(isUserAuthorized){
             postService.deletePost(postId);
-            return "redirect:/" ;
+            return "redirect:/user/" + userDetails.getUsername() + "/posts" ;
         }
 
         return "accessDenied";
