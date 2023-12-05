@@ -61,7 +61,7 @@
                 </div>
                 <div class="col-md-11">
                     <span>
-                        <span class="subreddit-text"><a class="post-url">post.subredditName</a></span>
+                        <span class="subreddit-text"><a class="post-url" href="" th:text="${subReddit.getName}"></a></span>
                         <span  th:text="${#temporals.format(post.createdAt, 'dd/MMM/yyy HH:mm')}"></span>
                             by <span class="username" sec:authentication="principal.username"></span>
                     </span>
@@ -72,8 +72,8 @@
                             <p class="post-text" th:text="${post.description}"></p>
                         </div>
                         <div class="comment-count">
-                                <span th:text="${commentCount}"></span>
-                                <i class="fa-regular fa-message"></i>
+                            <i class="fa-regular fa-message"></i>
+                            <span th:text="${commentCount}"></span><span> comments</span>
                         </div>
                     </div>
                     <span class="comment-user">Commented as <span sec:authentication="principal.username"></span></span>
@@ -88,15 +88,12 @@
                     </div>
                 <div style="margin-top: 60px;" th:each="comments: ${commentList}">
                     <div class="comment">
-                        <div class="username">
-<!--                            <a th:text="${comment.getUser().getUsername()}"></a>-->
-                        </div>
-                        <div>
-                            <p>comment.time</p>
-                        </div>
+                        <span class="username">
+                            <a th:if="${comments != null and comments.getUser() != null}" th:text="${comments.getUser().getUsername()}" href=""></a>
+                            Commented On <span th:text="${#temporals.format(comments.createdAt, 'dd/MMM/yyy HH:mm')}"></span>
+                        </span>
                         <p th:text="${comments.text}"></p>
                     </div>
-                    <hr />
                 </div>
             </div>
         </div>
@@ -104,10 +101,12 @@
         <div class="col-md-3">
             <div class="sidebar">
                 <img src="https://www.redditstatic.com/desktop2x/img/id-cards/home-banner@2x.png">
-                <div style="text-align: center; font-size: 1em">Welcome to Spring Reddit Clone home page. Come here to
-                    check in with your favorite subreddits.</div>
+                <div style="text-align: center; font-size: 1em" th:text="${subReddit.getDescription()}"></div>
                 <div style="text-align: center">
-                    <button class="btnCreatePost" (click)="goToCreatePost()">Create Post</button>
+                    <form th:action="@{'/community/' + ${subReddit.getName()} + '/createPost'}">
+                        <input type="hidden" name="subRedditName" th:value="${subReddit.getName()}">
+                        <button type="submit" class="create-post-button">Create Post</button>
+                    </form>
                 </div>
                 <div style="text-align: center">
                     <button class="btnCreateSubreddit" (click)="goToCreateSubreddit()">Create Subreddit</button>
@@ -121,7 +120,13 @@
                     <hr />
                 </span>
                 <div style="text-align: center" *ngIf="displayViewAll">
-                    <a style="font-weight: bold" routerLink="/list-subreddits">View All</a>
+                    <div class="community-container">
+                        <div class="community-item" th:each="subReddit : ${subRedditList}">
+                            <a th:href="@{'community/' + ${subReddit.getName()} }">
+                                <span th:text="${subReddit.getName()}"></span>
+                            </a>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
