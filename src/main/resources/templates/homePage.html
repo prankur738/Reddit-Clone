@@ -90,7 +90,7 @@
                                 <p th:text="${post.getDescription()}"></p>
                             </div>
                             <div class="img-container" th:if="${post.image != null}" >
-                                <img th:src="@{'image/'+${post.image}}" alt="reddit" >
+                                <img th:src="@{'/image/'+${post.image}}" alt="reddit" >
                             </div>
                         </a>
                         </div>
@@ -108,7 +108,8 @@
     <aside id="community">
         <h2>Community Section</h2>
         <div class="aside-button">
-            <a th:href="@{/community/createCommunity}"> <button>Create Community</button></a>
+            <p><a th:href="@{/community/createCommunity}"> <button>Create Community</button></a></p>
+            <p><a th:href="@{/posts/createPost}"> <button>Create Post</button></a></p>
         </div>
 
         <div class="community-container">

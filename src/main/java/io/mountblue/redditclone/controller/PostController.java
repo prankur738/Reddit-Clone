@@ -51,16 +51,18 @@ public class PostController {
     }
 
     @GetMapping("/posts/createPost")
-    public String showNewPostPage(Model model,
-                                  @AuthenticationPrincipal UserDetails userDetails,
-                                  @RequestParam("subRedditName") String subRedditName){
-
-        if(userDetails == null){ // non-logged in user
-            return "accessDenied";
-        }
-
+    public String showNewPostPage(Model model) {
         model.addAttribute("post", new Post());
-        model.addAttribute("subRedditName", subRedditName);
+        model.addAttribute("allSubReddits", subRedditService.findAll());
+
+        return "createNewPost";
+    }
+
+    @GetMapping("/community/{communityName}/createPost")
+    public String showNewPostInSubredditPage(Model model,
+                                             @PathVariable("communityName") String communityName){
+        model.addAttribute("post", new Post());
+        model.addAttribute("subReddit", subRedditService.findByName(communityName));
 
         return "createNewPost";
     }
