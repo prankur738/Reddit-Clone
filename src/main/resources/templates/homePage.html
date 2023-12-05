@@ -26,8 +26,8 @@
     </form>
     <div sec:authorize="isAuthenticated()" class="profile-div">
         <p class="profile">
-                <i class="fa-brands fa-square-reddit"></i>&nbsp;
-                u/<strong sec:authentication="principal.username" />
+              <a th:href="@{'user/'+${#authentication.principal.username}+'/posts'}"> <i class="fa-brands fa-square-reddit"></i>&nbsp;
+                u/<strong sec:authentication="principal.username" /></a>
         </p>
         <form th:action="@{/logout}" method="POST">
             <input type="submit" value="Logout">
