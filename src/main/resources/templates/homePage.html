@@ -39,9 +39,9 @@
 
 <div class="body">
     <aside id="filter">
+        <a th:if="${personalized}" th:href="@{/}">Popular &#8599;</a>
+        <a th:if="${personalized == null}" th:href="@{/personalized-homepage}">My Subscription Feed &#8599;</a>
         <h2>Filter Section</h2>
-        <div><h2>Popular</h2></div>
-        <div>Popular</div>
     </aside>
 
     <main id="posts">

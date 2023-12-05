@@ -140,4 +140,9 @@ public class PostServiceImpl implements PostService {
         postRepository.save(post);
 
     }
+
+    @Override
+    public List<Post> findAllBySubscribedSubReddits(String username) {
+        return postRepository.findAllBySubscribedSubReddits(username);
+    }
 }

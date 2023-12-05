@@ -3,6 +3,7 @@ package io.mountblue.redditclone.controller;
 import io.mountblue.redditclone.entity.Comment;
 import io.mountblue.redditclone.entity.Post;
 import io.mountblue.redditclone.entity.SubReddit;
+import io.mountblue.redditclone.entity.User;
 import io.mountblue.redditclone.service.PostService;
 import io.mountblue.redditclone.service.SubRedditService;
 import io.mountblue.redditclone.service.UserService;
@@ -171,4 +172,17 @@ public class PostController {
         return "homePage";
     }
 
+    @GetMapping("/personalized-homepage")
+    public String showPersonalizedHomepage(Model model, @AuthenticationPrincipal UserDetails userDetails) {
+        User user = userService.findByUsername(userDetails.getUsername());
+
+        List<SubReddit> subRedditList = user.getSubRedditList();
+        List<Post> posts = postService.findAllBySubscribedSubReddits(user.getUsername());
+
+        model.addAttribute("allPosts", posts);
+        model.addAttribute("subRedditList", subRedditList);
+        model.addAttribute("personalized", true);
+
+        return "homePage";
+    }
 }
