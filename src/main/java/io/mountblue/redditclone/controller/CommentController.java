@@ -2,9 +2,11 @@ package io.mountblue.redditclone.controller;
 
 import io.mountblue.redditclone.entity.Comment;
 import io.mountblue.redditclone.entity.Post;
+import io.mountblue.redditclone.entity.SubReddit;
 import io.mountblue.redditclone.entity.User;
 import io.mountblue.redditclone.service.CommentService;
 import io.mountblue.redditclone.service.PostService;
+import io.mountblue.redditclone.service.SubRedditService;
 import io.mountblue.redditclone.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -19,21 +21,27 @@ import java.util.List;
 public class CommentController {
 
     PostService postService;
+
     CommentService commentService;
 
     UserService userService;
 
+    SubRedditService subRedditService;
+
     @Autowired
-    public CommentController(PostService postService, CommentService commentService, UserService userService) {
+    public CommentController(PostService postService, CommentService commentService, UserService userService, SubRedditService subRedditService) {
         this.postService = postService;
         this.commentService = commentService;
         this.userService = userService;
+        this.subRedditService = subRedditService;
     }
+
 
     @GetMapping("/posts/{postId}/comments")
     public String showComments(Model model, @PathVariable("postId")Integer postId){
 
         Post post = postService.findById(postId);
+        SubReddit subReddit = post.getSubReddit();
         List<Comment> commentList = post.getCommentList();
 
         model.addAttribute("commentCount", commentList.size());
@@ -41,6 +49,7 @@ public class CommentController {
         model.addAttribute("postId", postId);
         model.addAttribute("newComment", new Comment());
         model.addAttribute("commentList", commentList);
+        model.addAttribute("subReddit", subReddit);
 
         return "viewPost";
     }

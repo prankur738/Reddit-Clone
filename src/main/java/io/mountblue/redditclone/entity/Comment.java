@@ -9,6 +9,7 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 import org.springframework.format.annotation.DateTimeFormat;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 
 @Entity
@@ -27,11 +28,11 @@ public class Comment {
 
     @Column(name = "created_at")
     @CreationTimestamp
-    Date createdAt;
+    LocalDateTime createdAt;
 
     @Column(name = "updated_at")
     @UpdateTimestamp
-    Date updatedAt;
+    LocalDateTime updatedAt;
 
     @ManyToOne
     @JoinColumn(name = "user_id")

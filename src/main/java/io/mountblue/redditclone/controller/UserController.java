@@ -2,6 +2,7 @@ package io.mountblue.redditclone.controller;
 
 import io.mountblue.redditclone.entity.Comment;
 import io.mountblue.redditclone.entity.Post;
+import io.mountblue.redditclone.entity.SubReddit;
 import io.mountblue.redditclone.entity.User;
 import io.mountblue.redditclone.service.UserService;
 import jakarta.validation.Valid;
@@ -88,14 +89,19 @@ public class UserController {
             return "accessDenied";
         }
         User user = userService.findByUsername(username);
+        List<Post> posts1 = user.getPosts();
+
 
         if(action.equals("comments")){
             List<Comment> comments = user.getComments();
-            model.addAttribute("comments", comments);
+            model.addAttribute("comment", comments);
 
-            return "profileCommentsPage";
-        }
-        else{
+
+        } else if (action.equals("community")) {
+            List<SubReddit> subReddits = user.getSubRedditList();
+            model.addAttribute("communities",subReddits);
+
+        } else {
             List<Post> posts = null;
 
             if(action.equals("posts")){
@@ -109,8 +115,10 @@ public class UserController {
             }
 
             model.addAttribute("posts",posts);
-            return "profilePage";
+
         }
+        model.addAttribute("action",action);
+        return "profilePage";
 
     }
 }

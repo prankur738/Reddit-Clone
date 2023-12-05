@@ -45,6 +45,10 @@ public class Post {
     @JoinColumn(name = "user_id")
     User user;
 
+    public Integer getCount(List<Comment> commentList){
+        return commentList.size();
+    }
+
     @ManyToMany()
     @JoinTable(
             name = "post_tag",

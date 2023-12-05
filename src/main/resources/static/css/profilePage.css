@@ -51,6 +51,7 @@
    border:none;
 }
 
+
 input[type=text]{
    border: none;
    font-size: 15px;
@@ -176,7 +177,7 @@ text-decoration:none;
 
 
 
-#posts {
+.posts {
     overflow-y: auto;
     padding: 15px;
     width: 50%;
@@ -230,7 +231,27 @@ img{
      width:100%;
      height:100%;
 }
-.post-container .author h3{
-    display: inline;
 
+
+.comments-date{
+font-size:20px;
+font-weight:bolder
+margin-bottom:10px;
+
+}
+.comments-content{
+font-size:24px;
+}
+.comments{
+    display:flex;
+    padding:20px;
+    background-color: #fff;
+    margin-bottom: 30px;
+    border-radius: 5px;
+    width:700px;
+    margin-left:50px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+
+.post-container .author h3 {
+    display: inline;
 }
