@@ -2,13 +2,16 @@ package io.mountblue.redditclone.controller;
 
 import io.mountblue.redditclone.entity.Comment;
 import io.mountblue.redditclone.entity.Post;
+import io.mountblue.redditclone.entity.User;
 import io.mountblue.redditclone.service.CommentService;
 import io.mountblue.redditclone.service.PostService;
+import io.mountblue.redditclone.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.security.Principal;
 import java.sql.Timestamp;
 import java.util.List;
 
@@ -18,10 +21,13 @@ public class CommentController {
     PostService postService;
     CommentService commentService;
 
+    UserService userService;
+
     @Autowired
-    public CommentController(PostService postService, CommentService commentService) {
+    public CommentController(PostService postService, CommentService commentService, UserService userService) {
         this.postService = postService;
         this.commentService = commentService;
+        this.userService = userService;
     }
 
     @GetMapping("/posts/{postId}/comments")
@@ -30,6 +36,7 @@ public class CommentController {
         Post post = postService.findById(postId);
         List<Comment> commentList = post.getCommentList();
 
+        model.addAttribute("commentCount", commentList.size());
         model.addAttribute("post", post);
         model.addAttribute("postId", postId);
         model.addAttribute("newComment", new Comment());
@@ -39,10 +46,11 @@ public class CommentController {
     }
 
     @PostMapping("/posts/{postId}/saveComment")
-    public String createAndSaveComment(Model model,@PathVariable("postId")Integer postId, @ModelAttribute("newComment") Comment comment, @ModelAttribute("post")Post post){
-        System.out.println("comment get:"+comment.getText());
+    public String createAndSaveComment(Model model, @PathVariable("postId")Integer postId, @ModelAttribute("newComment") Comment comment, @ModelAttribute("post")Post post, Principal principal){
+        User user =userService.findByUsername(principal.getName());
+        comment.setUser(user);
         commentService.saveComment(postId, comment);
-
+        System.out.println("comment User:"+ comment.getUser().getUsername());
         //Post post = postServiceImpl.findById(postId);
         List<Comment> commentList = post.getCommentList();
 

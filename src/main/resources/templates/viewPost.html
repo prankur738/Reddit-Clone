@@ -63,7 +63,7 @@
                     <span>
                         <span class="subreddit-text"><a class="post-url">post.subredditName</a></span>
                         <span  th:text="${#temporals.format(post.createdAt, 'dd/MMM/yyy HH:mm')}"></span>
-                            by<span class="username" sec:authentication="principal.username"></span>
+                            by <span class="username" sec:authentication="principal.username"></span>
                     </span>
                     <hr />
                     <div class = "post-container">
@@ -72,10 +72,11 @@
                             <p class="post-text" th:text="${post.description}"></p>
                         </div>
                         <div class="comment-count">
-                            <i class="fa-regular fa-message"></i>
+                                <span th:text="${commentCount}"></span>
+                                <i class="fa-regular fa-message"></i>
                         </div>
                     </div>
-                    <span class="comment-user">Commented as userName</span>
+                    <span class="comment-user">Commented as <span sec:authentication="principal.username"></span></span>
                     <div class="post-comment">
                         <form method="POST" th:object="${newComment}" th:action="@{'/posts/'+ ${postId} +'/saveComment'}">
                             <div class="comment-text">
@@ -88,7 +89,7 @@
                 <div style="margin-top: 60px;" th:each="comments: ${commentList}">
                     <div class="comment">
                         <div class="username">
-                            <a th:text="${session.username}">comment.userName</a>
+<!--                            <a th:text="${comment.getUser().getUsername()}"></a>-->
                         </div>
                         <div>
                             <p>comment.time</p>
