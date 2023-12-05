@@ -39,9 +39,7 @@
 
 <div class="main ">
 
-        <main id="posts"  th:if="${action != 'comments' and action != 'community' }">
-
-
+        <main class="posts"  th:if="${action != 'comments' and action != 'community' }">
             <div th:each="post : ${posts}">
                     <div class="post">
                         <div class = "vote">
@@ -95,18 +93,17 @@
             </div>
         </main>
 
-    <div  th:if="${action == 'community'}">
+    <div class="posts"   th:if="${action == 'community'}">
         <div th:each="subReddit : ${communities}">
-            <div class="post ">
-
+            <div class="comments ">
                 <div class = "post-container">
-                    <div class="author ">
+                    <div class="author comments-date ">
                         <h3 th:text="${subReddit.name}"></h3>
 
                     </div>
                     <div class = "post-content-container">
                             <div class="content">
-                                <p th:text="${subReddit.getDescription()}"></p>
+                                <p class="comments-content" th:text="${subReddit.getDescription()}"></p>
                             </div>
                     </div>
                 </div>
@@ -115,26 +112,20 @@
         </div>
     </div>
 
-    <div  th:if="${action == 'comments'}">
-
+    <div class="posts"   th:if="${action == 'comments'}">
         <div th:each="comment : ${comment}">
-
             <div class="comments">
-
                 <div class = "post-container">
-                    <div class=" author comments-date ">
-
-                    SubReddit:<h3 th:text="${comment.getPost().getSubReddit().getName()}"></h3>
-                     PostTitle:<h3  th:text="${comment.getPost().getTitle()}"></h3>
-
+                    <div class="author comments-date ">
+                   <div>Community:<h3 th:text="${comment.getPost().getSubReddit().getName()}"></h3></div>
+                    <div>   PostTitle:<h3  th:text="${comment.getPost().getTitle()}"></h3></div>
                         <div th:with="formattedDate=${#dates.format(comment.createdAt, 'dd-MM-yyyy')}">
-                            <div ><strong th:text="${formattedDate}"></strong></div>
+                              <div>CommentDate:<h3 th:text="${formattedDate}"></h3></div>
                         </div>
-
                     </div>
                     <div class = "post-content-container">
                         <div class="content ">
-                            <p class="comments-content" th:text="${comment.text}"></p>
+                           <p class="comments-content" th:text="${comment.text}"></p>
                         </div>
                     </div>
                 </div>
