@@ -26,7 +26,7 @@
     </form>
     <div sec:authorize="isAuthenticated()" class="profile-div">
         <p class="profile">
-              <a th:href="@{'user/'+${#authentication.principal.username}+'/posts'}"> <i class="fa-brands fa-square-reddit"></i>&nbsp;
+              <a th:href="@{'/user/'+${#authentication.principal.username}+'/posts'}"> <i class="fa-brands fa-square-reddit"></i>&nbsp;
                 u/<strong sec:authentication="principal.username" /></a>
         </p>
         <form th:action="@{/logout}" method="POST">
@@ -39,9 +39,9 @@
 
 <div class="body">
     <aside id="filter">
+        <a th:if="${personalized}" th:href="@{/}">Popular &#8599;</a>
+        <a th:if="${personalized == null}" th:href="@{/personalized-homepage}">My Subscription Feed &#8599;</a>
         <h2>Filter Section</h2>
-        <div><h2>Popular</h2></div>
-        <div>Popular</div>
     </aside>
 
     <main id="posts">
@@ -49,7 +49,7 @@
         <div>
             <div class="post create">
                 <i class="fa-brands fa-reddit image"></i>
-                <a th:href="@{/r/SpringBoot/createPost}">
+                <a th:href="@{/posts/createPost}">
                     <input class="createPost"  type="text" placeholder="Create Post">
                     <i class="fa-solid fa-image image1"></i>
                     <i class="fa-solid fa-link image1"></i>
@@ -58,12 +58,13 @@
         </div>
 
         <div th:each="post : ${allPosts}">
-           <a class ="anchor" th:href="@{'/r/subRedditName/'+${post.id}}">
+
             <div class="post">
                 <div class = "vote">
                     <form  th:action="@{/processPostVote}" method="post">
                         <input type="hidden" name="postId" th:value="${post.getId()}">
                         <input type="hidden" name="vote" value="1">
+                        <input type="hidden" name="endPoint" value="/">
                         <!-- Styled button with Font Awesome icon -->
                         <button type="submit" class="icon-button"><i class="fa-solid fa-up-long"></i></button>
                     </form>
@@ -73,6 +74,7 @@
                     <form  th:action="@{/processPostVote}" method="post">
                         <input type="hidden" name="postId" th:value="${post.getId()}">
                         <input type="hidden" name="vote" value="-1">
+                        <input type="hidden" name="endPoint" value="/">
                         <!-- Styled button with Font Awesome icon -->
                         <button type="submit" class="icon-button"><i class="fa-solid fa-down-long"></i></button>
                     </form>
@@ -80,9 +82,14 @@
               
                     <div class = "post-container">
                         <div class="author">
-                            <h3>Jitendra</h3>
+                            <a th:href="@{'/community/' + ${post.getSubReddit().getName()} }">
+                            <h3 th:text="'r/' + ${post.getSubReddit().getName()}" style="margin-right: 20px;"></h3>
+                            </a>
+                            posted by:
+                            <h3 th:text=" ${post.getUser().getUsername()}"></h3>
+                        </div>
 
-                      </div>
+
                         <div class = "post-content-container">
                         <a th:href="@{'posts/' + ${post.getId()} }">
                             <h2 class="post-title" th:text="${post.getTitle()}"></h2>
@@ -96,11 +103,11 @@
                         </div>
 
                         <div>
+                            <p th:text="${commentCount}"></p>
                             <i class="fa-regular fa-message"></i>
                         </div>
                     </div>
              </div>
-           </a>
         </div>
 
     </main>

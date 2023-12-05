@@ -1,26 +1,46 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     <meta charset="UTF-8">
     <title>view post</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <link rel="stylesheet" type="text/css" th:href="@{/css/viewPost.css}" />
+
 </head>
 <body>
+<script src="https://momentjs.com/downloads/moment.js"></script>
+<script th:inline="javascript">
+    /*<![CDATA[*/
+    function formatTimeAgo(lastUpdated) {
+        var now = moment();
+        var updated = moment(lastUpdated);
+        return updated.fromNow();
+    }
+    /*]]>*/
+</script>
 
 <div class="navBar">
     <div class="bar1">
-        <i class="fa-brands fa-reddit color"></i>
-        <p class="text">reddit</p>
+        <a th:href="@{/}"><i class="fa-brands fa-reddit color"></i></a>
+        <a th:href="@{/}"><p class="text">reddit</p></a>
     </div>
     <div class="bar2">
         <i class="fa-solid fa-magnifying-glass"></i>
         <input type="text" placeholder="Search Reddit">
     </div>
-    <form th:action="@{/login}">
+    <form sec:authorize="${!isAuthenticated()}" th:action="@{/login}">
         <input type="submit" value="Login">
     </form>
+    <div sec:authorize="isAuthenticated()" class="profile-div">
+        <p class="profile">
+            <i class="fa-brands fa-square-reddit"></i>&nbsp;
+            u/<strong sec:authentication="principal.username" />
+        </p>
+        <form th:action="@{/logout}" method="POST">
+            <input type="submit" value="Logout">
+        </form>
+    </div>
 </div>
 
 <div class="container">
@@ -41,8 +61,9 @@
                 </div>
                 <div class="col-md-11">
                     <span>
-                        <span class="subreddit-text"><a class="post-url" href="">post.subredditName</a></span>
-                        <span> . Posted<span> post.time </span>by<a class="username" href="">post.userName</a></span>
+                        <span class="subreddit-text"><a class="post-url">post.subredditName</a></span>
+                        <span  th:text="${#temporals.format(post.createdAt, 'dd/MMM/yyy HH:mm')}"></span>
+                            by <span class="username" sec:authentication="principal.username"></span>
                     </span>
                     <hr />
                     <div class = "post-container">
@@ -51,10 +72,11 @@
                             <p class="post-text" th:text="${post.description}"></p>
                         </div>
                         <div class="comment-count">
-                            <i class="fa-regular fa-message"></i>
+                                <span th:text="${commentCount}"></span>
+                                <i class="fa-regular fa-message"></i>
                         </div>
                     </div>
-                    <span class="comment-user">Commented as userName</span>
+                    <span class="comment-user">Commented as <span sec:authentication="principal.username"></span></span>
                     <div class="post-comment">
                         <form method="POST" th:object="${newComment}" th:action="@{'/posts/'+ ${postId} +'/saveComment'}">
                             <div class="comment-text">
@@ -67,7 +89,7 @@
                 <div style="margin-top: 60px;" th:each="comments: ${commentList}">
                     <div class="comment">
                         <div class="username">
-                            <a th:text="${session.username}">comment.userName</a>
+<!--                            <a th:text="${comment.getUser().getUsername()}"></a>-->
                         </div>
                         <div>
                             <p>comment.time</p>
@@ -105,5 +127,6 @@
         </div>
     </div>
 </div>
+
 </body>
 </html>
