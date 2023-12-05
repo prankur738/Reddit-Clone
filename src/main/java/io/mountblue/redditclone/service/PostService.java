@@ -14,7 +14,7 @@ public interface PostService {
 
     List<Post> findBySubRedditId(Integer subRedditId);
 
-    void updatePost(Post post,Integer subredditId,String username, String tagNames);
+    void updatePost(Post updatedPost,Integer postId, String tagNames);
 
     void deletePost(Integer postId);
 

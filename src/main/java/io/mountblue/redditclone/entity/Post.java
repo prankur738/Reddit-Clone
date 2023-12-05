@@ -63,4 +63,7 @@ public class Post {
     @ManyToOne(cascade={CascadeType.PERSIST, CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH})
     @JoinColumn(name = "subreddit_id")
     SubReddit subReddit;
+
+    @OneToMany(mappedBy="post", cascade = CascadeType.ALL)
+    List<VotePost> votePosts;
 }

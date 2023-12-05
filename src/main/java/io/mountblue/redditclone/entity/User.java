@@ -47,6 +47,9 @@ public class User implements UserDetails {
                                                      CascadeType.REFRESH, CascadeType.DETACH})
     List<SubReddit> subRedditList;
 
+    @OneToMany(mappedBy="user", cascade = CascadeType.ALL)
+    List<VotePost> votePosts;
+
     @ManyToMany(fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST, CascadeType.REFRESH,
                                                     CascadeType.DETACH, CascadeType.DETACH})
     @JoinTable(name = "users_roles",

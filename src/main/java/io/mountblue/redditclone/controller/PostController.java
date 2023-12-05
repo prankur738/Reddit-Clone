@@ -141,26 +141,19 @@ public class PostController {
 
         if(file.isEmpty()){
             Post oldPost = postService.findById(postId);
-            updatedPost.setId(postId);
-            updatedPost.setCreatedAt(oldPost.getCreatedAt());
             updatedPost.setImage(oldPost.getImage());
-            String username = oldPost.getUser().getUsername();
-            postService.updatePost(updatedPost, updatedPost.getSubReddit().getId(),username,tagNames);
         }
         else  {
-            Post oldPost = postService.findById(postId);
-            updatedPost.setId(postId);
-            updatedPost.setCreatedAt(oldPost.getCreatedAt());
             updatedPost.setImage(file.getOriginalFilename());
             //path where image store
 
             File file1 = new ClassPathResource("static/image").getFile();
             Path path = Paths.get(file1.getAbsolutePath() + File.separator + file.getOriginalFilename());//create a path
             Files.copy(file.getInputStream(), path, StandardCopyOption.REPLACE_EXISTING);
-
-            String username = oldPost.getUser().getUsername();
-            postService.updatePost(updatedPost, updatedPost.getSubReddit().getId(),username,tagNames);
         }
+
+        postService.updatePost(updatedPost, postId ,tagNames);
+
         return "redirect:/posts/" + postId;
     }
 
