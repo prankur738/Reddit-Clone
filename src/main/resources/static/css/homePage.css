@@ -216,3 +216,8 @@ a {
     text-decoration: none;
     color: black;
 }
+
+.post-container .author h3{
+    display: inline;
+
+}

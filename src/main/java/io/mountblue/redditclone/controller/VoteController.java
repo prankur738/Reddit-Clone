@@ -24,6 +24,7 @@ public class VoteController {
     @PostMapping("/processPostVote")
     public String processVoteCountOnPost(@RequestParam("vote") Integer vote,
                                          @RequestParam("postId") Integer postId,
+                                         @RequestParam("endPoint") String endPoint,
                                          @AuthenticationPrincipal UserDetails userDetails){
         String username = userDetails.getUsername();
         int voteCountChange = voteService.getChangeInVoteCount(username,postId,vote );
@@ -34,7 +35,7 @@ public class VoteController {
         String subredditName = post.getSubReddit().getName();
         postService.updatePost(postId, voteCountChange);
 
-        return "redirect:/";//+ subredditName + "/" + postId;
+        return "redirect:" + endPoint;
 
     }
 

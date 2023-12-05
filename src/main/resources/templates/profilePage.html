@@ -48,6 +48,8 @@
                             <form  th:action="@{/processPostVote}" method="post">
                                 <input type="hidden" name="postId" th:value="${post.getId()}">
                                 <input type="hidden" name="vote" value="1">
+
+                                <input type="hidden" name="endPoint" th:value=" '/user/' + ${#authentication.principal.username} + '/posts'">
                                 <!-- Styled button with Font Awesome icon -->
                                 <button type="submit" class="icon-button"><i class="fa-solid fa-up-long"></i></button>
                             </form>
@@ -57,6 +59,8 @@
                             <form  th:action="@{/processPostVote}" method="post">
                                 <input type="hidden" name="postId" th:value="${post.getId()}">
                                 <input type="hidden" name="vote" value="-1">
+                                <input type="hidden" name="endPoint" th:value=" '/user/' + ${#authentication.principal.username} + '/posts'">
+
                                 <!-- Styled button with Font Awesome icon -->
                                 <button type="submit" class="icon-button"><i class="fa-solid fa-down-long"></i></button>
                             </form>
@@ -64,8 +68,11 @@
 
                         <div class = "post-container">
                             <div class="author">
-                                <h3>Jitendra</h3>
-
+                                <a th:href="@{'/community/' + ${post.getSubReddit().getName()} }">
+                                    <h3 th:text="'r/' + ${post.getSubReddit().getName()}" style="margin-right: 20px;"></h3>
+                                </a>
+                                posted by:
+                                <h3 th:text=" ${post.getUser().getUsername()}"></h3>
                             </div>
                             <div class = "post-content-container">
                                 <a class="homepage-link" th:href="@{'posts/' + ${post.getId()} }">
