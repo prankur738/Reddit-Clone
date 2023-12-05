@@ -1,5 +1,7 @@
 package io.mountblue.redditclone.controller;
 
+import io.mountblue.redditclone.entity.Comment;
+import io.mountblue.redditclone.entity.Post;
 import io.mountblue.redditclone.entity.User;
 import io.mountblue.redditclone.service.UserService;
 import jakarta.validation.Valid;
@@ -12,6 +14,8 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @Controller
 @AllArgsConstructor
@@ -72,5 +76,36 @@ public class UserController {
     @GetMapping("/access-denied")
     public String accessDenied() {
         return "accessDenied";
+    }
+
+    @GetMapping("user/{username}/{action}")
+    public String showProfilePage(Model model,
+                                      @PathVariable("username") String username,
+                                      @PathVariable("action") String action){
+        User user = userService.findByUsername(username);
+
+        if(action.equals("comments")){
+            List<Comment> comments = user.getComments();
+            model.addAttribute("comments", comments);
+
+            return "profileCommentsPage";
+        }
+        else{
+            List<Post> posts = null;
+
+            if(action.equals("posts")){
+                posts = user.getPosts();
+            }
+            else if(action.equals("upVoted")){
+                posts = userService.getUpVotedPosts(username);
+            }
+            else if(action.equals("downVoted")){
+                posts = userService.getDownVotedPosts(username);
+            }
+
+            model.addAttribute("posts",posts);
+            return "profilePage";
+        }
+
     }
 }
