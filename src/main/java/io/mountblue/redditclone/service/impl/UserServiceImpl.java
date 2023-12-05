@@ -75,12 +75,13 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public List<Post> getUpVotedPosts(String username) {
+        User user = findByUsername(username);
         List<Post> upVotedPosts = new ArrayList<>();
-        List<VotePost> votedPosts = votePostRepository.findAllByUsername(username);
+        List<VotePost> votedPosts = votePostRepository.findAllByUser(user);
 
         for(VotePost votePost : votedPosts){
             if(votePost.getVote() == 1){
-                Post upVotedPost =  postRepository.findById(votePost.getPostId()).get();
+                Post upVotedPost =  postRepository.findById(votePost.getPost().getId()).get();
                 upVotedPosts.add(upVotedPost);
             }
         }
@@ -90,16 +91,18 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public List<Post> getDownVotedPosts(String username) {
+        User user = findByUsername(username);
         List<Post> downVotedPosts = new ArrayList<>();
-        List<VotePost> votedPosts = votePostRepository.findAllByUsername(username);
+        List<VotePost> votedPosts = votePostRepository.findAllByUser(user);
 
         for(VotePost votePost : votedPosts){
             if(votePost.getVote() == -1){
-                Post upVotedPost =  postRepository.findById(votePost.getPostId()).get();
+                Post upVotedPost =  postRepository.findById(votePost.getPost().getId()).get();
                 downVotedPosts.add(upVotedPost);
             }
         }
 
         return downVotedPosts;
     }
+
 }

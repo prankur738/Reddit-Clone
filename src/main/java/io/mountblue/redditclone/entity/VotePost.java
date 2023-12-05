@@ -17,20 +17,22 @@ public class VotePost {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Integer id;
 
-    @Column(name = "username")
-    String username;
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    User user;
 
-    @Column(name="post_id")
-    Integer postId;
+    @ManyToOne
+    @JoinColumn(name = "post_id")
+    Post post;
 
     @Column(name="vote")
     Integer vote;
 
     public VotePost(){}
 
-    public VotePost(String username, Integer postId, Integer vote){
-        this.username = username;
-        this.postId = postId;
+    public VotePost(User user,Post post, Integer vote){
+        this.user = user;
+        this.post = post;
         this.vote = vote;
     }
 }

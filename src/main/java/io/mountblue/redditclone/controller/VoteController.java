@@ -29,10 +29,6 @@ public class VoteController {
         String username = userDetails.getUsername();
         int voteCountChange = voteService.getChangeInVoteCount(username,postId,vote );
 
-        System.out.println(voteCountChange);
-
-        Post post = postService.findById(postId);
-        String subredditName = post.getSubReddit().getName();
         postService.updatePost(postId, voteCountChange);
 
         return "redirect:" + endPoint;

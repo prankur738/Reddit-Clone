@@ -60,14 +60,20 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public void updatePost(Post post, Integer subredditId, String username, String tagNames) {
+    public void updatePost(Post updatedPost, Integer postId, String tagNames) {
         Set<Tag> tagFromString = getTagFromString(tagNames);
-        User user = userService.findByUsername(username);
-        SubReddit subReddit = subRedditService.findById(subredditId);
-        post.setUser(user);
-        post.setTagList(tagFromString);
-        post.setSubReddit(subReddit);
-        postRepository.save(post);
+        Post oldPost = findById(postId);
+
+        updatedPost.setId(postId);
+        updatedPost.setCreatedAt(oldPost.getCreatedAt());
+        updatedPost.setCommentList(oldPost.getCommentList());
+        updatedPost.setCommentList(oldPost.getCommentList());
+        updatedPost.setUser(oldPost.getUser());
+        updatedPost.setTagList(tagFromString);
+        updatedPost.setSubReddit(oldPost.getSubReddit());
+        updatedPost.setVoteCount(oldPost.getVoteCount());
+
+        postRepository.save(updatedPost);
     }
 
     @Override
