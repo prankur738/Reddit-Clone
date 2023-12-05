@@ -5,8 +5,9 @@ import lombok.*;
 import lombok.experimental.FieldDefaults;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
-import org.springframework.format.annotation.DateTimeFormat;
+import java.sql.Timestamp;
 
+import java.time.LocalDateTime;
 import java.util.*;
 
 @Entity
@@ -28,11 +29,11 @@ public class Post {
 
     @Column(name = "created_at")
     @CreationTimestamp
-    Date createdAt;
+    LocalDateTime createdAt;
 
     @Column(name = "updated_at")
     @UpdateTimestamp
-    Date updatedAt;
+    LocalDateTime updatedAt;
 
     @Column(name = "image_name")
     String image;
