@@ -31,15 +31,15 @@
 
 <div class="navigation">
     <a th:href="@{'/user/'+${#authentication.principal.username}+'/posts' }" class="link">POSTS</a>
-    <a  class="link">COMMENT</a>
+    <a th:href="@{'/user/'+${#authentication.principal.username}+'/comments' }" class="link">COMMENT</a>
     <a th:href="@{'/user/'+${#authentication.principal.username}+'/upVoted' }" class="link">UPVOTED</a>
     <a th:href="@{'/user/'+${#authentication.principal.username}+'/downVoted' }" class="link">DOWNVOTED</a>
-    <a class="link">COMMUNITY</a>
+    <a th:href="@{'/user/'+${#authentication.principal.username}+'/community' }"   class="link">COMMUNITY</a>
 </div>
 
 <div class="main ">
-<!--    <div class="profile-post">-->
-        <main id="posts">
+
+        <main id="posts"  th:if="${action != 'comments' and action != 'community' }">
 
 
             <div th:each="post : ${posts}">
@@ -86,8 +86,57 @@
                     </div>
                 </a>
             </div>
-
         </main>
+
+    <div  th:if="${action == 'community'}">
+        <div th:each="subReddit : ${communities}">
+            <div class="post ">
+
+                <div class = "post-container">
+                    <div class="author ">
+                        <h3 th:text="${subReddit.name}"></h3>
+
+                    </div>
+                    <div class = "post-content-container">
+                            <div class="content">
+                                <p th:text="${subReddit.getDescription()}"></p>
+                            </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <div  th:if="${action == 'comments'}">
+
+        <div th:each="comment : ${comment}">
+
+            <div class="comments">
+
+                <div class = "post-container">
+                    <div class=" author comments-date ">
+
+                    SubReddit:<h3 th:text="${comment.getPost().getSubReddit().getName()}"></h3>
+                     PostTitle:<h3  th:text="${comment.getPost().getTitle()}"></h3>
+
+                        <div th:with="formattedDate=${#dates.format(comment.createdAt, 'dd-MM-yyyy')}">
+                            <div ><strong th:text="${formattedDate}"></strong></div>
+                        </div>
+
+                    </div>
+                    <div class = "post-content-container">
+                        <div class="content ">
+                            <p class="comments-content" th:text="${comment.text}"></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+
 
 
 

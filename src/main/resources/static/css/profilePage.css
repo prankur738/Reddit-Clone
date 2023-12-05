@@ -51,6 +51,7 @@
    border:none;
 }
 
+
 input[type=text]{
    border: none;
    font-size: 15px;
@@ -229,4 +230,25 @@ text-decoration:none;
 img{
      width:100%;
      height:100%;
+}
+
+.comments-date{
+font-size:20px;
+font-weight:bolder
+display:flex;
+margin-bottom:10px;
+
+}
+.comments-content{
+font-size:24px;
+}
+.comments{
+    display:flex;
+    padding:20px;
+    background-color: #fff;
+    margin-bottom: 30px;
+    border-radius: 5px;
+    width:400px;
+    margin-left:50px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
