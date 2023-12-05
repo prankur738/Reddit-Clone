@@ -73,7 +73,7 @@ public class PostController {
                                  BindingResult bindingResult,
                                  @RequestParam("subRedditName") String subRedditName,
                                  @AuthenticationPrincipal UserDetails userDetails,
-                                 @RequestParam(name="tagNames") String tagNames,
+                                 @RequestParam(name="tagNames", required = false) String tagNames,
                                  @RequestParam(value = "imageName",required = false
                                  ) MultipartFile file) throws IOException {
         if (bindingResult.hasErrors()) {
@@ -133,18 +133,35 @@ public class PostController {
     public String updatePost(@Valid @ModelAttribute("post") Post updatedPost,
                              BindingResult bindingResult,
                              @PathVariable("postId") Integer postId,
-                             @PathVariable("subRedditName") String subRedditName,
-                             @RequestParam(name="tagNames", required = false) String tagNames){
-
+                             @RequestParam(name="tagNames", required = false) String tagNames,
+                             @RequestParam(value = "imageName",required = false) MultipartFile file) throws IOException{
         if(bindingResult.hasErrors()){
             return "editPost";
         }
-        else{
-            SubReddit subReddit = subRedditService.findByName(subRedditName);
-            String username = postService.findById(postId).getUser().getUsername();
-            postService.updatePost(updatedPost, subReddit.getId(),username,tagNames);
-            return "redirect:/posts/" + postId;
+
+        if(file.isEmpty()){
+            Post oldPost = postService.findById(postId);
+            updatedPost.setId(postId);
+            updatedPost.setCreatedAt(oldPost.getCreatedAt());
+            updatedPost.setImage(oldPost.getImage());
+            String username = oldPost.getUser().getUsername();
+            postService.updatePost(updatedPost, updatedPost.getSubReddit().getId(),username,tagNames);
         }
+        else  {
+            Post oldPost = postService.findById(postId);
+            updatedPost.setId(postId);
+            updatedPost.setCreatedAt(oldPost.getCreatedAt());
+            updatedPost.setImage(file.getOriginalFilename());
+            //path where image store
+
+            File file1 = new ClassPathResource("static/image").getFile();
+            Path path = Paths.get(file1.getAbsolutePath() + File.separator + file.getOriginalFilename());//create a path
+            Files.copy(file.getInputStream(), path, StandardCopyOption.REPLACE_EXISTING);
+
+            String username = oldPost.getUser().getUsername();
+            postService.updatePost(updatedPost, updatedPost.getSubReddit().getId(),username,tagNames);
+        }
+        return "redirect:/posts/" + postId;
     }
 
     @PostMapping("/posts/deletePost/{postId}")

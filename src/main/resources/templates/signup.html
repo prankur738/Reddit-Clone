@@ -26,11 +26,11 @@
                 <span class="error" th:each="err : ${#fields.errors('email')}" th:text="'Email ' + ${err}" />
 
                 <label for="password">Password</label>
-                <input id="password" placeholder="password" th:field="*{password}" required>
+                <input id="password" type="password" placeholder="password" th:field="*{password}" required>
                 <span class="error" th:each="err : ${#fields.errors('password')}" th:text="'Password ' + ${err}" />
 
                 <label for="confirm-password">Confirm Password</label>
-                <input id="confirm-password" placeholder="Confirm password" name="confirmPassword" required>
+                <input id="confirm-password" type="password" placeholder="Confirm password" name="confirmPassword" required>
 
                 <div th:if="${registrationError}">
                     <p class="error" th:text="${registrationError}"></p>

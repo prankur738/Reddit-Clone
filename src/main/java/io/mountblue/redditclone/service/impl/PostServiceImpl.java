@@ -78,6 +78,9 @@ public class PostServiceImpl implements PostService {
 
     private Set<Tag> getTagFromString(String tagNames){
         Set<Tag> tags = new HashSet<>();
+        if(tagNames == null){
+            return tags;
+        }
         String[] tagArray = tagNames.split(",");
 
         for (String tagName : tagArray) {
