@@ -176,11 +176,11 @@ input[type=submit] {
 }
 
 .createPost {
-    width: 600px;
+    width: 450px;
     height: 45px;
     background-color: gray;
     padding-left: 20px;
-    margin-inline:160px;
+    margin-inline:100px;
 }
 
 .aside-button button, .create-post-button {
