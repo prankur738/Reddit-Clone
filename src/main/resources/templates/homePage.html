@@ -80,7 +80,7 @@
               
                     <div class = "post-container">
                         <div class="author">
-                            <h3>Jitendra</h3>
+                            <h3 th:if="${post != null and post.getUser() != null}" th:text="${post.getUser().getUsername()}"></h3>
 
                       </div>
                         <div class = "post-content-container">
@@ -94,10 +94,9 @@
                             </div>
                         </a>
                         </div>
-
-                        <div>
-                            <p th:text="${commentCount}"></p>
+                        <div class="comment-count">
                             <i class="fa-regular fa-message"></i>
+                            <span th:text="${post.getCount(post.getCommentList())}"></span><span> comments</span>
                         </div>
                     </div>
              </div>
