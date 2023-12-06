@@ -71,6 +71,9 @@
                         <div>
                             <p class="post-text" th:text="${post.description}"></p>
                         </div>
+                        <div class="img-container" th:if="${post.image != null}" >
+                            <img th:src="@{'/image/'+${post.image}}" alt="reddit" >
+                        </div>
                         <div class="comment-count">
                             <i class="fa-regular fa-message"></i>
                             <span th:text="${commentCount}"></span><span> comments</span>
@@ -78,7 +81,7 @@
                     </div>
                     <span class="comment-user">Commented as <span sec:authentication="principal.username"></span></span>
                     <div class="post-comment">
-                        <form method="POST" th:object="${newComment}" th:action="@{'/posts/'+ ${postId} +'/saveComment'}">
+                        <form method="POST" th:object="${newComment}" th:action="@{'/'+${subredditName}+'/posts/'+ ${postId} +'/saveComment'}">
                             <div class="comment-text">
                                 <textarea name="text" th:field="*{text}" placeholder="Your Thoughts?" cols="100"></textarea>
 

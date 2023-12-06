@@ -37,8 +37,8 @@ public class CommentController {
     }
 
 
-    @GetMapping("/{subreddit}/posts/{postId}/comments")
-    public String showComments(Model model, @PathVariable("postId")Integer postId){
+    @GetMapping("/{subredditName}/posts/{postId}/comments")
+    public String showComments(@PathVariable("subredditName")String subredditName, Model model, @PathVariable("postId")Integer postId){
 
         Post post = postService.findById(postId);
         SubReddit subReddit = post.getSubReddit();
@@ -50,12 +50,13 @@ public class CommentController {
         model.addAttribute("newComment", new Comment());
         model.addAttribute("commentList", commentList);
         model.addAttribute("subReddit", subReddit);
+        model.addAttribute("subredditName", subredditName);
 
         return "viewPost";
     }
 
-    @PostMapping("/posts/{postId}/saveComment")
-    public String createAndSaveComment(Model model, @PathVariable("postId")Integer postId, @ModelAttribute("newComment") Comment comment, @ModelAttribute("post")Post post, Principal principal){
+    @PostMapping("/{subredditName}/posts/{postId}/saveComment")
+    public String createAndSaveComment(@PathVariable("subredditName")String subredditName, Model model, @PathVariable("postId")Integer postId, @ModelAttribute("newComment") Comment comment, @ModelAttribute("post")Post post, Principal principal){
         User user =userService.findByUsername(principal.getName());
         comment.setUser(user);
         commentService.saveComment(postId, comment);
@@ -65,7 +66,7 @@ public class CommentController {
 
         model.addAttribute("post", post);
         model.addAttribute("commentList", commentList);
-        return "redirect:/posts/" + postId ;
+        return "redirect:/"+subredditName+"/posts/"+postId+"/comments";
     }
 
     @PostMapping("/comment/update")

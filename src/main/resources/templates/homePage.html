@@ -91,7 +91,7 @@
                     </div>
 
                     <div class = "post-content-container">
-                        <a th:href="@{'/' + ${post.getSubReddit().getName()}+'posts/' + ${post.getId()} }">
+                        <a th:href="@{'/' + ${post.getSubReddit().getName()}+'/posts/' + ${post.getId()} +'/comments'}">
                             <h2 class="post-title" th:text="${post.getTitle()}"></h2>
                             <div class="content">
                                 <p th:text="${post.getDescription()}"></p>
