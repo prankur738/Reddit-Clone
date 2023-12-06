@@ -37,7 +37,7 @@ public class CommentController {
     }
 
 
-    @GetMapping("/posts/{postId}/comments")
+    @GetMapping("/{subreddit}/posts/{postId}/comments")
     public String showComments(Model model, @PathVariable("postId")Integer postId){
 
         Post post = postService.findById(postId);

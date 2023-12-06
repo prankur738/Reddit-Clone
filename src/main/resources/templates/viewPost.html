@@ -80,36 +80,42 @@
                     <div class="post-comment">
                         <form method="POST" th:object="${newComment}" th:action="@{'/posts/'+ ${postId} +'/saveComment'}">
                             <div class="comment-text">
-                                <textarea name="text" th:field="*{text}" placeholder="Your Thoughts?"></textarea>
+                                <textarea name="text" th:field="*{text}" placeholder="Your Thoughts?" cols="100"></textarea>
 
                             </div>
                             <button type="submit" class="login float-right">Comment</button>
                         </form>
                     </div>
-                <div style="margin-top: 60px;" th:each="comments: ${commentList}">
-                    <div class="comment">
+                    <div style="margin-top: 60px;" th:each="comments: ${commentList}">
+                        <div class="comment">
                         <span class="username">
                             <a th:if="${comments != null and comments.getUser() != null}" th:text="${comments.getUser().getUsername()}" href=""></a>
                             Commented On <span th:text="${#temporals.format(comments.createdAt, 'dd/MMM/yyy HH:mm')}"></span>
                         </span>
-                        <p th:text="${comments.text}"></p>
+                            <p th:text="${comments.text}"></p>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
         <div class="col-md-3">
             <div class="sidebar">
-                <img src="https://www.redditstatic.com/desktop2x/img/id-cards/home-banner@2x.png">
-                <div style="text-align: center; font-size: 1em" th:text="${subReddit.getDescription()}"></div>
-                <div style="text-align: center">
+                <!--                <img src="https://www.redditstatic.com/desktop2x/img/id-cards/home-banner@2x.png">-->
+                <h2 th:text="${subReddit.getName()}"></h2>
+                <divc class="username">Created On
+                    <span th:text="${#temporals.format(subReddit.createdAt, 'dd/MMM/yyy HH:mm')}"></span>
+                </divc>
+                <h3>Description:</h3>
+                <div th:text="${subReddit.getDescription()}"></div>
+
+                <div>
                     <form th:action="@{'/community/' + ${subReddit.getName()} + '/createPost'}">
                         <input type="hidden" name="subRedditName" th:value="${subReddit.getName()}">
                         <button type="submit" class="create-post-button">Create Post</button>
                     </form>
                 </div>
                 <div style="text-align: center">
-                    <button class="btnCreateSubreddit" (click)="goToCreateSubreddit()">Create Subreddit</button>
+                    <button class="create-post-button" th:href="@{/community/createCommunity}">Create Cummunity</button>
                 </div>
             </div>
             <div class="sidebar-view-subreddit">
