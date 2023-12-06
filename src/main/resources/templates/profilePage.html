@@ -35,6 +35,7 @@
     <a th:href="@{'/user/'+${#authentication.principal.username}+'/upVoted' }" class="link">UPVOTED</a>
     <a th:href="@{'/user/'+${#authentication.principal.username}+'/downVoted' }" class="link">DOWNVOTED</a>
     <a th:href="@{'/user/'+${#authentication.principal.username}+'/community' }"   class="link">COMMUNITY</a>
+    <a th:href="@{'/user/'+${#authentication.principal.username}+'/bookmark' }"   class="link">BOOKMARK</a>
 </div>
 
 <div class="main ">
@@ -127,9 +128,10 @@
                     <div class="author comments-date ">
                    <div>Community:<h3 th:text="${comment.getPost().getSubReddit().getName()}"></h3></div>
                     <div>   PostTitle:<h3  th:text="${comment.getPost().getTitle()}"></h3></div>
-                        <div th:with="formattedDate=${#dates.format(comment.createdAt, 'dd-MM-yyyy')}">
-                              <div>CommentDate:<h3 th:text="${formattedDate}"></h3></div>
-                        </div>
+<!--                        <div th:with="formattedDate=${#dates.format(comment.createdAt, 'dd-MM-yyyy')}">-->
+<!--                              <div>CommentDate:<h3 th:text="${formattedDate}"></h3></div>-->
+<!--                        </div>-->
+                    <div> CommentTime: <h3 th:text="${#temporals.format(comment.createdAt, 'dd/MMM/yyy')}"></h3></div>
                     </div>
                     <div class = "post-content-container">
                         <div class="content ">

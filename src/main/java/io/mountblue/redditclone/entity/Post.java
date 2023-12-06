@@ -45,6 +45,9 @@ public class Post {
     @JoinColumn(name = "user_id")
     User user;
 
+    @OneToMany(mappedBy = "post",cascade = CascadeType.ALL)
+    List<Bookmark> bookmarkList;
+
     public Integer getCount(List<Comment> commentList){
         return commentList.size();
     }
