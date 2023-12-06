@@ -52,9 +52,23 @@
                     <div class="col-md-1">
                         <div class="d-flex flex-column votebox">
                             <div class = "vote">
-                                <i class="fa-solid fa-up-long"></i>
-                                <span>0</span>
-                                <i class="fa-solid fa-down-long"></i>
+                                <form  th:action="@{/processPostVote}" method="post">
+                                    <input type="hidden" name="postId" th:value="${postId}">
+                                    <input type="hidden" name="vote" value="1">
+                                    <input type="hidden" name="endPoint" th:value="'/' + ${subredditName} + '/posts/' + ${postId} + '/comments'">
+                                    <!-- Styled button with Font Awesome icon -->
+                                    <button type="submit" class="icon-button"><i class="fa-solid fa-up-long"></i></button>
+                                </form>
+
+                                <span th:text="${post.getVoteCount()}">  </span>
+
+                                <form  th:action="@{/processPostVote}" method="post">
+                                    <input type="hidden" name="postId" th:value="${postId}">
+                                    <input type="hidden" name="vote" value="-1">
+                                    <input type="hidden" name="endPoint" th:value="'/' + ${subredditName} + '/posts/' + ${postId} + '/comments'">
+                                    <!-- Styled button with Font Awesome icon -->
+                                    <button type="submit" class="icon-button"><i class="fa-solid fa-down-long"></i></button>
+                                </form>
                             </div>
                         </div>
                     </div>
