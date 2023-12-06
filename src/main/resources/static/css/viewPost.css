@@ -65,10 +65,6 @@ input[type=submit]{
     font-weight: bold;
   }
 
-  .post-url {
-    text-decoration:none;
-    color: black;
-  }
 
   .username{
       color: gray;
