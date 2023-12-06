@@ -26,7 +26,7 @@
     </form>
     <div sec:authorize="isAuthenticated()" class="profile-div">
         <p class="profile">
-              <a th:href="@{'/user/'+${#authentication.principal.username}+'/posts'}"> <i class="fa-brands fa-square-reddit"></i>&nbsp;
+            <a th:href="@{'/user/'+${#authentication.principal.username}+'/posts'}"> <i class="fa-brands fa-square-reddit"></i>&nbsp;
                 u/<strong sec:authentication="principal.username" /></a>
         </p>
         <form th:action="@{/logout}" method="POST">
@@ -78,20 +78,20 @@
                         <!-- Styled button with Font Awesome icon -->
                         <button type="submit" class="icon-button"><i class="fa-solid fa-down-long"></i></button>
                     </form>
-                    </div>
-              
-                    <div class = "post-container">
-                        <div class="author">
-         
-                            <a th:href="@{'/community/' + ${post.getSubReddit().getName()} }">
-                            <h3 th:text="'r/' + ${post.getSubReddit().getName()}" style="margin-right: 20px;"></h3>
-                            </a>
-                            posted by:
-                            <h3 th:text=" ${post.getUser().getUsername()}"></h3>
-                        </div>
+                </div>
 
-                        <div class = "post-content-container">
-                        <a th:href="@{'posts/' + ${post.getId()} }">
+                <div class = "post-container">
+                    <div class="author">
+
+                        <a th:href="@{'/community/' + ${post.getSubReddit().getName()} }">
+                            <h3 th:text="'r/' + ${post.getSubReddit().getName()}" style="margin-right: 20px;"></h3>
+                        </a>
+                        posted by:
+                        <h3 th:text=" ${post.getUser().getUsername()}"></h3>
+                    </div>
+
+                    <div class = "post-content-container">
+                        <a th:href="@{'/' + ${post.getSubReddit().getName()}+'posts/' + ${post.getId()} }">
                             <h2 class="post-title" th:text="${post.getTitle()}"></h2>
                             <div class="content">
                                 <p th:text="${post.getDescription()}"></p>
@@ -100,13 +100,13 @@
                                 <img th:src="@{'/image/'+${post.image}}" alt="reddit" >
                             </div>
                         </a>
-                        </div>
-                        <div class="comment-count">
-                            <i class="fa-regular fa-message"></i>
-                            <span th:text="${post.getCount(post.getCommentList())}"></span><span> comments</span>
-                        </div>
                     </div>
-             </div>
+                    <div class="comment-count">
+                        <i class="fa-regular fa-message"></i>
+                        <span th:text="${post.getCount(post.getCommentList())}"></span><span> comments</span>
+                    </div>
+                </div>
+            </div>
         </div>
 
     </main>
