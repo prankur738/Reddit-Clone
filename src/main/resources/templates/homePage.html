@@ -104,7 +104,13 @@
                         <div class="comment-count">
                             <i class="fa-regular fa-message"></i>
                             <span th:text="${post.getCount(post.getCommentList())}"></span><span> comments</span>
+
+                            <a th:href="@{'bookmark/'+${post.getId()}}">
+                                <i class="fa-regular fa-bookmark"></i> </a>
+
                         </div>
+
+
                     </div>
              </div>
         </div>

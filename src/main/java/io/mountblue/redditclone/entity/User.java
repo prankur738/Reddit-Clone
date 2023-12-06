@@ -10,6 +10,7 @@ import lombok.experimental.FieldDefaults;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
@@ -49,6 +50,9 @@ public class User implements UserDetails {
 
     @OneToMany(mappedBy="user", cascade = CascadeType.ALL)
     List<VotePost> votePosts;
+
+    @OneToMany(mappedBy = "user",cascade = CascadeType.ALL)
+    List<Bookmark> bookmarkList;
 
     @ManyToMany(fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST, CascadeType.REFRESH,
                                                     CascadeType.DETACH, CascadeType.DETACH})
