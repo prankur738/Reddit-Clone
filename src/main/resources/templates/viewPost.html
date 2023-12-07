@@ -111,7 +111,7 @@
                             <form method="GET" th:action="@{'/'+${subredditName}+'/posts/'+ ${postId}+'/editComment/'+${comments.id}}">
                                 <button type="submit" class="login float-right">Edit</button>
                             </form>
-                            <form method="POST" th:action="@{'/'+${subredditName}+'/posts/'+ ${postId}+'/' +${comments.id}+'/editComment'}">
+                            <form method="POST" th:action="@{'/'+${subredditName}+'/posts/'+ ${postId}+'/deleteComment/'+${comments.id}}">
                                 <button type="submit" class="login float-right">Delete</button>
                             </form>
                         </span>
