@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     <meta charset="UTF-8">
     <title>Profile Page</title>
@@ -16,15 +16,13 @@
     </div>
 
     <div class="bar2">
-        <i class="fa-solid fa-magnifying-glass"></i>
-        <input   type="text" placeholder="Search Reddit">
+        <form th:action="@{/search/posts}">
+            <i class="fa-solid fa-magnifying-glass"></i>
+            <input type="text" name="query" placeholder="Search Reddit">
+            <input type="submit" value="Search">
+        </form>
 
     </div>
-
-
-<!--    <form >-->
-<!--        <input type="submit" value="Login">-->
-<!--    </form>-->
 
 </div>
 
@@ -74,7 +72,7 @@
                                 <h3 th:text=" ${post.getUser().getUsername()}"></h3>
                             </div>
                             <div class = "post-content-container">
-                                <a class="homepage-link" th:href="@{'/posts/' + ${post.getId()} }">
+                                <a class="homepage-link" th:href="@{'/' + ${post.getSubReddit().getName()}+'/posts/' + ${post.getId()} +'/comments'}">
                                     <h2 class="post-title" th:text="${post.getTitle()}"></h2>
                                     <div class="content">
                                         <p th:text="${post.getDescription()}"></p>

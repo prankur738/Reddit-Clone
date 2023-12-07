@@ -174,4 +174,9 @@ public class PostServiceImpl implements PostService {
     public List<Post> findAllOrderByCreatedAt() {
         return postRepository.findAllOrderByCreatedAt();
     }
+
+    @Override
+    public List<Post> findPostsBySearchQuery(String query) {
+        return postRepository.getPostsBySearch(query);
+    }
 }
