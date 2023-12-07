@@ -212,3 +212,43 @@ input[type=submit]{
       margin-top: 10px;
       margin-bottom: 10px;
   }
+
+  /* Add your styles here */
+  body {
+      font-family: Arial, sans-serif;
+      margin: 20px;
+  }
+
+  h1 {
+      color: #333;
+  }
+
+
+   /***
+  form {
+      background-color: #f9f9f9;
+      padding: 20px;
+      border-radius: 5px;
+  }
+
+  label {
+      display: block;
+      margin-bottom: 5px;
+  }
+
+  input, textarea {
+      width: 100%;
+      padding: 8px;
+      margin-bottom: 10px;
+      box-sizing: border-box;
+  }
+
+  button {
+      background-color: #4caf50;
+      color: white;
+      padding: 10px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+  }
+***/

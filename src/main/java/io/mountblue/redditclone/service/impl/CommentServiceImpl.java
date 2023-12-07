@@ -21,7 +21,7 @@ public class CommentServiceImpl implements CommentService {
     PostRepository postRepository;
 
     @Override
-    public List<Comment> findById(Integer postId){
+    public List<Comment> findByPostId(Integer postId){
         return commentRepository.findByPostId(postId);
     }
 
@@ -31,7 +31,8 @@ public class CommentServiceImpl implements CommentService {
         if (optional.isPresent()){
             comment.setPost(optional.get());
         }
-        commentRepository.save(comment);
+        if(!comment.getText().isEmpty())
+            commentRepository.save(comment);
     }
 
     @Override
@@ -40,8 +41,14 @@ public class CommentServiceImpl implements CommentService {
         if (optional.isPresent()) {
             Comment updatedComment = optional.get();
             updatedComment.setText(comment.getText());
-            commentRepository.save(updatedComment);
+            if(!comment.getText().isEmpty())
+                commentRepository.save(updatedComment);
         }
+    }
+
+    @Override
+    public Optional<Comment> findById(Integer commentId){
+        return commentRepository.findById(commentId);
     }
 
     @Override
