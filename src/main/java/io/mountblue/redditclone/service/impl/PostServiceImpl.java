@@ -154,4 +154,24 @@ public class PostServiceImpl implements PostService {
     public List<Post> findAllBySubscribedSubReddits(String username) {
         return postRepository.findAllBySubscribedSubReddits(username);
     }
+
+    @Override
+    public List<Post> findAllOrderByVoteCountDesc() {
+        return postRepository.findAllOrderByVoteCountDesc();
+    }
+
+    @Override
+    public List<Post> findAllPostsOrderedByCommentsSizeDesc() {
+        return postRepository.findAllPostsOrderedByCommentsSizeDesc();
+    }
+
+    @Override
+    public List<Post> findAllOrderByCreatedAtDesc() {
+        return postRepository.findAllOrderByCreatedAtDesc();
+    }
+
+    @Override
+    public List<Post> findAllOrderByCreatedAt() {
+        return postRepository.findAllOrderByCreatedAt();
+    }
 }
