@@ -65,10 +65,6 @@ input[type=submit]{
     font-weight: bold;
   }
 
-  .post-url {
-    text-decoration:none;
-    color: black;
-  }
 
   .username{
       color: gray;
@@ -127,19 +123,18 @@ input[type=submit]{
 }
 
 .sidebar{
-    width: 312px;
-    height: 242px;
-    --post-line-color: #ccc;
-    border: 1px solid #ccc;
-    margin-bottom: 10px;
-    overflow: hidden;
-    background-color: rgba(255,255,255,0.8);
-    color: #878A8C;
-    position: relative;
-    border-radius: 4px;
-    padding:5px;
-    margin-top: 10px;
-    margin-bottom: 10px;
+   width: 340px;
+      height: 100%;
+      --post-line-color: #ccc;
+      border: 1px solid gray;
+      margin-bottom: 10px;
+      overflow: hidden;
+      background-color: rgba(255,255,255,0.8);
+      position: relative;
+      border-radius: 4px;
+      padding:10px;
+      margin-top: 10px;
+      margin-bottom: 10px;
 }
 
 .btnCreatePost, .btnCreateSubreddit{
@@ -203,4 +198,17 @@ input[type=submit]{
     line-height: 18px;
     color: black;
     margin-right: 4px;
+  }
+
+  .create-post-button {
+      width: 100%;
+      padding: 10px 20px;
+      background-color: orangered;
+      border: none;
+      color: white;
+      border-radius: 20px;
+      font-size: 1rem;
+      cursor: pointer;
+      margin-top: 10px;
+      margin-bottom: 10px;
   }

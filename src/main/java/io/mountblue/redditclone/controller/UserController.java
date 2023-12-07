@@ -1,9 +1,6 @@
 package io.mountblue.redditclone.controller;
 
-import io.mountblue.redditclone.entity.Comment;
-import io.mountblue.redditclone.entity.Post;
-import io.mountblue.redditclone.entity.SubReddit;
-import io.mountblue.redditclone.entity.User;
+import io.mountblue.redditclone.entity.*;
 import io.mountblue.redditclone.service.UserService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
@@ -16,6 +13,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Controller
@@ -102,16 +100,18 @@ public class UserController {
             model.addAttribute("communities",subReddits);
 
         } else {
-            List<Post> posts = null;
+            List<Post> posts = new ArrayList<>();
 
-            if(action.equals("posts")){
-                posts = user.getPosts();
-            }
-            else if(action.equals("upVoted")){
-                posts = userService.getUpVotedPosts(username);
-            }
-            else if(action.equals("downVoted")){
-                posts = userService.getDownVotedPosts(username);
+            switch (action) {
+                case "posts" -> posts = user.getPosts();
+                case "upVoted" -> posts = userService.getUpVotedPosts(username);
+                case "downVoted" -> posts = userService.getDownVotedPosts(username);
+                case "bookmark" -> {
+                    List<Bookmark> bookmarkList = user.getBookmarkList();
+                    for (Bookmark bookmark : bookmarkList) {
+                        posts.add(bookmark.getPost());
+                    }
+                }
             }
 
             model.addAttribute("posts",posts);

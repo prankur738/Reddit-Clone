@@ -52,9 +52,23 @@
                     <div class="col-md-1">
                         <div class="d-flex flex-column votebox">
                             <div class = "vote">
-                                <i class="fa-solid fa-up-long"></i>
-                                <span>0</span>
-                                <i class="fa-solid fa-down-long"></i>
+                                <form  th:action="@{/processPostVote}" method="post">
+                                    <input type="hidden" name="postId" th:value="${postId}">
+                                    <input type="hidden" name="vote" value="1">
+                                    <input type="hidden" name="endPoint" th:value="'/' + ${subredditName} + '/posts/' + ${postId} + '/comments'">
+                                    <!-- Styled button with Font Awesome icon -->
+                                    <button type="submit" class="icon-button"><i class="fa-solid fa-up-long"></i></button>
+                                </form>
+
+                                <span th:text="${post.getVoteCount()}">  </span>
+
+                                <form  th:action="@{/processPostVote}" method="post">
+                                    <input type="hidden" name="postId" th:value="${postId}">
+                                    <input type="hidden" name="vote" value="-1">
+                                    <input type="hidden" name="endPoint" th:value="'/' + ${subredditName} + '/posts/' + ${postId} + '/comments'">
+                                    <!-- Styled button with Font Awesome icon -->
+                                    <button type="submit" class="icon-button"><i class="fa-solid fa-down-long"></i></button>
+                                </form>
                             </div>
                         </div>
                     </div>
@@ -71,6 +85,9 @@
                         <div>
                             <p class="post-text" th:text="${post.description}"></p>
                         </div>
+                        <div class="img-container" th:if="${post.image != null}" >
+                            <img th:src="@{'/image/'+${post.image}}" alt="reddit" >
+                        </div>
                         <div class="comment-count">
                             <i class="fa-regular fa-message"></i>
                             <span th:text="${commentCount}"></span><span> comments</span>
@@ -78,55 +95,46 @@
                     </div>
                     <span class="comment-user">Commented as <span sec:authentication="principal.username"></span></span>
                     <div class="post-comment">
-                        <form method="POST" th:object="${newComment}" th:action="@{'/posts/'+ ${postId} +'/saveComment'}">
-                            <div class="comment-text">
-                                <textarea name="text" th:field="*{text}" placeholder="Your Thoughts?"></textarea>
-
+                        <form method="POST" th:object="${newComment}" th:action="@{'/'+${subredditName}+'/posts/'+ ${postId} +'/saveComment'}">
+                            <div>
+                                <textarea name="text" th:field="*{text}" placeholder="Your Thoughts?" cols="80"></textarea>
                             </div>
                             <button type="submit" class="login float-right">Comment</button>
                         </form>
                     </div>
-                <div style="margin-top: 60px;" th:each="comments: ${commentList}">
-                    <div class="comment">
+                    <div style="margin-top: 60px;" th:each="comments: ${commentList}">
+                        <div class="comment">
                         <span class="username">
-                            <a th:if="${comments != null and comments.getUser() != null}" th:text="${comments.getUser().getUsername()}" href=""></a>
+                            <a th:if="${comments != null and comments.getUser() != null}"
+                               th:text="${comments.getUser().getUsername()}" th:href="@{'/user/'+${#authentication.principal.username}+'/posts'}"></a>
                             Commented On <span th:text="${#temporals.format(comments.createdAt, 'dd/MMM/yyy HH:mm')}"></span>
                         </span>
-                        <p th:text="${comments.text}"></p>
+                            <p th:text="${comments.text}"></p>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
         <div class="col-md-3">
             <div class="sidebar">
-                <img src="https://www.redditstatic.com/desktop2x/img/id-cards/home-banner@2x.png">
-                <div style="text-align: center; font-size: 1em" th:text="${subReddit.getDescription()}"></div>
-                <div style="text-align: center">
+                <!--                <img src="https://www.redditstatic.com/desktop2x/img/id-cards/home-banner@2x.png">-->
+                <h2 th:text="${subReddit.getName()}"></h2>
+                <divc class="username">Created On
+                    <span th:text="${#temporals.format(subReddit.createdAt, 'dd/MMM/yyy HH:mm')}"></span>
+                </divc>
+                <h3>Description:</h3>
+                <div th:text="${subReddit.getDescription()}"></div>
+
+                <div>
                     <form th:action="@{'/community/' + ${subReddit.getName()} + '/createPost'}">
                         <input type="hidden" name="subRedditName" th:value="${subReddit.getName()}">
                         <button type="submit" class="create-post-button">Create Post</button>
                     </form>
                 </div>
                 <div style="text-align: center">
-                    <button class="btnCreateSubreddit" (click)="goToCreateSubreddit()">Create Subreddit</button>
-                </div>
-            </div>
-            <div class="sidebar-view-subreddit">
-                <div style="color: black; font-weight: bold">Browse Subreddits</div>
-                <hr />
-                <span *ngFor="let subreddit of subreddits">
-                    <span class="subreddit-text"><a href="/view-subreddit/{{subreddit.id}}">subreddit.name</a></span>
-                    <hr />
-                </span>
-                <div style="text-align: center" *ngIf="displayViewAll">
-                    <div class="community-container">
-                        <div class="community-item" th:each="subReddit : ${subRedditList}">
-                            <a th:href="@{'community/' + ${subReddit.getName()} }">
-                                <span th:text="${subReddit.getName()}"></span>
-                            </a>
-                        </div>
-                    </div>
+                    <a th:href="@{/community/createCommunity}">
+                        <button class="create-post-button" th:href="@{/community/createCommunity}">Create Cummunity</button>
+                    </a>
                 </div>
             </div>
         </div>
