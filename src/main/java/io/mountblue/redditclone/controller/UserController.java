@@ -102,20 +102,15 @@ public class UserController {
         } else {
             List<Post> posts = new ArrayList<>();
 
-            if(action.equals("posts")){
-                posts = user.getPosts();
-            }
-            else if(action.equals("upVoted")){
-                posts = userService.getUpVotedPosts(username);
-            }
-            else if(action.equals("downVoted")){
-                posts = userService.getDownVotedPosts(username);
-            }
-            else if(action.equals("bookmark")){
-                List<Bookmark> bookmarkList = user.getBookmarkList();
-
-                for(Bookmark bookmark : bookmarkList){
-                    posts.add(bookmark.getPost());
+            switch (action) {
+                case "posts" -> posts = user.getPosts();
+                case "upVoted" -> posts = userService.getUpVotedPosts(username);
+                case "downVoted" -> posts = userService.getDownVotedPosts(username);
+                case "bookmark" -> {
+                    List<Bookmark> bookmarkList = user.getBookmarkList();
+                    for (Bookmark bookmark : bookmarkList) {
+                        posts.add(bookmark.getPost());
+                    }
                 }
             }
 

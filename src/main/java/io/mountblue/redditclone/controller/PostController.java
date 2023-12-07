@@ -27,6 +27,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.util.ArrayList;
 import java.util.List;
 
 import java.util.List;
@@ -172,25 +173,44 @@ public class PostController {
     }
 
     @GetMapping("/")
-    public String showHomePage(Model model){
+    public String showPopularPage(Model model,
+                                  @RequestParam(name = "sort", defaultValue = "Top") String sort){
+        List<Post> allPosts = switch (sort) {
+            case "Top" -> postService.findAllOrderByVoteCountDesc();
+            case "Hot" -> postService.findAllPostsOrderedByCommentsSizeDesc();
+            case "New" -> postService.findAllOrderByCreatedAtDesc();
+            case "Old" -> postService.findAllOrderByCreatedAt();
+            default -> postService.findAllPosts();
+        };
+
         List<SubReddit> subRedditList = subRedditService.findAll();
-        List<Post> allPosts = postService.findAllPosts();
 
         model.addAttribute("allPosts", allPosts);
         model.addAttribute("subRedditList", subRedditList);
+        model.addAttribute("sort", sort);
 
         return "homePage";
     }
 
     @GetMapping("/personalized-homepage")
-    public String showPersonalizedHomepage(Model model, @AuthenticationPrincipal UserDetails userDetails) {
+    public String showHomepage(Model model,
+                               @RequestParam(name = "sort", defaultValue = "Top") String sort,
+                               @AuthenticationPrincipal UserDetails userDetails) {
         User user = userService.findByUsername(userDetails.getUsername());
 
-        List<SubReddit> subRedditList = user.getSubRedditList();
         List<Post> posts = postService.findAllBySubscribedSubReddits(user.getUsername());
+        switch (sort) {
+            case "Top" -> posts.sort((a, b) -> b.getVoteCount() - a.getVoteCount());
+            case "Hot" -> posts.sort((a, b) -> b.getCommentList().size() - a.getCommentList().size());
+            case "New" -> posts.sort((a, b) -> b.getCreatedAt().compareTo(a.getCreatedAt()));
+            case "Old" -> posts.sort((a, b) -> a.getCreatedAt().compareTo(b.getCreatedAt()));
+        }
+
+        List<SubReddit> subRedditList = subRedditService.findAll();
 
         model.addAttribute("allPosts", posts);
         model.addAttribute("subRedditList", subRedditList);
+        model.addAttribute("sort", sort);
         model.addAttribute("personalized", true);
 
         return "homePage";
