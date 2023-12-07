@@ -176,7 +176,7 @@ public class PostController {
     }
 
     @GetMapping("/")
-    public String showPopularPage(Model model,
+    public String showPopularPage(Model model,@AuthenticationPrincipal UserDetails userDetails,
                                   @RequestParam(name = "sort", defaultValue = "Top") String sort){
         List<Post> allPosts = switch (sort) {
             case "Top" -> postService.findAllOrderByVoteCountDesc();
@@ -186,11 +186,21 @@ public class PostController {
             default -> postService.findAllPosts();
         };
 
+        User user = userService.findByUsername(userDetails.getUsername());
+        List<Bookmark> bookmarkList = user.getBookmarkList();
+        List<Integer> ids = new ArrayList<>();
+
+        for(Bookmark bookmark: bookmarkList) {
+            ids.add(bookmark.getPost().getId());
+        }
+
         List<SubReddit> subRedditList = subRedditService.findAll();
 
         model.addAttribute("allPosts", allPosts);
         model.addAttribute("subRedditList", subRedditList);
         model.addAttribute("sort", sort);
+        model.addAttribute("bookmark",ids);
+
 
         return "homePage";
     }
