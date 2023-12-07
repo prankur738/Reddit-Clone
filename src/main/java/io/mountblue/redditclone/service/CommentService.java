@@ -11,6 +11,5 @@ public interface CommentService {
     public List<Comment> findByPostId(Integer postId);
     public Optional<Comment> findById(Integer commentId);
     public void saveComment(Integer postId, Comment comment);
-    public void UpdateComment(Comment comment);
     public void deleteComment(Comment comment);
 }

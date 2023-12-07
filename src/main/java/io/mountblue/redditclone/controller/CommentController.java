@@ -15,7 +15,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
-import java.sql.Timestamp;
 import java.util.List;
 import java.util.Optional;
 
@@ -94,7 +93,7 @@ public class CommentController {
         model.addAttribute("commentCount", commentList.size());
         model.addAttribute("post", post);
         model.addAttribute("postId", postId);
-        model.addAttribute("editedComment",(Comment) editedComment.get());
+        model.addAttribute("editedComment", editedComment.get());
         model.addAttribute("newComment", new Comment());
         model.addAttribute("commentList", commentList);
         model.addAttribute("subReddit", subReddit);
@@ -118,11 +117,15 @@ public class CommentController {
         return "redirect:/"+subredditName+"/posts/"+postId+"/comments";
     }
 
-    @PostMapping("/{subredditName}/posts/{postId}/deleteComment")
+    @PostMapping("/{subredditName}/posts/{postId}/deleteComment/{commentId}")
     public String deleteComment(@PathVariable("subredditName")String subredditName,
                                 @PathVariable("postId")Integer postId,
-                                @ModelAttribute("comment") Comment comment){
-        commentService.deleteComment(comment);
+                                @PathVariable("commentId")Integer commentId){
+        Optional<Comment> comment = commentService.findById(commentId);
+        if(comment.isPresent()){
+            commentService.deleteComment(comment.get());
+        }
+
         return "redirect:/"+subredditName+"/posts/"+postId+"/comments";
     }
 }

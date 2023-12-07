@@ -35,16 +35,16 @@ public class CommentServiceImpl implements CommentService {
             commentRepository.save(comment);
     }
 
-    @Override
-    public void UpdateComment(Comment comment) {
-        Optional<Comment> optional = commentRepository.findById(comment.getId());
-        if (optional.isPresent()) {
-            Comment updatedComment = optional.get();
-            updatedComment.setText(comment.getText());
-            if(!comment.getText().isEmpty())
-                commentRepository.save(updatedComment);
-        }
-    }
+//    @Override
+//    public void UpdateComment(Comment comment) {
+//        Optional<Comment> optional = commentRepository.findById(comment.getId());
+//        if (optional.isPresent()) {
+//            Comment updatedComment = optional.get();
+//            updatedComment.setText(comment.getText());
+//            if(!comment.getText().isEmpty())
+//                commentRepository.save(updatedComment);
+//        }
+//    }
 
     @Override
     public Optional<Comment> findById(Integer commentId){
