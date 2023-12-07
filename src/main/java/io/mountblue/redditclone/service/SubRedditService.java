@@ -24,4 +24,5 @@ public interface SubRedditService {
 
     void addSubscriber(User user, String subRedditName);
     void removeSubscriber(User user, String subRedditName);
+    List<SubReddit> findSubRedditsBySearchQuery(String query);
 }

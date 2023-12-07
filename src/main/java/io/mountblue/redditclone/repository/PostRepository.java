@@ -29,4 +29,11 @@ public interface PostRepository extends JpaRepository<Post,Integer> {
 
     @Query("SELECT p FROM Post p ORDER BY p.createdAt")
     List<Post> findAllOrderByCreatedAt();
+
+    @Query("SELECT p FROM Post p LEFT JOIN p.tagList t WHERE "+
+            "t.name LIKE CONCAT('%', :query, '%') OR "+
+            "p.title LIKE CONCAT('%', :query, '%') OR "+
+            "p.description LIKE CONCAT('%', :query, '%') "
+    )
+    List<Post> getPostsBySearch(@Param("query") String query);
 }

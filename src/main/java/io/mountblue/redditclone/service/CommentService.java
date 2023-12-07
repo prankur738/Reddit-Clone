@@ -10,4 +10,5 @@ public interface CommentService {
     public void saveComment(Integer postId, Comment comment);
     public void UpdateComment(Comment comment);
     public void deleteComment(Comment comment);
+    List<Comment> findCommentsBySearchQuery(String query);
 }

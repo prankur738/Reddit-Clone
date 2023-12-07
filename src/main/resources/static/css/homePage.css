@@ -238,5 +238,9 @@ a {
 
 .post-container .author h3{
     display: inline;
+}
 
+.comment-space{
+    display:inline;
+    margin-right:40px;
 }

@@ -100,4 +100,9 @@ public class SubRedditServiceImpl implements SubRedditService {
 
         subRedditRepository.save(subReddit);
     }
+
+    @Override
+    public List<SubReddit> findSubRedditsBySearchQuery(String query) {
+        return subRedditRepository.getSubRedditBySearch(query);
+    }
 }
