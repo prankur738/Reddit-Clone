@@ -51,6 +51,12 @@ public class User implements UserDetails {
     @OneToMany(mappedBy="user", cascade = CascadeType.ALL)
     List<VotePost> votePosts;
 
+    @Column(name="karma_point")
+    Integer karma = 1;
+  
+    @OneToMany(mappedBy="user", cascade = CascadeType.ALL)
+    List<VoteComment> voteComments;
+
     @OneToMany(mappedBy = "user",cascade = CascadeType.ALL)
     List<Bookmark> bookmarkList;
 

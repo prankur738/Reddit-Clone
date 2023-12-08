@@ -13,10 +13,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -59,6 +56,7 @@ public class SubRedditController {
         SubReddit subReddit = subRedditService.findByName(subRedditName);
         model.addAttribute("subReddit",subReddit);
 
+
         User user = userService.findByUsername(userDetails.getUsername());
         List<Bookmark> bookmarkList = user.getBookmarkList();
         List<Integer> ids = new ArrayList<>();
@@ -69,7 +67,24 @@ public class SubRedditController {
         model.addAttribute("bookmark",ids);
         if (subReddit.getSubscribers().contains(user)) {
             model.addAttribute("subscribedUser", true);
+
+        if (userDetails != null) {
+            User user = userService.findByUsername(userDetails.getUsername());
+
+            boolean isAdmin = user.getId() == subReddit.getAdminUserId();
+            boolean isMod = isAdmin || subReddit.getModerators().contains(user);
+
+            model.addAttribute("isAdmin", isAdmin);
+            model.addAttribute("isMod", isMod);
+
+            if (subReddit.getSubscribers().contains(user)) {
+                model.addAttribute("subscribedUser", true);
+            }
+
         }
+
+        model.addAttribute("admin", userService.findById(subReddit.getAdminUserId()));
+        model.addAttribute("allUsers", userService.findAll());
 
         return "viewSubReddit";
     }
@@ -131,6 +146,43 @@ public class SubRedditController {
         User user = userService.findByUsername(userDetails.getUsername());
 
         subRedditService.removeSubscriber(user, communityName);
+
+        return "redirect:/community/" + communityName;
+    }
+
+    @PostMapping("/community/{communityName}/makeMod")
+    public String makeModerator(@PathVariable String communityName, @RequestParam Integer userId) {
+        User user = userService.findById(userId);
+
+        subRedditService.makeMod(user, communityName);
+
+        return "redirect:/community/" + communityName;
+    }
+
+    @PostMapping("/community/{communityName}/removeMod")
+    public String removeModerator(@PathVariable String communityName, @RequestParam Integer userId) {
+        User user = userService.findById(userId);
+
+        subRedditService.removeMod(user, communityName);
+
+        return "redirect:/community/" + communityName;
+    }
+
+    @PostMapping("/community/{communityName}/ban")
+    public String banUser(@PathVariable String communityName, @RequestParam Integer userId) {
+        User user = userService.findById(userId);
+        System.out.println("test");
+
+        subRedditService.banUser(user, communityName);
+
+        return "redirect:/community/" + communityName;
+    }
+
+    @PostMapping("/community/{communityName}/unban")
+    public String unbanUser(@PathVariable String communityName, @RequestParam Integer userId) {
+        User user = userService.findById(userId);
+
+        subRedditService.unbanUser(user, communityName);
 
         return "redirect:/community/" + communityName;
     }

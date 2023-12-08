@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
@@ -42,6 +43,12 @@ public class PostServiceImpl implements PostService {
         SubReddit subReddit = subRedditService.findById(subredditId);
         post.setUser(user);
         post.setTagList(tagFromString);
+
+        if(user.getKarma() == null)
+            user.setKarma(1);
+        else
+            user.setKarma(user.getKarma()+1);
+
         post.setSubReddit(subReddit);
         postRepository.save(post);
 
@@ -178,5 +185,14 @@ public class PostServiceImpl implements PostService {
     @Override
     public List<Post> findPostsBySearchQuery(String query) {
         return postRepository.getPostsBySearch(query);
+    }
+
+    @Override
+    public Integer getPostsByUserInSubRedditInLast24Hours(String username, String subRedditName,
+                                                          LocalDateTime startDate) {
+        User user = userService.findByUsername(username);
+        SubReddit subReddit = subRedditService.findByName(subRedditName);
+
+        return postRepository.countPostsByUserInSubredditLast24Hours(user, subReddit, startDate);
     }
 }

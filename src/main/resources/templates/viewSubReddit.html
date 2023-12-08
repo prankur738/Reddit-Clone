@@ -146,6 +146,46 @@
             <input type="hidden" name="subRedditName" th:value="${subReddit.getName()}">
             <button type="submit" class="create-post-button">Create Post</button>
         </form>
+
+        <table th:if="${isAdmin}">
+            <caption>Moderator Controls</caption>
+            <tr th:each="user : ${subReddit.getSubscribers()}">
+                <td>[[${user.getUsername()}]]</td>
+                <td th:unless="${user.getId() != subReddit.getAdminUserId()}">Admin</td>
+                <td th:if="${user.getId() != subReddit.getAdminUserId()}" class="control-buttons-container">
+                    <form th:if="${#sets.contains(subReddit.getModerators(), user)}"
+                          th:action="@{'/community/' + ${subReddit.getName()} + '/removeMod'}" method="POST">
+                        <input type="hidden" name="userId" th:value="${user.getId()}" />
+                        <button value="submit" class="unmod-button">UnMod</button>
+                    </form>
+                    <form th:unless="${#sets.contains(subReddit.getModerators(), user)}"
+                          th:action="@{'/community/' + ${subReddit.getName()} + '/makeMod'}" method="POST">
+                        <input type="hidden" name="userId" th:value="${user.getId()}" />
+                        <button value="submit" class="mod-button">Mod</button>
+                    </form>
+                </td>
+            </tr>
+        </table>
+
+        <table th:if="${isMod}">
+            <caption>User Restriction Controls</caption>
+            <tr th:each="user : ${allUsers}">
+                <td>[[${user.getUsername()}]]</td>
+                <td th:unless="${user.getId() != subReddit.getAdminUserId()}">Admin</td>
+                <td th:if="${user.getId() != subReddit.getAdminUserId()}" class="control-buttons-container">
+                    <form th:if="${#sets.contains(subReddit.getBannedUsers(), user)}"
+                          th:action="@{'/community/' + ${subReddit.getName()} + '/unban'}" method="POST">
+                        <input type="hidden" name="userId" th:value="${user.getId()}" />
+                        <button value="submit" class="unban-button">Unban</button>
+                    </form>
+                    <form th:unless="${#sets.contains(subReddit.getBannedUsers(), user)}"
+                          th:action="@{'/community/' + ${subReddit.getName()} + '/ban'}" method="POST">
+                        <input type="hidden" name="userId" th:value="${user.getId()}" />
+                        <button value="submit" class="ban-button">Ban</button>
+                    </form>
+                </td>
+            </tr>
+        </table>
     </aside>
 </div>
 

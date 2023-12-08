@@ -23,6 +23,16 @@ public interface SubRedditService {
     List<SubReddit> findAll();
 
     void addSubscriber(User user, String subRedditName);
+
     void removeSubscriber(User user, String subRedditName);
+
     List<SubReddit> findSubRedditsBySearchQuery(String query);
+
+    void makeMod(User user, String subRedditName);
+
+    void removeMod(User user, String subRedditName);
+
+    void banUser(User user, String subRedditName);
+
+    void unbanUser(User user, String subRedditName);
 }

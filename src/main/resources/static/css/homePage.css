@@ -10,6 +10,15 @@
     display: flex;
 }
 
+aside {
+    overflow-y: scroll !important;
+    scrollbar-width: none;
+}
+
+button:hover {
+    cursor: pointer;
+}
+
 #filter {
     background-color: #ffffff;
     padding: 15px;
@@ -254,6 +263,7 @@ a {
 display:inline;
 margin-right:40px;
 }
+
 .reddit-span:hover {
     color: #ff4500;
     cursor: pointer;
@@ -290,3 +300,49 @@ margin-right:40px;
     ul{
      list-style: none;
      }
+
+
+table, tr {
+    width: 100%;
+    border: 1px solid;
+}
+
+table {
+    margin: 40px auto;
+}
+
+td {
+    width: 100%;
+    padding: 2px 5px;
+}
+
+td > button {
+    border: none;
+    background-color
+}
+
+caption {
+    width: 100%;
+    background-color: orangered;
+    color: white;
+    font-weight: bold;
+    border: 1px solid black;
+    border-bottom: 2px solid black;
+}
+
+table .control-buttons-container {
+    text-align: center;
+}
+
+.ban-button, unmod-button {
+    border: 1px solid black;
+    background-color: red;
+    color: white;
+}
+
+.unban-button, mod-button {
+    border: 1px solid black;
+    background-color: green;
+    color: white;
+}
+

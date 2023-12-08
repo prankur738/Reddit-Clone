@@ -25,6 +25,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -78,6 +79,15 @@ public class PostController {
                                  @RequestParam(name="tagNames", required = false) String tagNames,
                                  @RequestParam(value = "imageName",required = false
                                  ) MultipartFile file) throws IOException {
+
+        String username = userDetails.getUsername();
+        LocalDateTime startDate = LocalDateTime.now().minusHours(24);
+        Integer postCountInLast24Hrs = postService.getPostsByUserInSubRedditInLast24Hours(username, subRedditName, startDate);
+        if(postCountInLast24Hrs >=4){
+            return "accessDenied";
+        }
+        System.out.println(postCountInLast24Hrs);
+
         if (bindingResult.hasErrors()) {
             return "createNewPost";
 
@@ -193,12 +203,14 @@ public class PostController {
             default -> postService.findAllPosts();
         };
 
-        User user = userService.findByUsername(userDetails.getUsername());
-        List<Bookmark> bookmarkList = user.getBookmarkList();
         List<Integer> ids = new ArrayList<>();
+        if(userDetails != null){
+            User user = userService.findByUsername(userDetails.getUsername());
+            List<Bookmark> bookmarkList = user.getBookmarkList();
 
-        for(Bookmark bookmark: bookmarkList) {
-            ids.add(bookmark.getPost().getId());
+            for(Bookmark bookmark: bookmarkList) {
+                ids.add(bookmark.getPost().getId());
+            }
         }
 
         List<SubReddit> subRedditList = subRedditService.findAll();
@@ -207,7 +219,6 @@ public class PostController {
         model.addAttribute("subRedditList", subRedditList);
         model.addAttribute("sort", sort);
         model.addAttribute("bookmark",ids);
-
 
         return "homePage";
     }
