@@ -44,6 +44,22 @@ public class SubReddit {
     )
     Set<User> subscribers = new HashSet<>();
 
+    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.REFRESH, CascadeType.MERGE, CascadeType.DETACH})
+    @JoinTable(
+            name = "moderator_subreddit",
+            joinColumns = @JoinColumn(name = "subreddit_id"),
+            inverseJoinColumns = @JoinColumn(name = "user_id")
+    )
+    Set<User> moderators = new HashSet<>();
+
+    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.REFRESH, CascadeType.MERGE, CascadeType.DETACH})
+    @JoinTable(
+            name = "banneduser_subreddit",
+            joinColumns = @JoinColumn(name = "subreddit_id"),
+            inverseJoinColumns = @JoinColumn(name = "user_id")
+    )
+    Set<User> bannedUsers = new HashSet<>();
+
     @OneToMany(mappedBy = "subReddit")
     List<Post> postList;
 
