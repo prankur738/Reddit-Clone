@@ -11,6 +11,10 @@ public interface UserService extends UserDetailsService {
 
     void encodePassword(User user);
 
+    User findById(Integer id);
+
+    List<User> findAll();
+
     User findByUsername(String username);
 
     void grantRoleToUser(String username, String role);

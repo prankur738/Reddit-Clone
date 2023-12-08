@@ -105,4 +105,42 @@ public class SubRedditServiceImpl implements SubRedditService {
     public List<SubReddit> findSubRedditsBySearchQuery(String query) {
         return subRedditRepository.getSubRedditBySearch(query);
     }
+
+    @Override
+    public void makeMod(User user, String subRedditName) {
+        SubReddit subReddit = subRedditRepository.findByName(subRedditName).orElseThrow();
+
+        subReddit.getModerators().add(user);
+
+        subRedditRepository.save(subReddit);
+    }
+
+    @Override
+    public void removeMod(User user, String subRedditName) {
+        SubReddit subReddit = subRedditRepository.findByName(subRedditName).orElseThrow();
+
+        subReddit.getModerators().remove(user);
+
+        subRedditRepository.save(subReddit);
+    }
+
+    @Override
+    public void banUser(User user, String subRedditName) {
+        SubReddit subReddit = subRedditRepository.findByName(subRedditName).orElseThrow();
+
+        subReddit.getSubscribers().remove(user);
+        subReddit.getModerators().remove(user);
+        subReddit.getBannedUsers().add(user);
+
+        subRedditRepository.save(subReddit);
+    }
+
+    @Override
+    public void unbanUser(User user, String subRedditName) {
+        SubReddit subReddit = subRedditRepository.findByName(subRedditName).orElseThrow();
+
+        subReddit.getBannedUsers().remove(user);
+
+        subRedditRepository.save(subReddit);
+    }
 }
