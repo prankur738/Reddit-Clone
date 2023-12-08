@@ -55,35 +55,16 @@
 
 <div class="body">
     <aside id="filter">
-        <a th:if="${personalized}" th:href="@{/}">Popular &#8599;</a>
-        <a th:if="${personalized == null}" th:href="@{/personalized-homepage}">My Subscription Feed &#8599;</a>
-        <h2>Search Section</h2>
-        <p> Search by: </p>
-        <form th:action="@{/search/posts}">
-        <input id="search-input" type="text"  name="query" th:value="${query}">
-    </form>
-        <form id="post-search" th:action="@{/search/posts}" method="GET">
-            <!-- Hidden input field for the parameter -->
-            <input type="hidden" name="query" th:value="${query}">
-            <!-- Text or link that triggers form submission on click -->
-            <p onclick="document.getElementById('post-search').submit()">Posts</p>
-        </form>
+        <a id="popular-link" th:class="${personalized == null ? 'active' : null}" th:href="@{/}">
+            <i class="fa-brands fa-reddit-alien"></i> Popular
+        </a>
+        <a id="home-link" th:class="${personalized == null ? null : 'active'}" th:href="@{/personalized-homepage}">
+            <i class="fa-solid fa-house"></i> Home
+        </a>
 
-        <form id="community-search" th:action="@{/search/community}" method="GET">
-            <!-- Hidden input field for the parameter -->
-            <input type="hidden" name="query" th:value="${query}">
-            <!-- Text or link that triggers form submission on click -->
-            <p onclick="document.getElementById('community-search').submit()">Communities</p>
-        </form>
-
-        <form id="comment-search" th:action="@{/search/comments}" method="GET">
-            <!-- Hidden input field for the parameter -->
-            <input type="hidden" name="query" th:value="${query}">
-            <!-- Text or link that triggers form submission on click -->
-            <p onclick="document.getElementById('comment-search').submit()">Comments</p>
-        </form>
     </aside>
     <main id="posts">
+
         <div>
             <div class="post create">
                 <i class="fa-brands fa-reddit image"></i>
@@ -94,6 +75,34 @@
                 </a>
             </div>
         </div>
+
+        <div>
+            <div class="post sort">
+                <form>
+                    <span>Search By:&emsp;</span>
+                    <form></form>
+                    <form id="post-search" th:action="@{/search/posts}" method="GET">
+                        <button th:class="${sort == 'New' ? 'active' : null}" name="query" th:value="${query}" type="submit">
+                            <i class="fa-regular fa-rectangle-list"></i> Posts
+                        </button>
+                    </form>
+
+                    <form id="community-search" th:action="@{/search/community}" method="GET">
+                        <button th:class="${sort == 'Hot' ? 'active' : null}" name="query" th:value="${query}" type="submit">
+                            <i class="fa-solid fa-users-line"></i> Community
+                        </button>
+                    </form>
+
+
+                    <form id="comment-search" th:action="@{/search/comments}" method="GET">
+                        <button th:class="${sort == 'New' ? 'active' : null}" name="query" th:value="${query}" type="submit">
+                            <i class="fa-regular fa-comments"></i> Comments
+                        </button>
+                    </form>
+                </form>
+            </div>
+        </div>
+
 <div th:if="${action == 'posts'}">
         <div th:each="post : ${allPosts}">
 
@@ -149,8 +158,9 @@
                 </div>
             </div>
         </div>
-
+</div>
         <div th:if="${action == 'community'}">
+
             <div th:each="subReddit : ${communities}">
 
                 <div class="post">
@@ -174,6 +184,7 @@
         </div>
 
         <div th:if="${action == 'comments'}">
+
             <div th:each="comment : ${comments}">
 
                 <div class="post">
