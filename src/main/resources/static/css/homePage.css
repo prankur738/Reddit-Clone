@@ -13,6 +13,7 @@
 aside {
     overflow-y: scroll !important;
     scrollbar-width: none;
+    max-height: calc(100vh - 120px) !important;
 }
 
 button:hover {
@@ -292,17 +293,21 @@ caption {
     border-bottom: 2px solid black;
 }
 
+table, caption {
+    max-width: 250px;
+}
+
 table .control-buttons-container {
     text-align: center;
 }
 
-.ban-button, unmod-button {
+.ban-button, .unmod-button {
     border: 1px solid black;
     background-color: red;
     color: white;
 }
 
-.unban-button, mod-button {
+.unban-button, .mod-button {
     border: 1px solid black;
     background-color: green;
     color: white;
