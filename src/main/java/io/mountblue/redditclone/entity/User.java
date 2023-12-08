@@ -51,6 +51,9 @@ public class User implements UserDetails {
     @OneToMany(mappedBy="user", cascade = CascadeType.ALL)
     List<VotePost> votePosts;
 
+    @OneToMany(mappedBy="user", cascade = CascadeType.ALL)
+    List<VoteComment> voteComments;
+
     @OneToMany(mappedBy = "user",cascade = CascadeType.ALL)
     List<Bookmark> bookmarkList;
 
