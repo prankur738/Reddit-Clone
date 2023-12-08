@@ -42,8 +42,12 @@
 
 <div class="body">
     <aside id="filter">
-        <a th:if="${personalized}" th:href="@{/}">Popular &#8599;</a>
-        <a th:if="${personalized == null}" th:href="@{/personalized-homepage}">My Subscription Feed &#8599;</a>
+        <a id="popular-link" th:class="${personalized == null ? 'active' : null}" th:href="@{/}">
+            <i class="fa-brands fa-reddit-alien"></i> Popular
+        </a>
+        <a id="home-link" th:class="${personalized == null ? null : 'active'}" th:href="@{/personalized-homepage}">
+            <i class="fa-solid fa-house"></i> Home
+        </a>
         <h2>Filter Section</h2>
     </aside>
 
@@ -64,10 +68,18 @@
             <div class="post sort">
                 <form>
                     <span>Sort By:&emsp;</span>
-                    <button th:class="${sort == 'Top' ? 'top' : null}"name="sort" value="Top" type="submit">Top</button>
-                    <button th:class="${sort == 'Hot' ? 'hot' : null}"name="sort" value="Hot" type="submit">Hot</button>
-                    <button th:class="${sort == 'New' ? 'new' : null}"name="sort" value="New" type="submit">New</button>
-                    <button th:class="${sort == 'Old' ? 'old' : null}"name="sort" value="Old" type="submit">Old</button>
+                    <button th:class="${sort == 'Top' ? 'active' : null}"name="sort" value="Top" type="submit">
+                        <i class="fa-solid fa-arrow-trend-up"></i> Top
+                    </button>
+                    <button th:class="${sort == 'Hot' ? 'active' : null}"name="sort" value="Hot" type="submit">
+                        <i class="fa-solid fa-fire"></i> Hot
+                    </button>
+                    <button th:class="${sort == 'New' ? 'active' : null}"name="sort" value="New" type="submit">
+                        <i class="fa-solid fa-arrow-up-wide-short"></i> New
+                    </button>
+                    <button th:class="${sort == 'Old' ? 'active' : null}"name="sort" value="Old" type="submit">
+                        <i class="fa-solid fa-arrow-down-short-wide"></i> Old
+                    </button>
                 </form>
             </div>
         </div>
