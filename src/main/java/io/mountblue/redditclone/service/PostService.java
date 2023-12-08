@@ -34,4 +34,6 @@ public interface PostService {
     List<Post> findAllOrderByCreatedAtDesc();
 
     List<Post> findAllOrderByCreatedAt();
+
+    List<Post> findPostsBySearchQuery(String query);
 }

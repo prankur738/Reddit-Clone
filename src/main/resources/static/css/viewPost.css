@@ -8,22 +8,30 @@
     width: 100%; /* Make the navbar span the full width of the viewport */
     background-color: white; /* Optional: Add a background color */
     z-index: 1000;
+   box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
 }
 .color{
-    margin-top: 0px;
+    margin-top: 5px;
     margin-left: 30px;
     margin-right: 10px;
     color: orangered;
     font-size: 30px;
 }
+.profile-div{
+display:flex;
+justify-content:center;
+margin-left:20px;
+}
 .bar1{
     display: flex;
-    align-items: center;
+    justify-content:center;
+
 }
 .text{
     color: orangered;
     font-size: 25px;
     font-weight: bolder
+
 }
 input[type=text]{
     border: none;
@@ -75,7 +83,7 @@ input[type=submit]{
   }
 
   .post{
-      border: 1px solid black;
+
       margin: 10px 10px 10px auto;
       overflow: hidden;
       background-color: rgba(255,255,255,0.8);
@@ -126,7 +134,7 @@ input[type=submit]{
    width: 340px;
       height: 100%;
       --post-line-color: #ccc;
-      border: 1px solid gray;
+      box-shadow: rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px;
       margin-bottom: 10px;
       overflow: hidden;
       background-color: rgba(255,255,255,0.8);
@@ -212,6 +220,22 @@ input[type=submit]{
       margin-top: 10px;
       margin-bottom: 10px;
   }
+  
+  .main-box{
+  box-shadow: rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px;
+  }
+  .button {
+            display: inline-block;
+            padding: 3px 3px;
+            background-color: black;
+            color: white;
+            font-size:15px;
+            font-weight:bold;
+            text-decoration: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top : 5px;
+        }
 
   /* Add your styles here */
   body {

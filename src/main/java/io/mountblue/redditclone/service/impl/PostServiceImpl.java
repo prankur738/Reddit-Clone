@@ -42,6 +42,7 @@ public class PostServiceImpl implements PostService {
         SubReddit subReddit = subRedditService.findById(subredditId);
         post.setUser(user);
         post.setTagList(tagFromString);
+
         post.setSubReddit(subReddit);
         postRepository.save(post);
 
@@ -173,5 +174,10 @@ public class PostServiceImpl implements PostService {
     @Override
     public List<Post> findAllOrderByCreatedAt() {
         return postRepository.findAllOrderByCreatedAt();
+    }
+
+    @Override
+    public List<Post> findPostsBySearchQuery(String query) {
+        return postRepository.getPostsBySearch(query);
     }
 }

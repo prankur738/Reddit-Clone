@@ -17,8 +17,11 @@
         <p class="text">reddit</p>
     </div>
     <div class="bar2">
-        <i class="fa-solid fa-magnifying-glass"></i>
-        <input type="text" placeholder="Search Reddit">
+        <form th:action="@{/search/posts}">
+            <i class="fa-solid fa-magnifying-glass"></i>
+            <input type="text" name="query" placeholder="Search Reddit">
+            <input type="submit" value="Search">
+        </form>
     </div>
 
     <form sec:authorize="${!isAuthenticated()}" th:action="@{/login}">
@@ -117,12 +120,24 @@
                             </div>
                         </a>
                         </div>
-                        <div class="comment-count">
-                            <i class="fa-regular fa-message"></i>
-                            <span th:text="${post.getCount(post.getCommentList())}"></span><span> comments</span>
 
+                        <div class="comment-count">
+                            <a th:href="@{'/' + ${post.getSubReddit().getName()}+'/posts/' + ${post.getId()} +'/comments'}">
+                            <i class="fa-regular fa-message"></i>
+                            <span th:text="${post.getCount(post.getCommentList())}"></span>
+                            <span class="comment-space"> comments</span>
+                            </a>
+
+                            <span  th:unless="${#lists.contains(bookmark,post.id)}">
                             <a th:href="@{'bookmark/'+${post.getId()}}">
                                 <i class="fa-regular fa-bookmark"></i> </a>
+                            </span>
+
+                            <span th:if="${#lists.contains(bookmark,post.id)}">
+                                <a th:href="@{'bookmark/'+${post.getId()}}">
+                                    <i class="fa-solid fa-bookmark"></i></a>
+                            </span>
+
 
                         </div>
                 </div>

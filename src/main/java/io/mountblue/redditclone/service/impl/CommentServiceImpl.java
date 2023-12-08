@@ -21,8 +21,13 @@ public class CommentServiceImpl implements CommentService {
     PostRepository postRepository;
 
     @Override
-    public List<Comment> findByPostId(Integer postId){
+    public List<Comment> findByPostId(Integer postId) {
         return commentRepository.findByPostId(postId);
+    }
+
+    @Override
+    public Optional<Comment> findById(Integer postId){
+        return commentRepository.findById(postId);
     }
 
     @Override
@@ -47,12 +52,21 @@ public class CommentServiceImpl implements CommentService {
 //    }
 
     @Override
-    public Optional<Comment> findById(Integer commentId){
-        return commentRepository.findById(commentId);
+    public void UpdateComment(Integer commentId,String editComment,Integer postId) {
+
+        Optional<Comment> comment = commentRepository.findById(commentId);
+        comment.get().setText(editComment);
+        commentRepository.save(comment.get());
+
     }
 
     @Override
-    public void deleteComment(Comment comment){
-        commentRepository.delete(comment);
+    public void deleteComment(Integer commentId){
+        commentRepository.deleteById(commentId);
+    }
+
+    @Override
+    public List<Comment> findCommentsBySearchQuery(String query) {
+        return commentRepository.getCommentsBySearch(query);
     }
 }

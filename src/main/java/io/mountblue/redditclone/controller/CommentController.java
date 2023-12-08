@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.security.Principal;
 import java.util.List;
@@ -57,6 +58,8 @@ public class CommentController {
         model.addAttribute("subReddit", subReddit);
         model.addAttribute("subredditName", subredditName);
         model.addAttribute("editMode", editMode);
+        model.addAttribute("commentId",model.getAttribute("commentId"));
+        model.addAttribute("commentbody",model.getAttribute("commentbody"));
 
         return "viewPost";
     }
@@ -79,53 +82,55 @@ public class CommentController {
         return "redirect:/"+subredditName+"/posts/"+postId+"/comments";
     }
 
-    @GetMapping("/{subredditName}/posts/{postId}/editComment/{commentId}")
-    public String commentIdEdit(@PathVariable("subredditName")String subredditName,
-                                @PathVariable("postId")Integer postId,
-                                @PathVariable("commentId")Integer commentId,
-                                Model model){
-        Optional<Comment> editedComment = commentService.findById(commentId);
-        Post post = postService.findById(postId);
-        SubReddit subReddit = post.getSubReddit();
-        List<Comment> commentList = post.getCommentList();
-       boolean editMode = true;
-        model.addAttribute("editMode", editMode);
-        model.addAttribute("commentCount", commentList.size());
-        model.addAttribute("post", post);
-        model.addAttribute("postId", postId);
-        model.addAttribute("editedComment", editedComment.get());
-        model.addAttribute("newComment", new Comment());
-        model.addAttribute("commentList", commentList);
-        model.addAttribute("subReddit", subReddit);
-        model.addAttribute("commentId", commentId);
-        model.addAttribute("subredditName", subredditName);
-        return "viewPost";
-    }
+    @GetMapping("/comment/{postId}/{commentId}/edit")
+    public String editCommentForm(@PathVariable("postId") Integer postId,
+                                  @PathVariable("commentId") Integer commentId,
+                                  Model model, RedirectAttributes redirectAttributes){
+        System.out.println("Hello");
 
-    @PostMapping("/{subredditName}/posts/{postId}/updateComment/{commentId}")
-    public String editComment(@PathVariable("subredditName")String subredditName,
-                              @PathVariable("postId")Integer postId,
-                              @PathVariable("commentId")Integer commentId,
-                              @ModelAttribute("editedComment") Comment editedComment,
-                              Model model){
-        Optional<Comment> updateComment = commentService.findById(commentId);
-        updateComment.get().setText(editedComment.getText());
-        updateComment.get().setId(commentId);
-        commentService.saveComment(commentId, updateComment.get());
-        boolean editMode = false;
-        model.addAttribute("editMode", editMode);
-        return "redirect:/"+subredditName+"/posts/"+postId+"/comments";
-    }
-
-    @PostMapping("/{subredditName}/posts/{postId}/deleteComment/{commentId}")
-    public String deleteComment(@PathVariable("subredditName")String subredditName,
-                                @PathVariable("postId")Integer postId,
-                                @PathVariable("commentId")Integer commentId){
         Optional<Comment> comment = commentService.findById(commentId);
-        if(comment.isPresent()){
-            commentService.deleteComment(comment.get());
-        }
+        Post post = postService.findById(postId);
+        SubReddit subreddit = post.getSubReddit();
+        String subredditName = subreddit.getName();
+
+        model.addAttribute("commentId",comment.get().getId());
+        model.addAttribute("commentbody",comment.get().getText());
+        redirectAttributes.addFlashAttribute("commentId",comment.get().getId());
+        redirectAttributes.addFlashAttribute("commentbody",comment.get().getText());
+
+        return "redirect:/"+subredditName+"/posts/"+postId+"/comments";
+
+    }
+    @PostMapping("/comment/{postId}/{commentId}")
+    public String editComment( @ModelAttribute("comments") Comment comment,
+                               @PathVariable("postId") Integer postId,
+                               @PathVariable("commentId") Integer commentId,
+                               @RequestParam("updateContent") String editComment,
+                               Model model){
+        System.out.println(editComment);
+        Post post = postService.findById(postId);
+        SubReddit subreddit = post.getSubReddit();
+        String subredditName = subreddit.getName();
+        commentService.UpdateComment(commentId,editComment,postId);
+
+
 
         return "redirect:/"+subredditName+"/posts/"+postId+"/comments";
     }
+
+
+
+
+    @GetMapping("/comment/{postId}/{commentId}/delete")
+    public String deleteComment(@PathVariable("commentId") Integer commentId,
+                                @PathVariable("postId") Integer postId){
+        commentService.deleteComment(commentId);
+        Post post = postService.findById(postId);
+        SubReddit subreddit = post.getSubReddit();
+        String subredditName = subreddit.getName();
+
+
+        return "redirect:/"+subredditName+"/posts/"+postId+"/comments";
+    }
+
 }

@@ -1,9 +1,7 @@
 package io.mountblue.redditclone.controller;
 
-import io.mountblue.redditclone.entity.Comment;
-import io.mountblue.redditclone.entity.Post;
-import io.mountblue.redditclone.entity.SubReddit;
-import io.mountblue.redditclone.entity.User;
+import io.mountblue.redditclone.entity.*;
+import io.mountblue.redditclone.service.CommentService;
 import io.mountblue.redditclone.service.PostService;
 import io.mountblue.redditclone.service.SubRedditService;
 import io.mountblue.redditclone.service.UserService;
@@ -38,6 +36,7 @@ public class PostController {
     private final PostService postService;
     private final UserService userService;
     private final SubRedditService subRedditService;
+    private final CommentService commentService;
 
     @InitBinder
     public void initBinder(WebDataBinder dataBinder){
@@ -46,10 +45,12 @@ public class PostController {
     }
 
     @Autowired
-    PostController(PostService postService, UserService userService, SubRedditService subRedditService){
+    PostController(PostService postService, UserService userService,
+                   SubRedditService subRedditService, CommentService commentService){
         this.postService = postService;
         this.userService = userService;
         this.subRedditService = subRedditService;
+        this.commentService = commentService;
     }
 
     @GetMapping("/posts/createPost")
@@ -133,6 +134,7 @@ public class PostController {
     @PostMapping("/posts/updatePost/{postId}")
     public String updatePost(@Valid @ModelAttribute("post") Post updatedPost,
                              BindingResult bindingResult,
+                             @AuthenticationPrincipal UserDetails userDetails,
                              @PathVariable("postId") Integer postId,
                              @RequestParam(name="tagNames", required = false) String tagNames,
                              @RequestParam(value = "imageName",required = false) MultipartFile file) throws IOException{
@@ -154,8 +156,9 @@ public class PostController {
         }
 
         postService.updatePost(updatedPost, postId ,tagNames);
+        String username = userDetails.getUsername();
 
-        return "redirect:/posts/" + postId;
+        return "redirect:/user/" + username + "/posts";
     }
 
     @PostMapping("/posts/deletePost/{postId}")
@@ -173,7 +176,7 @@ public class PostController {
     }
 
     @GetMapping("/")
-    public String showPopularPage(Model model,
+    public String showPopularPage(Model model,@AuthenticationPrincipal UserDetails userDetails,
                                   @RequestParam(name = "sort", defaultValue = "Top") String sort){
         List<Post> allPosts = switch (sort) {
             case "Top" -> postService.findAllOrderByVoteCountDesc();
@@ -183,11 +186,21 @@ public class PostController {
             default -> postService.findAllPosts();
         };
 
+        User user = userService.findByUsername(userDetails.getUsername());
+        List<Bookmark> bookmarkList = user.getBookmarkList();
+        List<Integer> ids = new ArrayList<>();
+
+        for(Bookmark bookmark: bookmarkList) {
+            ids.add(bookmark.getPost().getId());
+        }
+
         List<SubReddit> subRedditList = subRedditService.findAll();
 
         model.addAttribute("allPosts", allPosts);
         model.addAttribute("subRedditList", subRedditList);
         model.addAttribute("sort", sort);
+        model.addAttribute("bookmark",ids);
+
 
         return "homePage";
     }
@@ -208,11 +221,44 @@ public class PostController {
 
         List<SubReddit> subRedditList = subRedditService.findAll();
 
+        List<Bookmark> bookmarkList = user.getBookmarkList();
+        List<Integer> ids = new ArrayList<>();
+
+        for(Bookmark bookmark: bookmarkList) {
+            ids.add(bookmark.getPost().getId());
+        }
+
+        model.addAttribute("bookmark",ids);
         model.addAttribute("allPosts", posts);
         model.addAttribute("subRedditList", subRedditList);
         model.addAttribute("sort", sort);
         model.addAttribute("personalized", true);
 
         return "homePage";
+    }
+
+    @GetMapping("/search/{action}")
+    public String showSearchResultPage(Model model,
+                                       @RequestParam(value = "query", required = false) String query,
+                                       @PathVariable("action") String action){
+        if(action.equals("posts")){
+            List<Post> posts = postService.findPostsBySearchQuery(query);
+            model.addAttribute("allPosts", posts);
+        }
+        else if(action.equals("community")){
+            List<SubReddit> communities = subRedditService.findSubRedditsBySearchQuery(query);
+            model.addAttribute("communities", communities);
+        }
+        else if(action.equals("comments")){
+            List<Comment> comments = commentService.findCommentsBySearchQuery(query);
+            model.addAttribute("comments",comments);
+        }
+
+        List<SubReddit> subRedditList = subRedditService.findAll();
+        model.addAttribute("subRedditList",subRedditList);
+
+        model.addAttribute("action", action);
+        model.addAttribute("query", query);
+        return "searchResult";
     }
 }

@@ -8,26 +8,33 @@
     <link rel="stylesheet" type="text/css" th:href="@{/css/viewPost.css}" />
 </head>
 <body>
+<script src="https://momentjs.com/downloads/moment.js"></script>
+<script th:inline="javascript">
+
+</script>
 
 <div class="navBar">
     <div class="bar1">
         <a th:href="@{/}"><i class="fa-brands fa-reddit color"></i></a>
-        <a th:href="@{/}"><p class="text">reddit</p></a>
+        <a style="text-decoration:none;" th:href="@{/}"><p class="text">reddit</p></a>
     </div>
     <div class="bar2">
-        <i class="fa-solid fa-magnifying-glass"></i>
-        <input type="text" placeholder="Search Reddit">
+        <form th:action="@{/search/posts}">
+            <i class="fa-solid fa-magnifying-glass"></i>
+            <input type="text" name="query" placeholder="Search Reddit">
+            <input type="submit" value="Search">
+        </form>
     </div>
     <form sec:authorize="${!isAuthenticated()}" th:action="@{/login}">
         <input type="submit" value="Login">
     </form>
     <div sec:authorize="isAuthenticated()" class="profile-div">
         <p class="profile">
-            <i class="fa-brands fa-square-reddit"></i>&nbsp;
-            u/<strong sec:authentication="principal.username" />
+            <a style="text-decoration:none; color:black;" th:href="@{'/user/'+${#authentication.principal.username}+'/posts'}"> <i class="fa-brands fa-square-reddit"></i>&nbsp;
+                u/<strong style="font-size:15px;" sec:authentication="principal.username" /></a>
         </p>
         <form th:action="@{/logout}" method="POST">
-            <input type="submit" value="Logout">
+            <input style="margin-left:10px;" type="submit" value="Logout">
         </form>
     </div>
 </div>
@@ -36,7 +43,7 @@
     <div class="row">
         <hr />
         <div class="col-md-9">
-            <div class="row post">
+            <div class="row post main-box">
                 <div class="col-md-1">
                     <div class="col-md-1">
                         <div class="d-flex flex-column votebox">
@@ -64,9 +71,10 @@
                 </div>
                 <div class="col-md-11">
                     <span>
-                        <span class="subreddit-text"><a class="post-url" href="" th:text="${subReddit.getName}"></a></span>
+                        <span class="subreddit-text"><a class="post-url" th:href="@{/community/{subredditName}(subredditName=${subReddit.getName})}" th:text="${subReddit.getName}"></a></span>
                         <span  th:text="${#temporals.format(post.createdAt, 'dd/MMM/yyy HH:mm')}"></span>
-                            by <span class="username" sec:authentication="principal.username"></span>
+<!--                            by <span class="username" sec:authentication="principal.username"></span>-->
+                              by<span class="username" th:text="${post.getUser().getUsername()}"></span>
                     </span>
                     <hr />
                     <div class = "post-container">
@@ -82,24 +90,53 @@
                             <span th:text="${commentCount}"></span><span> comments</span>
                         </div>
                     </div>
-                    <span class="comment-user">Commented as <span sec:authentication="principal.username"></span></span>
+<!--                    <span class="comment-user">Commented as <span sec:authentication="principal.username"></span></span>-->
                     <div class="post-comment">
                         <form method="POST" th:object="${newComment}" th:action="@{'/'+${subredditName}+'/posts/'+ ${postId} +'/saveComment'}">
                             <div>
                                 <textarea name="text" th:field="*{text}" placeholder="Your Thoughts?" cols="80"></textarea>
                             </div>
-                            <button type="submit" class="login float-right">Comment</button>
+                            <button type="submit" class="login float-right button">Comment</button>
                         </form>
                     </div>
+
                     <div style="margin-top: 60px;" th:each="comments: ${commentList}">
-                        <div class="comment" th:unless="${editMode}">
-                            <span class="username">
-                                <a th:if="${comments != null and comments.getUser() != null}"
-                                    th:text="${comments.getUser().getUsername()}" th:href="@{'/user/'+${#authentication.principal.username}+'/posts'}">
-                                </a>
-                                    Commented On <span th:text="${#temporals.format(comments.createdAt, 'dd/MMM/yyy HH:mm')}"></span>
-                            </span>
+                        <div class="comment">
+                        <span class="username">
+                            <span th:if="${comments != null and comments.getUser() != null}"
+                               th:text="${comments.getUser().getUsername()}" ></span>
+                            Commented On <span th:text="${#temporals.format(comments.createdAt, 'dd/MMM/yyy HH:mm')}"></span>
+                        </span>
+
+
+
+                            <form th:if="${commentId != null and commentId eq comments.id}"
+                                    th:action="@{/comment/{postId}/{commentId}(postId=${post.id},commentId=${comments.id})}" method="Post">
+                                <textarea name="updateContent"
+                                           rows="10"
+                                          th:text="${comments.text}"
+                                          style="width: 50%; margin-left: 5%;" required></textarea>
+                                <br>
+                                <input  type="submit" value="Edit">
+                            </form>
+
+                            <div th:unless="${commentId != null and commentId eq comments.id}" >
                             <p th:text="${comments.text}"></p>
+<!--                            <a th:if="${#authentication.principal.username eq comments.getUser().getUsername()}"-->
+<!--                               th:href="@{/comment/{postId}/{commentId}/edit(postId=${post.id},commentId=${comments.id})}" class="button">Edit</a>-->
+<!--                            <a th:if="${#authentication.principal.username eq comments.getUser().getUsername()}"-->
+<!--                               th:href="@{/comment/{postId}/{commentId}/delete(postId=${post.id},commentId=${comments.id})}" class="button">Delete</a>-->
+
+
+                                <span th:if="${#authorization.expression('isAuthenticated()')}">
+      <span th:if = "${#authentication.principal.username == post.getUser().getUsername() }">
+      <a th:href="@{/comment/{postId}/{commentId}/edit(postId=${post.id},commentId=${comments.id})}"   class="button" >Edit</a>
+      <a th:href="@{/comment/{postId}/{commentId}/delete(postId=${post.id},commentId=${comments.id})}"  class="button" >Delete</a>
+      </span>
+      </span>
+
+
+                            </div>
                         </div>
                         <div th:if="${comments.id eq commentId}">
                             <form method="POST" th:object="${editedComment}" th:action="@{'/'+${subredditName}+'/posts/'+ ${postId} +'/updateComment/'+${commentId}}">
@@ -123,12 +160,12 @@
         <div class="col-md-3">
             <div class="sidebar">
                 <!--                <img src="https://www.redditstatic.com/desktop2x/img/id-cards/home-banner@2x.png">-->
-                <h2 th:text="${subReddit.getName()}"></h2>
-                <divc class="username">Created On
+                <h2 style="padding:5px;" th:text="${subReddit.getName()}"></h2>
+                <div style="padding:5px;"  class="username">Created On
                     <span th:text="${#temporals.format(subReddit.createdAt, 'dd/MMM/yyy HH:mm')}"></span>
-                </divc>
-                <h3>Description:</h3>
-                <div th:text="${subReddit.getDescription()}"></div>
+                </div>
+                <h3 style="padding:5px;">Description:</h3>
+                <div style="padding:5px; margin-bottom:20px;" th:text="${subReddit.getDescription()}"></div>
 
                 <div>
                     <form th:action="@{'/community/' + ${subReddit.getName()} + '/createPost'}">
