@@ -21,8 +21,13 @@ public class CommentServiceImpl implements CommentService {
     PostRepository postRepository;
 
     @Override
-    public List<Comment> findById(Integer postId){
+    public List<Comment> findByPostId(Integer postId) {
         return commentRepository.findByPostId(postId);
+    }
+
+    @Override
+    public Optional<Comment> findById(Integer postId){
+        return commentRepository.findById(postId);
     }
 
     @Override
@@ -31,22 +36,33 @@ public class CommentServiceImpl implements CommentService {
         if (optional.isPresent()){
             comment.setPost(optional.get());
         }
-        commentRepository.save(comment);
+        if(!comment.getText().isEmpty())
+            commentRepository.save(comment);
+    }
+
+//    @Override
+//    public void UpdateComment(Comment comment) {
+//        Optional<Comment> optional = commentRepository.findById(comment.getId());
+//        if (optional.isPresent()) {
+//            Comment updatedComment = optional.get();
+//            updatedComment.setText(comment.getText());
+//            if(!comment.getText().isEmpty())
+//                commentRepository.save(updatedComment);
+//        }
+//    }
+
+    @Override
+    public void UpdateComment(Integer commentId,String editComment,Integer postId) {
+
+        Optional<Comment> comment = commentRepository.findById(commentId);
+        comment.get().setText(editComment);
+        commentRepository.save(comment.get());
+
     }
 
     @Override
-    public void UpdateComment(Comment comment) {
-        Optional<Comment> optional = commentRepository.findById(comment.getId());
-        if (optional.isPresent()) {
-            Comment updatedComment = optional.get();
-            updatedComment.setText(comment.getText());
-            commentRepository.save(updatedComment);
-        }
-    }
-
-    @Override
-    public void deleteComment(Comment comment){
-        commentRepository.delete(comment);
+    public void deleteComment(Integer commentId){
+        commentRepository.deleteById(commentId);
     }
 
     @Override
