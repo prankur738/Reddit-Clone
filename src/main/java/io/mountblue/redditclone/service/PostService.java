@@ -3,6 +3,7 @@ package io.mountblue.redditclone.service;
 import io.mountblue.redditclone.entity.Post;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 public interface PostService {
@@ -36,4 +37,5 @@ public interface PostService {
     List<Post> findAllOrderByCreatedAt();
 
     List<Post> findPostsBySearchQuery(String query);
+    Integer getPostsByUserInSubRedditInLast24Hours(String username, String subRedditName, LocalDateTime startDate);
 }
