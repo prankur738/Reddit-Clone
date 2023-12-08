@@ -1,5 +1,11 @@
 package io.mountblue.redditclone.controller;
 
+import com.google.auth.Credentials;
+import com.google.auth.oauth2.GoogleCredentials;
+import com.google.cloud.storage.Blob;
+import com.google.cloud.storage.BlobId;
+import com.google.cloud.storage.Storage;
+import com.google.cloud.storage.StorageOptions;
 import io.mountblue.redditclone.entity.Comment;
 import io.mountblue.redditclone.entity.Post;
 import io.mountblue.redditclone.entity.SubReddit;
@@ -15,7 +21,11 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.security.Principal;
+import java.util.Base64;
 import java.util.List;
 import java.util.Optional;
 
@@ -43,9 +53,26 @@ public class CommentController {
 
 
     @GetMapping("/{subredditName}/posts/{postId}/comments")
-    public String showComments(@PathVariable("subredditName")String subredditName, Model model, @PathVariable("postId")Integer postId){
+    public String showComments(@PathVariable("subredditName")String subredditName, Model model, @PathVariable("postId")Integer postId) throws IOException {
 
         Post post = postService.findById(postId);
+
+            if(post.getPhotoName()!= null){
+                String fileName = post.getPhotoName();
+                // Download file from Firebase Storage
+                Credentials credentials = GoogleCredentials.fromStream(new FileInputStream("./serviceAccountKey.json"));
+                Storage storage = StorageOptions.newBuilder().setCredentials(credentials).build().getService();
+                Blob blob = storage.get(BlobId.of("reddit-clone-f5e1d.appspot.com", fileName));
+
+                String contentType = post.getPhotoType();
+                String base64Image = Base64.getEncoder().encodeToString(blob.getContent());
+
+                post.setPhotoType(contentType);
+                post.setImage(base64Image);
+
+
+
+        }
         SubReddit subReddit = post.getSubReddit();
         List<Comment> commentList = post.getCommentList();
         Boolean editMode = false;

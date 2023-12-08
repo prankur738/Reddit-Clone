@@ -98,9 +98,14 @@
                             <div class="post-content">
                                 <p th:text="${post.getDescription()}"></p>
                             </div>
-                            <div th:if="${post.image != null}" >
-                                <img th:src="@{'/image/'+${post.image}}" alt="reddit" width="500px" height="350px">
-                            </div>
+<!--                            <div th:if="${post.image != null}" >-->
+<!--                                <img th:src="@{'/image/'+${post.image}}" alt="reddit" width="500px" height="350px">-->
+<!--                            </div>-->
+                                <div th:if="${post.image != null}">
+                                <img  th:src="'data:' + ${post.photoType} + ';base64,'
+                                 + ${post.image}"
+                                     width="500px" height="350px" class="show_img">
+                                </div>
                             </a>
                         </div>
 
