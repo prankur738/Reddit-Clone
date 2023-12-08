@@ -6,6 +6,7 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <link rel="stylesheet" type="text/css" th:href="@{/css/viewPost.css}" />
+
 </head>
 <body>
 <script src="https://momentjs.com/downloads/moment.js"></script>
@@ -73,7 +74,7 @@
                     <span>
                         <span class="subreddit-text"><a class="post-url" th:href="@{/community/{subredditName}(subredditName=${subReddit.getName})}" th:text="${subReddit.getName}"></a></span>
                         <span  th:text="${#temporals.format(post.createdAt, 'dd/MMM/yyy HH:mm')}"></span>
-<!--                            by <span class="username" sec:authentication="principal.username"></span>-->
+                        <!--                            by <span class="username" sec:authentication="principal.username"></span>-->
                               by<span class="username" th:text="${post.getUser().getUsername()}"></span>
                     </span>
                     <hr />
@@ -90,7 +91,7 @@
                             <span th:text="${commentCount}"></span><span> comments</span>
                         </div>
                     </div>
-<!--                    <span class="comment-user">Commented as <span sec:authentication="principal.username"></span></span>-->
+                    <!--                    <span class="comment-user">Commented as <span sec:authentication="principal.username"></span></span>-->
                     <div class="post-comment">
                         <form method="POST" th:object="${newComment}" th:action="@{'/'+${subredditName}+'/posts/'+ ${postId} +'/saveComment'}">
                             <div>
@@ -104,16 +105,16 @@
                         <div class="comment">
                         <span class="username">
                             <span th:if="${comments != null and comments.getUser() != null}"
-                               th:text="${comments.getUser().getUsername()}" ></span>
+                                  th:text="${comments.getUser().getUsername()}" ></span>
                             Commented On <span th:text="${#temporals.format(comments.createdAt, 'dd/MMM/yyy HH:mm')}"></span>
                         </span>
 
 
 
                             <form th:if="${commentId != null and commentId eq comments.id}"
-                                    th:action="@{/comment/{postId}/{commentId}(postId=${post.id},commentId=${comments.id})}" method="Post">
+                                  th:action="@{/comment/{postId}/{commentId}(postId=${post.id},commentId=${comments.id})}" method="Post">
                                 <textarea name="updateContent"
-                                           rows="10"
+                                          rows="10"
                                           th:text="${comments.text}"
                                           style="width: 50%; margin-left: 5%;" required></textarea>
                                 <br>
@@ -121,11 +122,11 @@
                             </form>
 
                             <div th:unless="${commentId != null and commentId eq comments.id}" >
-                            <p th:text="${comments.text}"></p>
-<!--                            <a th:if="${#authentication.principal.username eq comments.getUser().getUsername()}"-->
-<!--                               th:href="@{/comment/{postId}/{commentId}/edit(postId=${post.id},commentId=${comments.id})}" class="button">Edit</a>-->
-<!--                            <a th:if="${#authentication.principal.username eq comments.getUser().getUsername()}"-->
-<!--                               th:href="@{/comment/{postId}/{commentId}/delete(postId=${post.id},commentId=${comments.id})}" class="button">Delete</a>-->
+                                <p th:text="${comments.text}"></p>
+                                <!--                            <a th:if="${#authentication.principal.username eq comments.getUser().getUsername()}"-->
+                                <!--                               th:href="@{/comment/{postId}/{commentId}/edit(postId=${post.id},commentId=${comments.id})}" class="button">Edit</a>-->
+                                <!--                            <a th:if="${#authentication.principal.username eq comments.getUser().getUsername()}"-->
+                                <!--                               th:href="@{/comment/{postId}/{commentId}/delete(postId=${post.id},commentId=${comments.id})}" class="button">Delete</a>-->
 
 
                                 <span th:if="${#authorization.expression('isAuthenticated()')}">
@@ -138,21 +139,6 @@
 
                             </div>
                         </div>
-                        <div th:if="${comments.id eq commentId}">
-                            <form method="POST" th:object="${editedComment}" th:action="@{'/'+${subredditName}+'/posts/'+ ${postId} +'/updateComment/'+${commentId}}">
-                                <textarea name="text" th:field="*{text}" cols="80"></textarea>
-                                <button type="submit">Save Changes</button>
-                            </form>
-                        </div>
-                        <span th:unless="${comments.id eq commentId}">
-                            <form method="GET" th:action="@{'/'+${subredditName}+'/posts/'+ ${postId}+'/editComment/'+${comments.id}}">
-                                <button type="submit" class="login float-right">Edit</button>
-                            </form>
-                            <form method="POST" th:action="@{'/'+${subredditName}+'/posts/'+ ${postId}+'/deleteComment/'+${comments.id}}">
-                                <button type="submit" class="login float-right">Delete</button>
-                            </form>
-                        </span>
-
                     </div>
                 </div>
             </div>
@@ -182,5 +168,6 @@
         </div>
     </div>
 </div>
+
 </body>
 </html>
