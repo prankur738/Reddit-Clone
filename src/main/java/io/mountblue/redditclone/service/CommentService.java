@@ -19,6 +19,6 @@ public interface CommentService {
     public void deleteComment(Integer commentId);
   
     List<Comment> findCommentsBySearchQuery(String query);
-  
+
     void updateComment(Integer commentId, Integer voteCountChange);
 }

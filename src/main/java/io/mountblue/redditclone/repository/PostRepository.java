@@ -1,10 +1,13 @@
 package io.mountblue.redditclone.repository;
 
 import io.mountblue.redditclone.entity.Post;
+import io.mountblue.redditclone.entity.SubReddit;
+import io.mountblue.redditclone.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 public interface PostRepository extends JpaRepository<Post,Integer> {
@@ -36,4 +39,11 @@ public interface PostRepository extends JpaRepository<Post,Integer> {
             "p.description LIKE CONCAT('%', :query, '%') "
     )
     List<Post> getPostsBySearch(@Param("query") String query);
+
+    @Query("SELECT COUNT(p) FROM Post p WHERE p.user = :user AND p.subReddit = :subReddit AND p.createdAt >= :startDate")
+    Integer countPostsByUserInSubredditLast24Hours(
+            @Param("user") User user,
+            @Param("subReddit") SubReddit subReddit,
+            @Param("startDate") LocalDateTime startDate
+    );
 }
