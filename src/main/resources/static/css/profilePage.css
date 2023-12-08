@@ -257,7 +257,7 @@ font-size:24px;
     }
 
     #edit-button, #delete-button {
-        width: 90%;
+        width: 30%;
         height: 25px;
         border-radius: 30px;
         background-color: orangered;
@@ -266,5 +266,6 @@ font-size:24px;
         color:white;
         margin-left: 20px;
         margin-bottom: 20px;
+
     }
 

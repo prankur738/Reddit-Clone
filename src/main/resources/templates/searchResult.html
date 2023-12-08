@@ -135,13 +135,16 @@
                                 <p th:text="${post.getDescription()}"></p>
                             </div>
                             <div class="img-container" th:if="${post.image != null}" >
-                            </div>    <img th:src="@{'/image/'+${post.image}}" alt="reddit" >
+                               <img th:src="@{'/image/'+${post.image}}" alt="reddit" >
+                            </div>
                         </a>
                     </div>
-                    </div>
+
                     <div class="comment-count">
                         <i class="fa-regular fa-message"></i>
-                        <span th:text="${post.getCount(post.getCommentList())}"></span><span> comments</span>
+                        <span th:text="${post.getCount(post.getCommentList())}"></span>
+                        <span> comments</span>
+
                     </div>
                 </div>
             </div>

@@ -42,7 +42,6 @@ public class PostServiceImpl implements PostService {
         SubReddit subReddit = subRedditService.findById(subredditId);
         post.setUser(user);
         post.setTagList(tagFromString);
-
         post.setSubReddit(subReddit);
         postRepository.save(post);
 

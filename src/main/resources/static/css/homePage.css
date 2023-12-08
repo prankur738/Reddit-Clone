@@ -254,3 +254,39 @@ a {
 display:inline;
 margin-right:40px;
 }
+.reddit-span:hover {
+    color: #ff4500;
+    cursor: pointer;
+
+  }
+  .static{
+  margin-top:10px;
+  height:auto;
+  width:100%;
+  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+
+  }
+  .bgcolor{
+   height:70px;
+    width:100%;
+  }
+  .font{
+  height:70px;
+      width:30%;
+  }
+   .policy{
+   display:flex;
+    height:200px;
+    width:100%;
+    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+    }
+
+    .one{
+     display:flex;
+     justify-content:center;
+     align-items:center;
+     flex-direction:column;
+    }
+    ul{
+     list-style: none;
+     }

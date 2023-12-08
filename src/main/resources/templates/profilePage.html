@@ -84,10 +84,25 @@
                                 </a>
                             </div>
 
-                            <div>
-                                <i class="fa-regular fa-message"></i>
-                            </div>
+                            <div class="comment-count">
+                                <a th:href="@{'/' + ${post.getSubReddit().getName()}+'/posts/' + ${post.getId()} +'/comments'}">
+                                    <i class="fa-regular fa-message"></i>
+                                    <span th:text="${post.getCount(post.getCommentList())}"></span>
+                                    <span class="comment-space"> comments</span>
+                                </a>
+
+                                <span  th:unless="${#lists.contains(bookmark,post.id)}">
+                            <a th:href="@{'/bookmark/'+${post.getId()}  + '/posts'}">
+                                <i class="fa-regular fa-bookmark"></i> </a>
+                            </span>
+
+                                <span th:if="${#lists.contains(bookmark,post.id)}">
+                                <a th:href="@{'/bookmark/'+${post.getId()} + '/posts'}">
+                                    <i class="fa-solid fa-bookmark"></i></a>
+                            </span>
                         </div>
+
+
                         <span th:if="${action == 'posts'}">
                         <form th:action="@{'/posts/editPost/' + ${post.getId()}}">
                             <button id="edit-button">Edit</button>
@@ -98,6 +113,7 @@
                         </span>
                     </div>
 
+            </div>
             </div>
         </main>
 

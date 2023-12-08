@@ -82,6 +82,13 @@ public class PostController {
             return "createNewPost";
 
         }
+        String username = userDetails.getUsername();
+        User user = userService.findByUsername(username);
+        List<Post> posts = user.getPosts();
+        if(posts.size()>3){
+            return "accessDenied";
+        }
+
         if(file.isEmpty()){
             SubReddit subReddit = subRedditService.findByName(subRedditName);
             postService.createNewPost(post, subReddit.getId(), userDetails.getUsername(), tagNames);
@@ -238,7 +245,7 @@ public class PostController {
     }
 
     @GetMapping("/search/{action}")
-    public String showSearchResultPage(Model model,
+    public String showSearchResultPage(Model model,@AuthenticationPrincipal UserDetails userDetails,
                                        @RequestParam(value = "query", required = false) String query,
                                        @PathVariable("action") String action){
         if(action.equals("posts")){
@@ -254,11 +261,20 @@ public class PostController {
             model.addAttribute("comments",comments);
         }
 
+        User user = userService.findByUsername(userDetails.getUsername());
+        List<Bookmark> bookmarkList = user.getBookmarkList();
+        List<Integer> ids = new ArrayList<>();
+
+        for(Bookmark bookmark: bookmarkList) {
+            ids.add(bookmark.getPost().getId());
+        }
+
         List<SubReddit> subRedditList = subRedditService.findAll();
         model.addAttribute("subRedditList",subRedditList);
 
         model.addAttribute("action", action);
         model.addAttribute("query", query);
+        model.addAttribute("bookmark",ids);
         return "searchResult";
     }
 }
