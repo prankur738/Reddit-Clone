@@ -14,7 +14,7 @@ public interface SubRedditService {
 
     void createSubReddit(SubReddit subReddit,String username);
 
-    void updateSubReddit(SubReddit subReddit,String username);
+    void updateSubReddit(SubReddit subReddit,Integer subRedditId);
 
     void deleteById(Integer subRedditId);
 

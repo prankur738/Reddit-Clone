@@ -57,30 +57,31 @@ public class SubRedditController {
         model.addAttribute("subReddit",subReddit);
 
 
-        User user = userService.findByUsername(userDetails.getUsername());
-        List<Bookmark> bookmarkList = user.getBookmarkList();
+        User username = userService.findByUsername(userDetails.getUsername());
+        List<Bookmark> bookmarkList = username.getBookmarkList();
         List<Integer> ids = new ArrayList<>();
 
         for(Bookmark bookmark: bookmarkList) {
             ids.add(bookmark.getPost().getId());
         }
         model.addAttribute("bookmark",ids);
-        if (subReddit.getSubscribers().contains(user)) {
+        if (subReddit.getSubscribers().contains(username)) {
             model.addAttribute("subscribedUser", true);
 
-        if (userDetails != null) {
-            User user = userService.findByUsername(userDetails.getUsername());
+            if (userDetails != null) {
+                User user = userService.findByUsername(userDetails.getUsername());
 
-            boolean isAdmin = user.getId() == subReddit.getAdminUserId();
-            boolean isMod = isAdmin || subReddit.getModerators().contains(user);
+                boolean isAdmin = user.getId() == subReddit.getAdminUserId();
+                boolean isMod = isAdmin || subReddit.getModerators().contains(user);
 
-            model.addAttribute("isAdmin", isAdmin);
-            model.addAttribute("isMod", isMod);
+                model.addAttribute("isAdmin", isAdmin);
+                model.addAttribute("isMod", isMod);
 
-            if (subReddit.getSubscribers().contains(user)) {
-                model.addAttribute("subscribedUser", true);
+                if (subReddit.getSubscribers().contains(user)) {
+                    model.addAttribute("subscribedUser", true);
+                }
+
             }
-
         }
 
         model.addAttribute("admin", userService.findById(subReddit.getAdminUserId()));
@@ -121,12 +122,13 @@ public class SubRedditController {
         return "accessDenied";
     }
 
-    @PostMapping("/community/update")
+    @PostMapping("/community/update/{subRedditId}")
     public String updateSubReddit(@Valid @ModelAttribute("subReddit") SubReddit  subReddit,
                                   BindingResult bindingResult,
+                                  @PathVariable("subRedditId") Integer subRedditId,
                                   @AuthenticationPrincipal UserDetails userDetails){
 
-        subRedditService.updateSubReddit(subReddit,userDetails.getUsername());
+        subRedditService.updateSubReddit(subReddit, subRedditId);
         return "redirect:/community/" + subReddit.getName();
     }
 
