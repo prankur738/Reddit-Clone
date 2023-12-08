@@ -175,9 +175,15 @@ input[type=submit] {
     font-size: 20px;
 }
 
+#popular-link, #home-link {
+    display: block;
+    width: 100%;
+    padding: 10px 15px;
+}
+
 .sort button {
     color: darkslategray;
-    font-size: 13px;
+    font-size: 15px;
     font-weight: bold;
     background-color: inherit;
     border: none;
@@ -185,7 +191,7 @@ input[type=submit] {
     padding: 10px 15px;
 }
 
-.top, .hot, .new, .old {
+.active {
     background-color: lightgray !important;
 }
 
