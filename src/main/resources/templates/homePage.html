@@ -122,9 +122,11 @@
                         </div>
 
                         <div class="comment-count">
+                            <a th:href="@{'/' + ${post.getSubReddit().getName()}+'/posts/' + ${post.getId()} +'/comments'}">
                             <i class="fa-regular fa-message"></i>
                             <span th:text="${post.getCount(post.getCommentList())}"></span>
                             <span class="comment-space"> comments</span>
+                            </a>
 
                             <span  th:unless="${#lists.contains(bookmark,post.id)}">
                             <a th:href="@{'bookmark/'+${post.getId()}}">

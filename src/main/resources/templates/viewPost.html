@@ -104,8 +104,8 @@
                     <div style="margin-top: 60px;" th:each="comments: ${commentList}">
                         <div class="comment">
                         <span class="username">
-                            <a th:if="${comments != null and comments.getUser() != null}"
-                               th:text="${comments.getUser().getUsername()}" th:href="@{'/user/'+${#authentication.principal.username}+'/posts'}"></a>
+                            <span th:if="${comments != null and comments.getUser() != null}"
+                               th:text="${comments.getUser().getUsername()}" ></span>
                             Commented On <span th:text="${#temporals.format(comments.createdAt, 'dd/MMM/yyy HH:mm')}"></span>
                         </span>
 
@@ -131,7 +131,6 @@
 
                                 <span th:if="${#authorization.expression('isAuthenticated()')}">
       <span th:if = "${#authentication.principal.username == post.getUser().getUsername() }">
-          <p th:text="${post.getUser().getUsername()}"></p>
       <a th:href="@{/comment/{postId}/{commentId}/edit(postId=${post.id},commentId=${comments.id})}"   class="button" >Edit</a>
       <a th:href="@{/comment/{postId}/{commentId}/delete(postId=${post.id},commentId=${comments.id})}"  class="button" >Delete</a>
       </span>
