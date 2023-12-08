@@ -52,24 +52,24 @@ public class SubRedditController {
     @GetMapping("/community/{subRedditName}")
     public String showSubReddit(Model model,
                                 @PathVariable("subRedditName") String subRedditName,
-                                @AuthenticationPrincipal UserDetails userDetails){
+                                @AuthenticationPrincipal UserDetails userDetails) {
         SubReddit subReddit = subRedditService.findByName(subRedditName);
-        model.addAttribute("subReddit",subReddit);
+        model.addAttribute("subReddit", subReddit);
 
 
         User user = userService.findByUsername(userDetails.getUsername());
         List<Bookmark> bookmarkList = user.getBookmarkList();
         List<Integer> ids = new ArrayList<>();
 
-        for(Bookmark bookmark: bookmarkList) {
+        for (Bookmark bookmark : bookmarkList) {
             ids.add(bookmark.getPost().getId());
         }
-        model.addAttribute("bookmark",ids);
+        model.addAttribute("bookmark", ids);
         if (subReddit.getSubscribers().contains(user)) {
             model.addAttribute("subscribedUser", true);
+        }
 
         if (userDetails != null) {
-            User user = userService.findByUsername(userDetails.getUsername());
 
             boolean isAdmin = user.getId() == subReddit.getAdminUserId();
             boolean isMod = isAdmin || subReddit.getModerators().contains(user);
@@ -80,7 +80,6 @@ public class SubRedditController {
             if (subReddit.getSubscribers().contains(user)) {
                 model.addAttribute("subscribedUser", true);
             }
-
         }
 
         model.addAttribute("admin", userService.findById(subReddit.getAdminUserId()));
@@ -91,7 +90,7 @@ public class SubRedditController {
 
     @PostMapping("community/deleteCommunity/{subRedditId}")
     public String deleteSubReddit(@PathVariable("subRedditId") Integer subRedditId,
-                                  @AuthenticationPrincipal UserDetails userDetails){
+                                  @AuthenticationPrincipal UserDetails userDetails) {
         boolean isUserAuthorized = subRedditService.checkUserAuthorized(userDetails, subRedditId);
 
         if(isUserAuthorized){
