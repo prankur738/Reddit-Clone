@@ -77,11 +77,8 @@ public class SubRedditController {
 
                 String contentType = post.getPhotoType();
                 String base64Image = Base64.getEncoder().encodeToString(blob.getContent());
-
                 post.setPhotoType(contentType);
                 post.setImage(base64Image);
-
-
             }
         }
         model.addAttribute("subReddit", subReddit);
