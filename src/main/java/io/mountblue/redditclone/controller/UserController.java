@@ -149,6 +149,7 @@ public class UserController {
             model.addAttribute("posts",posts);
 
         }
+        model.addAttribute("user",user.getKarma());
         model.addAttribute("bookmark",ids);
         model.addAttribute("action",action);
         return "profilePage";

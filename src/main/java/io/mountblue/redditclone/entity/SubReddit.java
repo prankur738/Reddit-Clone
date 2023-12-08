@@ -63,7 +63,7 @@ public class SubReddit {
     )
     Set<User> bannedUsers = new HashSet<>();
 
-    @OneToMany(mappedBy = "subReddit")
+    @OneToMany(mappedBy = "subReddit",cascade = CascadeType.ALL)
     List<Post> postList;
 
 }
