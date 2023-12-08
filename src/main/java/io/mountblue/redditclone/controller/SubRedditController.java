@@ -1,5 +1,6 @@
 package io.mountblue.redditclone.controller;
 
+import io.mountblue.redditclone.entity.Bookmark;
 import io.mountblue.redditclone.entity.SubReddit;
 import io.mountblue.redditclone.entity.User;
 import io.mountblue.redditclone.service.PostService;
@@ -14,6 +15,7 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Controller
@@ -54,6 +56,18 @@ public class SubRedditController {
         SubReddit subReddit = subRedditService.findByName(subRedditName);
         model.addAttribute("subReddit",subReddit);
 
+
+        User user = userService.findByUsername(userDetails.getUsername());
+        List<Bookmark> bookmarkList = user.getBookmarkList();
+        List<Integer> ids = new ArrayList<>();
+
+        for(Bookmark bookmark: bookmarkList) {
+            ids.add(bookmark.getPost().getId());
+        }
+        model.addAttribute("bookmark",ids);
+        if (subReddit.getSubscribers().contains(user)) {
+            model.addAttribute("subscribedUser", true);
+
         if (userDetails != null) {
             User user = userService.findByUsername(userDetails.getUsername());
 
@@ -66,6 +80,7 @@ public class SubRedditController {
             if (subReddit.getSubscribers().contains(user)) {
                 model.addAttribute("subscribedUser", true);
             }
+
         }
 
         model.addAttribute("admin", userService.findById(subReddit.getAdminUserId()));

@@ -88,7 +88,12 @@ public class UserController {
         }
         User user = userService.findByUsername(username);
         List<Post> posts1 = user.getPosts();
+        List<Bookmark> bookmarkLists = user.getBookmarkList();
+        List<Integer> ids = new ArrayList<>();
 
+        for(Bookmark bookmark: bookmarkLists) {
+            ids.add(bookmark.getPost().getId());
+        }
 
         if(action.equals("comments")){
             List<Comment> comments = user.getComments();
@@ -117,6 +122,7 @@ public class UserController {
             model.addAttribute("posts",posts);
 
         }
+        model.addAttribute("bookmark",ids);
         model.addAttribute("action",action);
         return "profilePage";
 

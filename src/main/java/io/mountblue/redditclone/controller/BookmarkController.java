@@ -20,10 +20,19 @@ public class BookmarkController {
         this.bookmarkService = bookmarkService;
         this.userRepository = userRepository;
     }
-    @GetMapping("bookmark/{postId}")
-    public String bookmarkPost(@PathVariable Integer postId, @AuthenticationPrincipal UserDetails userDetails){
+    @GetMapping("/bookmark/{postId}/{endPoint}")
+    public String bookmarkPost(@PathVariable Integer postId,
+                               @PathVariable(value = "endPoint", required = false) String endPoint,
+                               @AuthenticationPrincipal UserDetails userDetails){
 
         bookmarkService.bookmarkPost(postId,userDetails.getUsername());
-        return "redirect:/";
+        if(endPoint.equals("home")){
+            return "redirect:/";
+        }
+        else if(endPoint.equals("posts")){
+            return  "redirect:/user/"+userDetails.getUsername()+'/'+endPoint;
+        }
+
+            return "redirect:/community/"+endPoint;
     }
 }
