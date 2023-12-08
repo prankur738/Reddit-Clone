@@ -2,6 +2,7 @@ package io.mountblue.redditclone.service.impl;
 
 import io.mountblue.redditclone.entity.Comment;
 import io.mountblue.redditclone.entity.Post;
+import io.mountblue.redditclone.entity.User;
 import io.mountblue.redditclone.repository.CommentRepository;
 import io.mountblue.redditclone.repository.PostRepository;
 import io.mountblue.redditclone.service.CommentService;
@@ -31,15 +32,19 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
-    public void saveComment(Integer postId, Comment comment){
+    public void saveComment(Integer postId, Comment comment, User postOwner){
         Optional<Post> optional = postRepository.findById(postId); //get comment post by id
         if (optional.isPresent()){
             comment.setPost(optional.get());
         }
-        if(!comment.getText().isEmpty())
+        if(!comment.getText().isEmpty()){
+            if(postOwner.getKarma() == null)
+                postOwner.setKarma(1);
+            else
+                postOwner.setKarma(postOwner.getKarma()+1);
             commentRepository.save(comment);
+        }
     }
-
 
     @Override
     public void updateComment(Integer commentId, String editComment, Integer postId) {

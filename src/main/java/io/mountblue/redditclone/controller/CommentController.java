@@ -72,7 +72,8 @@ public class CommentController {
                                        Model model, Principal principal){
         User user =userService.findByUsername(principal.getName());
         comment.setUser(user);
-        commentService.saveComment(postId, comment);
+        Post post1 = postService.findById(postId);
+        commentService.saveComment(postId, comment,post1.getUser());
         System.out.println("comment User:"+ comment.getUser().getUsername());
         //Post post = postServiceImpl.findById(postId);
         List<Comment> commentList = post.getCommentList();

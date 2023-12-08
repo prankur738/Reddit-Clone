@@ -42,7 +42,10 @@ public class PostServiceImpl implements PostService {
         SubReddit subReddit = subRedditService.findById(subredditId);
         post.setUser(user);
         post.setTagList(tagFromString);
-
+        if(user.getKarma() == null)
+            user.setKarma(1);
+        else
+            user.setKarma(user.getKarma()+1);
         post.setSubReddit(subReddit);
         postRepository.save(post);
 
