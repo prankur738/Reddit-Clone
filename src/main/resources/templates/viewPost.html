@@ -83,8 +83,10 @@
                         <div>
                             <p class="post-text" th:text="${post.description}"></p>
                         </div>
-                        <div class="img-container" th:if="${post.image != null}" >
-                            <img th:src="@{'/image/'+${post.image}}" alt="reddit" >
+                        <div th:if="${post.image != null}">
+                            <img  th:src="'data:' + ${post.photoType} + ';base64,'
+                                 + ${post.image}"
+                                  width="500px" height="350px" class="show_img">
                         </div>
                         <div class="comment-count">
                             <i class="fa-regular fa-message"></i>
@@ -167,7 +169,7 @@
         </div>
         <div class="col-md-3">
             <div class="sidebar">
-                <!--                <img src="https://www.redditstatic.com/desktop2x/img/id-cards/home-banner@2x.png">-->
+
                 <h2 style="padding:5px;" th:text="${subReddit.getName()}"></h2>
                 <div style="padding:5px;"  class="username">Created On
                     <span th:text="${#temporals.format(subReddit.createdAt, 'dd/MMM/yyy HH:mm')}"></span>

@@ -29,6 +29,9 @@ public class SubReddit {
     @Column(name="description", columnDefinition = "TEXT")
     String description;
 
+    @Column(name = "post_limit")
+    Integer postLimit;
+
     @Column(name = "created_at")
     @CreationTimestamp
     LocalDateTime createdAt;

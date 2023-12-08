@@ -1,5 +1,11 @@
 package io.mountblue.redditclone.controller;
 
+import com.google.auth.Credentials;
+import com.google.auth.oauth2.GoogleCredentials;
+import com.google.cloud.storage.Blob;
+import com.google.cloud.storage.BlobId;
+import com.google.cloud.storage.Storage;
+import com.google.cloud.storage.StorageOptions;
 import io.mountblue.redditclone.entity.*;
 import io.mountblue.redditclone.service.UserService;
 import jakarta.validation.Valid;
@@ -13,7 +19,11 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.List;
 
 @Controller
@@ -82,13 +92,18 @@ public class UserController {
                                   @PathVariable("username") String username,
                                   @PathVariable("action") String action,
                                   @AuthenticationPrincipal UserDetails userDetails
-    ){
+    ) throws IOException {
         if(userDetails == null || !userDetails.getUsername().equals(username)){
             return "accessDenied";
         }
         User user = userService.findByUsername(username);
         List<Post> posts1 = user.getPosts();
+        List<Bookmark> bookmarkLists = user.getBookmarkList();
+        List<Integer> ids = new ArrayList<>();
 
+        for(Bookmark bookmark: bookmarkLists) {
+            ids.add(bookmark.getPost().getId());
+        }
 
         if(action.equals("comments")){
             List<Comment> comments = user.getComments();
@@ -113,10 +128,28 @@ public class UserController {
                     }
                 }
             }
+            for(Post post : posts){
+                if(post.getPhotoName()!= null){
+                    String fileName = post.getPhotoName();
+                    // Download file from Firebase Storage
+                    Credentials credentials = GoogleCredentials.fromStream(new FileInputStream("./serviceAccountKey.json"));
+                    Storage storage = StorageOptions.newBuilder().setCredentials(credentials).build().getService();
+                    Blob blob = storage.get(BlobId.of("reddit-clone-f5e1d.appspot.com", fileName));
+
+                    String contentType = post.getPhotoType();
+                    String base64Image = Base64.getEncoder().encodeToString(blob.getContent());
+
+                    post.setPhotoType(contentType);
+                    post.setImage(base64Image);
+
+
+                }
+            }
 
             model.addAttribute("posts",posts);
 
         }
+        model.addAttribute("bookmark",ids);
         model.addAttribute("action",action);
         return "profilePage";
 

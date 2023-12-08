@@ -86,21 +86,49 @@
                         posted by:
                         <h3 th:text=" ${post.getUser().getUsername()}"></h3>
                     </div>
-                    <a th:href="@{'/' + ${post.getSubReddit().getName()}+'/posts/' + ${post.getId()} +'/comments'}">
-                        <div class = "post-bucket">
+
+                        <div class = "post-content-container">
+                            <a th:href="@{'/' + ${post.getSubReddit().getName()}+'/posts/' + ${post.getId()} +'/comments'}">
                             <div class="post-title" th:text="${post.getTitle()}"></div>
                             <div class="post-content">
                                 <p th:text="${post.getDescription()}"></p>
                             </div>
-                            <div th:if="${post.image != null}" >
-                                <img th:src="@{'/image/'+${post.image}}" alt="reddit" width="500px" height="350px">
-                            </div>
+<!--                            <div th:if="${post.image != null}" >-->
+<!--                                <img th:src="@{'/image/'+${post.image}}" alt="reddit" width="500px" height="350px">-->
+<!--                            </div>-->
+                                <div th:if="${post.image != null}">
+                                <img  th:src="'data:' + ${post.photoType} + ';base64,'
+                                 + ${post.image}"
+                                     width="500px" height="350px" class="show_img">
+                                </div>
+                            </a>
                         </div>
-                        <!--                        </a>-->
-                        <div>
-                            <hr> <i class="fa-regular fa-message"></i>
-                        </div>
-                    </a>
+
+
+
+                    <div class="comment-count">
+                        <a th:href="@{'/' + ${post.getSubReddit().getName()}+'/posts/' + ${post.getId()} +'/comments'}">
+                            <i class="fa-regular fa-message"></i>
+                            <span th:text="${post.getCount(post.getCommentList())}"></span>
+                            <span class="comment-space"> comments</span>
+                        </a>
+
+                        <span  th:unless="${#lists.contains(bookmark,post.id)}">
+                            <a th:href="@{'/bookmark/'+${post.getId()}+ '/'+ ${subReddit.getName()}}">
+                                <i class="fa-regular fa-bookmark"></i> </a>
+                            </span>
+
+                        <span th:if="${#lists.contains(bookmark,post.id)}">
+                                <a th:href="@{'/bookmark/'+${post.getId()} + '/'+${subReddit.getName()} }">
+                                    <i class="fa-solid fa-bookmark"></i></a>
+                            </span>
+
+                    </div>
+
+<!--                      <div>-->
+<!--                            <hr> <i class="fa-regular fa-message"></i>-->
+<!--                        </div>-->
+
                 </div>
             </div>
         </div>

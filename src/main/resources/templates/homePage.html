@@ -48,7 +48,14 @@
         <a id="home-link" th:class="${personalized == null ? null : 'active'}" th:href="@{/personalized-homepage}">
             <i class="fa-solid fa-house"></i> Home
         </a>
-        <h2>Filter Section</h2>
+        <h4>Your Communities</h4>
+        <div class="community-container">
+            <div class="community-item" th:each="subReddit : ${subRedditList}">
+                <a th:href="@{'community/' + ${subReddit.getName()} }">
+                  <span class="reddit-span" style="display:block; margin-bottom:10px;"> <i class="fa-brands fa-reddit "></i>   <span th:text="${subReddit.getName()}"></span></span>
+                </a>
+            </div>
+        </div>
     </aside>
 
     <main id="posts">
@@ -127,8 +134,10 @@
                             <div class="content">
                                 <p th:text="${post.getDescription()}"></p>
                             </div>
-                            <div class="img-container" th:if="${post.image != null}" >
-                                <img th:src="@{'/image/'+${post.image}}" alt="reddit" >
+                            <div th:if="${post.image != null}">
+                                <img  th:src="'data:' + ${post.photoType} + ';base64,'
+                                 + ${post.image}"
+                                      width="500px" height="350px" class="show_img">
                             </div>
                         </a>
                         </div>
@@ -141,12 +150,12 @@
                             </a>
 
                             <span  th:unless="${#lists.contains(bookmark,post.id)}">
-                            <a th:href="@{'bookmark/'+${post.getId()}}">
+                            <a th:href="@{'/bookmark/'+${post.getId()}  + '/home'}">
                                 <i class="fa-regular fa-bookmark"></i> </a>
                             </span>
 
                             <span th:if="${#lists.contains(bookmark,post.id)}">
-                                <a th:href="@{'bookmark/'+${post.getId()}}">
+                                <a th:href="@{'/bookmark/'+${post.getId()} + '/home'}">
                                     <i class="fa-solid fa-bookmark"></i></a>
                             </span>
 
@@ -159,19 +168,65 @@
     </main>
 
     <aside id="community">
-        <h2>Community Section</h2>
-        <div class="aside-button">
-            <p><a th:href="@{/community/createCommunity}"> <button>Create Community</button></a></p>
-            <p><a th:href="@{/posts/createPost}"> <button>Create Post</button></a></p>
-        </div>
 
-        <div class="community-container">
-            <div class="community-item" th:each="subReddit : ${subRedditList}">
-                <a th:href="@{'community/' + ${subReddit.getName()} }">
-                    <span th:text="${subReddit.getName()}"></span>
-                </a>
+
+        <div class="static">
+            <div class="bgcolor">
+                <img src="https://www.redditstatic.com/desktop2x/img/id-cards/home-banner@2x.png">
+            </div>
+<!--            <i class="fa-brands fa-reddit-alien font"></i>-->
+            <div>
+            <img class="font" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRMvv1uqC2E8HoO_s01-zjCGx8LxPuJSDP63g&usqp=CAU">
+        </div>
+            <div>
+                Your personal Reddit frontpage. Come here to check in with your favorite communities
+            </div>
+            <div class="aside-button">
+                <p><a th:href="@{/community/createCommunity}"> <button>Create Community</button></a></p>
+                <p><a th:href="@{/posts/createPost}"> <button>Create Post</button></a></p>
             </div>
         </div>
+<!--        <div class="policy">-->
+<!--       <div class="one">-->
+
+<!--    <ul>-->
+<!--        <li>User Agreement</li>-->
+<!--        <li>Privacy Policy</li>-->
+
+<!--    </ul>-->
+<!--       </div>-->
+<!--       </div>-->
+<!--            <div class="one">-->
+<!--              <p>Content Policy</p>-->
+<!--               <p>Moderator Code Of Conduct</p>-->
+<!--            </div>-->
+<!--            <div>-->
+<!--               <p>English</p>-->
+<!--               <p>Francais</p>-->
+<!--                <p>Italiano</p>-->
+<!--            </div>-->
+<!--            <div>-->
+<!--               <p>Deutsch</p>-->
+<!--                <p>Espanol</p>-->
+<!--                <p>Portugues</p>-->
+<!--            </div>-->
+<!--            <div>-->
+<!--                <p>Reddit,Inc. 2023.All rights reserved</p>-->
+<!--            </div>-->
+
+<!--</div>-->
+<!--        <div class="aside-button">-->
+<!--            <p><a th:href="@{/community/createCommunity}"> <button>Create Community</button></a></p>-->
+<!--            <p><a th:href="@{/posts/createPost}"> <button>Create Post</button></a></p>-->
+<!--        </div>-->
+
+<!--        <div class="community-container">-->
+<!--            <div class="community-item" th:each="subReddit : ${subRedditList}">-->
+<!--                <a th:href="@{'community/' + ${subReddit.getName()} }">-->
+<!--                    <span th:text="${subReddit.getName()}"></span>-->
+<!--                </a>-->
+<!--            </div>-->
+<!--        </div>-->
     </aside>
 </div>
 </body>

@@ -1,5 +1,8 @@
 package io.mountblue.redditclone.controller;
 
+import com.google.auth.Credentials;
+import com.google.auth.oauth2.GoogleCredentials;
+import com.google.cloud.storage.*;
 import io.mountblue.redditclone.entity.*;
 import io.mountblue.redditclone.service.CommentService;
 import io.mountblue.redditclone.service.PostService;
@@ -20,13 +23,18 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.List;
 
 import java.util.List;
@@ -91,32 +99,65 @@ public class PostController {
         String username = userDetails.getUsername();
         LocalDateTime startDate = LocalDateTime.now().minusHours(24);
         Integer postCountInLast24Hrs = postService.getPostsByUserInSubRedditInLast24Hours(username, subRedditName, startDate);
-        if(postCountInLast24Hrs >=4){
+        Integer postLimit = subRedditService.findByName(subRedditName).getPostLimit();
+        if(postCountInLast24Hrs >= postLimit){
             return "accessDenied";
         }
-        System.out.println(postCountInLast24Hrs);
+       
 
         if (bindingResult.hasErrors()) {
             return "createNewPost";
 
         }
+
+
         if(file.isEmpty()){
             SubReddit subReddit = subRedditService.findByName(subRedditName);
             postService.createNewPost(post, subReddit.getId(), userDetails.getUsername(), tagNames);
 
         }
-        else  {
-            post.setImage(file.getOriginalFilename());
-            //path where image store
-            File file1 = new ClassPathResource("static/image").getFile();
-            Path path = Paths.get(file1.getAbsolutePath() + File.separator + file.getOriginalFilename());//create a path
-            Files.copy(file.getInputStream(), path, StandardCopyOption.REPLACE_EXISTING);
+        else{
+            String fileName = file.getOriginalFilename();
+            java.io.File tempFile = java.io.File.createTempFile("temp", null);
+            file.transferTo(tempFile.toPath()); // transfer data to io.File
+
+            // Accessing serviceAccount file for firebase Authentication
+            try (FileInputStream serviceAccount = new FileInputStream("./serviceAccountKey.json")) {
+                //Creates a BlobId and BlobInfo for the file in firebase Storage.
+                //BlobId is unique identifier of Blob object in firebase
+                BlobId blobId = BlobId.of("reddit-clone-f5e1d.appspot.com", fileName);
+                BlobInfo blobInfo = BlobInfo.newBuilder(blobId).setContentType("media").build();
+
+                //reading credentials from serviceAccount
+                //uploading file content from temporary file to firebase
+                Credentials credentials = GoogleCredentials.fromStream(serviceAccount);
+                Storage storage = StorageOptions.newBuilder().setCredentials(credentials).build().getService();
+                storage.create(blobInfo, Files.readAllBytes(tempFile.toPath()));
+
+                String DOWNLOAD_URL = "https://firebasestorage.googleapis.com/v0/b/drive-db-415a1/o/%s?alt=media";
+
+                //saving metadata in file entity
+
+                post.setPhotoName(file.getOriginalFilename());
+                post.setPhotoLink(String.format(DOWNLOAD_URL, URLEncoder.encode(fileName, StandardCharsets.UTF_8)));
+                post.setPhotoSize(file.getSize());  // Set the file size
+                post.setPhotoType(file.getContentType());
+
+
+            } catch (IOException e) {
+                // Handle the exception (log, throw, or return an error response)
+                throw new RuntimeException("Error uploading file to Firebase Storage", e);
+            } finally {
+                // Delete the temporary file
+                tempFile.delete();
+            }
+
+        }
+
+
 
             SubReddit subReddit = subRedditService.findByName(subRedditName);
             postService.createNewPost(post, subReddit.getId(), userDetails.getUsername(), tagNames);
-
-        }
-        System.out.println(post.getImage());
         return "redirect:/community/" + subRedditName;
     }
 
@@ -164,14 +205,44 @@ public class PostController {
             Post oldPost = postService.findById(postId);
             updatedPost.setImage(oldPost.getImage());
         }
-        else  {
-            updatedPost.setImage(file.getOriginalFilename());
-            //path where image store
+        else{
+            String fileName = file.getOriginalFilename();
+            java.io.File tempFile = java.io.File.createTempFile("temp", null);
+            file.transferTo(tempFile.toPath()); // transfer data to io.File
 
-            File file1 = new ClassPathResource("static/image").getFile();
-            Path path = Paths.get(file1.getAbsolutePath() + File.separator + file.getOriginalFilename());//create a path
-            Files.copy(file.getInputStream(), path, StandardCopyOption.REPLACE_EXISTING);
+            // Accessing serviceAccount file for firebase Authentication
+            try (FileInputStream serviceAccount = new FileInputStream("./serviceAccountKey.json")) {
+                //Creates a BlobId and BlobInfo for the file in firebase Storage.
+                //BlobId is unique identifier of Blob object in firebase
+                BlobId blobId = BlobId.of("reddit-clone-f5e1d.appspot.com", fileName);
+                BlobInfo blobInfo = BlobInfo.newBuilder(blobId).setContentType("media").build();
+
+                //reading credentials from serviceAccount
+                //uploading file content from temporary file to firebase
+                Credentials credentials = GoogleCredentials.fromStream(serviceAccount);
+                Storage storage = StorageOptions.newBuilder().setCredentials(credentials).build().getService();
+                storage.create(blobInfo, Files.readAllBytes(tempFile.toPath()));
+
+                String DOWNLOAD_URL = "https://firebasestorage.googleapis.com/v0/b/drive-db-415a1/o/%s?alt=media";
+
+                //saving metadata in file entity
+
+                updatedPost.setPhotoName(file.getOriginalFilename());
+                updatedPost.setPhotoLink(String.format(DOWNLOAD_URL, URLEncoder.encode(fileName, StandardCharsets.UTF_8)));
+                updatedPost.setPhotoSize(file.getSize());  // Set the file size
+                updatedPost.setPhotoType(file.getContentType());
+
+
+            } catch (IOException e) {
+                // Handle the exception (log, throw, or return an error response)
+                throw new RuntimeException("Error uploading file to Firebase Storage", e);
+            } finally {
+                // Delete the temporary file
+                tempFile.delete();
+            }
+
         }
+
 
         postService.updatePost(updatedPost, postId ,tagNames);
         String username = userDetails.getUsername();
@@ -195,7 +266,7 @@ public class PostController {
 
     @GetMapping("/")
     public String showPopularPage(Model model,@AuthenticationPrincipal UserDetails userDetails,
-                                  @RequestParam(name = "sort", defaultValue = "Top") String sort){
+                                  @RequestParam(name = "sort", defaultValue = "Top") String sort) throws IOException {
         List<Post> allPosts = switch (sort) {
             case "Top" -> postService.findAllOrderByVoteCountDesc();
             case "Hot" -> postService.findAllPostsOrderedByCommentsSizeDesc();
@@ -216,6 +287,24 @@ public class PostController {
 
         List<SubReddit> subRedditList = subRedditService.findAll();
 
+        for(Post post : allPosts){
+            if(post.getPhotoName()!= null){
+                String fileName = post.getPhotoName();
+                // Download file from Firebase Storage
+                Credentials credentials = GoogleCredentials.fromStream(new FileInputStream("./serviceAccountKey.json"));
+                Storage storage = StorageOptions.newBuilder().setCredentials(credentials).build().getService();
+                Blob blob = storage.get(BlobId.of("reddit-clone-f5e1d.appspot.com", fileName));
+
+                String contentType = post.getPhotoType();
+                String base64Image = Base64.getEncoder().encodeToString(blob.getContent());
+
+                post.setPhotoType(contentType);
+                post.setImage(base64Image);
+
+
+            }
+        }
+
         model.addAttribute("allPosts", allPosts);
         model.addAttribute("subRedditList", subRedditList);
         model.addAttribute("sort", sort);
@@ -227,15 +316,32 @@ public class PostController {
     @GetMapping("/personalized-homepage")
     public String showHomepage(Model model,
                                @RequestParam(name = "sort", defaultValue = "Top") String sort,
-                               @AuthenticationPrincipal UserDetails userDetails) {
-        User user = userService.findByUsername(userDetails.getUsername());
+                               @AuthenticationPrincipal UserDetails userDetails) throws IOException {
 
+        User user = userService.findByUsername(userDetails.getUsername());
         List<Post> posts = postService.findAllBySubscribedSubReddits(user.getUsername());
         switch (sort) {
             case "Top" -> posts.sort((a, b) -> b.getVoteCount() - a.getVoteCount());
             case "Hot" -> posts.sort((a, b) -> b.getCommentList().size() - a.getCommentList().size());
             case "New" -> posts.sort((a, b) -> b.getCreatedAt().compareTo(a.getCreatedAt()));
             case "Old" -> posts.sort((a, b) -> a.getCreatedAt().compareTo(b.getCreatedAt()));
+        }
+        for(Post post : posts){
+            if(post.getPhotoName()!= null){
+                String fileName = post.getPhotoName();
+                // Download file from Firebase Storage
+                Credentials credentials = GoogleCredentials.fromStream(new FileInputStream("./serviceAccountKey.json"));
+                Storage storage = StorageOptions.newBuilder().setCredentials(credentials).build().getService();
+                Blob blob = storage.get(BlobId.of("reddit-clone-f5e1d.appspot.com", fileName));
+
+                String contentType = post.getPhotoType();
+                String base64Image = Base64.getEncoder().encodeToString(blob.getContent());
+
+                post.setPhotoType(contentType);
+                post.setImage(base64Image);
+
+
+            }
         }
 
         List<SubReddit> subRedditList = subRedditService.findAll();
@@ -257,7 +363,7 @@ public class PostController {
     }
 
     @GetMapping("/search/{action}")
-    public String showSearchResultPage(Model model,
+    public String showSearchResultPage(Model model,@AuthenticationPrincipal UserDetails userDetails,
                                        @RequestParam(value = "query", required = false) String query,
                                        @PathVariable("action") String action){
         if(action.equals("posts")){
@@ -273,11 +379,20 @@ public class PostController {
             model.addAttribute("comments",comments);
         }
 
+        User user = userService.findByUsername(userDetails.getUsername());
+        List<Bookmark> bookmarkList = user.getBookmarkList();
+        List<Integer> ids = new ArrayList<>();
+
+        for(Bookmark bookmark: bookmarkList) {
+            ids.add(bookmark.getPost().getId());
+        }
+
         List<SubReddit> subRedditList = subRedditService.findAll();
         model.addAttribute("subRedditList",subRedditList);
 
         model.addAttribute("action", action);
         model.addAttribute("query", query);
+        model.addAttribute("bookmark",ids);
         return "searchResult";
     }
 }

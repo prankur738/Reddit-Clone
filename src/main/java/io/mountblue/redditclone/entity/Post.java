@@ -45,6 +45,11 @@ public class Post {
     @JoinColumn(name = "user_id")
     User user;
 
+    String photoName;
+    String photoType;
+    String photoLink;
+    Long photoSize;
+
     @OneToMany(mappedBy = "post",cascade = CascadeType.ALL)
     List<Bookmark> bookmarkList;
 

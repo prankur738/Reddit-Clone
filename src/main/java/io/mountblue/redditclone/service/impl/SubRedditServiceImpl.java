@@ -49,12 +49,18 @@ public class SubRedditServiceImpl implements SubRedditService {
     }
 
     @Override
-    public void updateSubReddit(SubReddit subReddit, String username) {
-        User user = userRepository.findByUsername(username);
-        subReddit.getSubscribers().add(user);
-        subReddit.setAdminUserId(user.getId());
-        subRedditRepository.save(subReddit);
+    public void updateSubReddit(SubReddit subReddit, Integer subRedditId) {
+        SubReddit oldSubReddit = subRedditRepository.findById(subRedditId).get();
 
+        subReddit.setId(subRedditId);
+        subReddit.setCreatedAt(oldSubReddit.getCreatedAt());
+        subReddit.setAdminUserId(oldSubReddit.getAdminUserId());
+        subReddit.setBannedUsers(oldSubReddit.getBannedUsers());
+        subReddit.setModerators(oldSubReddit.getModerators());
+        subReddit.setSubscribers(oldSubReddit.getSubscribers());
+        subReddit.setPostList(oldSubReddit.getPostList());
+
+        subRedditRepository.save(subReddit);
     }
 
     @Override

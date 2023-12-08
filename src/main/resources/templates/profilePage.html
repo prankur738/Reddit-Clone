@@ -20,7 +20,7 @@
             <i class="fa-solid fa-magnifying-glass"></i>
             <input type="text" name="query" placeholder="Search Reddit">
 
-             <input type="submit" value="Search">
+<!--             <input type="submit" value="Search">-->
         </form>
 
     </div>
@@ -78,16 +78,33 @@
                                     <div class="content">
                                         <p th:text="${post.getDescription()}"></p>
                                     </div>
-                                    <div class="img-container" th:if="${post.image != null}" >
-                                        <img th:src="@{'/image/'+${post.image}}" alt="reddit" >
+                                    <div th:if="${post.image != null}">
+                                        <img  th:src="'data:' + ${post.photoType} + ';base64,'
+                                 + ${post.image}"
+                                              width="500px" height="350px" class="show_img">
                                     </div>
                                 </a>
                             </div>
 
-                            <div>
-                                <i class="fa-regular fa-message"></i>
-                            </div>
+                            <div class="comment-count">
+                                <a th:href="@{'/' + ${post.getSubReddit().getName()}+'/posts/' + ${post.getId()} +'/comments'}">
+                                    <i class="fa-regular fa-message"></i>
+                                    <span th:text="${post.getCount(post.getCommentList())}"></span>
+                                    <span class="comment-space"> comments</span>
+                                </a>
+
+                                <span  th:unless="${#lists.contains(bookmark,post.id)}">
+                            <a th:href="@{'/bookmark/'+${post.getId()}  + '/posts'}">
+                                <i class="fa-regular fa-bookmark"></i> </a>
+                            </span>
+
+                                <span th:if="${#lists.contains(bookmark,post.id)}">
+                                <a th:href="@{'/bookmark/'+${post.getId()} + '/posts'}">
+                                    <i class="fa-solid fa-bookmark"></i></a>
+                            </span>
                         </div>
+
+
                         <span th:if="${action == 'posts'}">
                         <form th:action="@{'/posts/editPost/' + ${post.getId()}}">
                             <button id="edit-button">Edit</button>
@@ -98,6 +115,7 @@
                         </span>
                     </div>
 
+            </div>
             </div>
         </main>
 

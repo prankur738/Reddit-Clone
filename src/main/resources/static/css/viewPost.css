@@ -6,10 +6,9 @@
     top: 0px;
     left: 0px;
     width:100%;
-    width: 100%; /* Make the navbar span the full width of the viewport */
     background-color: white; /* Optional: Add a background color */
-    z-index: 1000;
-   box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+    z-index: 1;
+   box-shadow: rgba(0, 0, 0, 0.24) 0px 0px 8px 0px;
 }
 .color{
     margin-top: 5px;
@@ -221,7 +220,7 @@ input[type=submit]{
       margin-top: 10px;
       margin-bottom: 10px;
   }
-  
+
   .main-box{
   box-shadow: rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px;
   }
@@ -241,7 +240,6 @@ input[type=submit]{
   /* Add your styles here */
   body {
       font-family: Arial, sans-serif;
-      margin: 20px;
   }
 
   h1 {
@@ -277,3 +275,9 @@ input[type=submit]{
       cursor: pointer;
   }
 ***/
+
+.col-md-3 {
+     position:fixed;
+    top: 70px;
+    right:55px;
+}
