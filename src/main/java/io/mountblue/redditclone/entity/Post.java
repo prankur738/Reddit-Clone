@@ -45,9 +45,16 @@ public class Post {
     @JoinColumn(name = "user_id")
     User user;
 
+    @Column(name = "photo_name")
     String photoName;
+
+    @Column(name = "photo_type")
     String photoType;
+
+    @Column(name = "photo_link")
     String photoLink;
+
+    @Column(name = "photo_size")
     Long photoSize;
 
     @OneToMany(mappedBy = "post",cascade = CascadeType.ALL)
@@ -68,7 +75,7 @@ public class Post {
     @OneToMany(cascade = CascadeType.ALL,mappedBy = "post")
     List<Comment> commentList;
 
-    @ManyToOne(cascade={CascadeType.PERSIST, CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH})
+    @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.REFRESH, CascadeType.MERGE, CascadeType.DETACH})
     @JoinColumn(name = "subreddit_id")
     SubReddit subReddit;
 

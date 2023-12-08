@@ -44,6 +44,14 @@
 
 <div class="body">
     <aside id="filter">
+        <form th:if="${isAdmin}"  th:action="@{/community/editCommunity/{subRedditId}(subRedditId=${subRedditId})}">
+            <button type="submit" class="create-post-button">Edit Community</button>
+        </form>
+        <form  th:if="${isAdmin}" method="Post" th:action="@{/community/deleteCommunity/{subRedditId}(subRedditId=${subRedditId})}">
+            <button type="submit" class="create-post-button">Delete Community</button>
+        </form>
+
+
     </aside>
 
 
@@ -148,6 +156,7 @@
             <input type="hidden" name="subRedditName" th:value="${subReddit.getName()}">
             <button type="submit" class="create-post-button">Create Post</button>
         </form>
+
 
         <table th:if="${isAdmin}">
             <caption>Moderator Controls</caption>

@@ -82,6 +82,7 @@ public class SubRedditController {
             }
         }
         model.addAttribute("subReddit", subReddit);
+        model.addAttribute("subRedditId",subReddit.getId());
 
 
         User users = userService.findByUsername(userDetails.getUsername());
