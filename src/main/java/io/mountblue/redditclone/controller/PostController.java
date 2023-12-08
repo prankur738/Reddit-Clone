@@ -92,7 +92,7 @@ public class PostController {
             return "createNewPost";
 
         }
-        String username = userDetails.getUsername();
+
         User user = userService.findByUsername(username);
         List<Post> posts = user.getPosts();
         if(posts.size()>3){
