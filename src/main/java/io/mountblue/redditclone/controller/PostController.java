@@ -91,20 +91,17 @@ public class PostController {
         String username = userDetails.getUsername();
         LocalDateTime startDate = LocalDateTime.now().minusHours(24);
         Integer postCountInLast24Hrs = postService.getPostsByUserInSubRedditInLast24Hours(username, subRedditName, startDate);
-        if(postCountInLast24Hrs >=4){
+        Integer postLimit = subRedditService.findByName(subRedditName).getPostLimit();
+        if(postCountInLast24Hrs >= postLimit){
             return "accessDenied";
         }
-        System.out.println(postCountInLast24Hrs);
+       
 
         if (bindingResult.hasErrors()) {
             return "createNewPost";
 
         }
 
-        String userName = userDetails.getUsername();
-        User user = userService.findByUsername(userName);
-
-        List<Post> posts = user.getPosts();
 
         if(file.isEmpty()){
             SubReddit subReddit = subRedditService.findByName(subRedditName);

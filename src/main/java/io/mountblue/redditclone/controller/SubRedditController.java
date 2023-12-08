@@ -75,7 +75,6 @@ public class SubRedditController {
                 Storage storage = StorageOptions.newBuilder().setCredentials(credentials).build().getService();
                 Blob blob = storage.get(BlobId.of("reddit-clone-f5e1d.appspot.com", fileName));
 
-
                 String contentType = post.getPhotoType();
                 String base64Image = Base64.getEncoder().encodeToString(blob.getContent());
 
@@ -103,9 +102,9 @@ public class SubRedditController {
         }
 
 
+
             if (userDetails != null) {
                 User user = userService.findByUsername(userDetails.getUsername());
-
 
                 boolean isAdmin = user.getId() == subReddit.getAdminUserId();
                 boolean isMod = isAdmin || subReddit.getModerators().contains(user);
@@ -113,11 +112,9 @@ public class SubRedditController {
                 model.addAttribute("isAdmin", isAdmin);
                 model.addAttribute("isMod", isMod);
 
-
-            if (subReddit.getSubscribers().contains(user)) {
-                model.addAttribute("subscribedUser", true);
-
-            }
+                if (subReddit.getSubscribers().contains(user)) {
+                    model.addAttribute("subscribedUser", true);
+                }
         }
 
             model.addAttribute("admin", userService.findById(subReddit.getAdminUserId()));
@@ -159,12 +156,13 @@ public class SubRedditController {
         return "accessDenied";
     }
 
-    @PostMapping("/community/update")
+    @PostMapping("/community/update/{subRedditId}")
     public String updateSubReddit(@Valid @ModelAttribute("subReddit") SubReddit  subReddit,
                                   BindingResult bindingResult,
+                                  @PathVariable("subRedditId") Integer subRedditId,
                                   @AuthenticationPrincipal UserDetails userDetails){
 
-        subRedditService.updateSubReddit(subReddit,userDetails.getUsername());
+        subRedditService.updateSubReddit(subReddit, subRedditId);
         return "redirect:/community/" + subReddit.getName();
     }
 
