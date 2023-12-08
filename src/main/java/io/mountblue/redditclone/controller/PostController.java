@@ -64,9 +64,17 @@ public class PostController {
 
     @GetMapping("/community/{communityName}/createPost")
     public String showNewPostInSubredditPage(Model model,
-                                             @PathVariable("communityName") String communityName){
+                                             @PathVariable("communityName") String communityName,
+                                             @AuthenticationPrincipal UserDetails userDetails){
+        User user = userService.findByUsername(userDetails.getUsername());
+        SubReddit subReddit = subRedditService.findByName(communityName);
+
+        if (subReddit.getBannedUsers().contains(user)) {
+            return "accessDenied";
+        }
+
         model.addAttribute("post", new Post());
-        model.addAttribute("subReddit", subRedditService.findByName(communityName));
+        model.addAttribute("subReddit", subReddit);
 
         return "createNewPost";
     }

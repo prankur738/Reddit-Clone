@@ -43,6 +43,7 @@ public class SubRedditServiceImpl implements SubRedditService {
     public void createSubReddit(SubReddit subReddit, String username) {
         User user = userRepository.findByUsername(username);
         subReddit.getSubscribers().add(user);
+        subReddit.getModerators().add(user);
         subReddit.setAdminUserId(user.getId());
         subRedditRepository.save(subReddit);
     }
@@ -127,6 +128,8 @@ public class SubRedditServiceImpl implements SubRedditService {
     @Override
     public void banUser(User user, String subRedditName) {
         SubReddit subReddit = subRedditRepository.findByName(subRedditName).orElseThrow();
+
+        if (subReddit.getAdminUserId() == user.getId()) return;
 
         subReddit.getSubscribers().remove(user);
         subReddit.getModerators().remove(user);

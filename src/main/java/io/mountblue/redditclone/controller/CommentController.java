@@ -71,6 +71,12 @@ public class CommentController {
                                        @ModelAttribute("post")Post post,
                                        Model model, Principal principal){
         User user =userService.findByUsername(principal.getName());
+        SubReddit subReddit = subRedditService.findByName(subredditName);
+
+        if (subReddit.getBannedUsers().contains(user)) {
+            return "accessDenied";
+        }
+
         comment.setUser(user);
         Post post1 = postService.findById(postId);
         commentService.saveComment(postId, comment,post1.getUser());
@@ -87,8 +93,6 @@ public class CommentController {
     public String editCommentForm(@PathVariable("postId") Integer postId,
                                   @PathVariable("commentId") Integer commentId,
                                   Model model, RedirectAttributes redirectAttributes){
-        System.out.println("Hello");
-
         Optional<Comment> comment = commentService.findById(commentId);
         Post post = postService.findById(postId);
         SubReddit subreddit = post.getSubReddit();

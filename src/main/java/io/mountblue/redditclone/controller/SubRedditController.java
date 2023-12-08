@@ -57,6 +57,10 @@ public class SubRedditController {
         if (userDetails != null) {
             User user = userService.findByUsername(userDetails.getUsername());
 
+            if (subReddit.getBannedUsers().contains(user)) {
+                return "accessDenied";
+            }
+
             boolean isAdmin = user.getId() == subReddit.getAdminUserId();
             boolean isMod = isAdmin || subReddit.getModerators().contains(user);
 
