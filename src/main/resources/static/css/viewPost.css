@@ -220,6 +220,7 @@ input[type=submit]{
       margin-top: 10px;
       margin-bottom: 10px;
   }
+  
   .main-box{
   box-shadow: rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px;
   }
@@ -235,3 +236,43 @@ input[type=submit]{
             cursor: pointer;
             margin-top : 5px;
         }
+
+  /* Add your styles here */
+  body {
+      font-family: Arial, sans-serif;
+      margin: 20px;
+  }
+
+  h1 {
+      color: #333;
+  }
+
+
+   /***
+  form {
+      background-color: #f9f9f9;
+      padding: 20px;
+      border-radius: 5px;
+  }
+
+  label {
+      display: block;
+      margin-bottom: 5px;
+  }
+
+  input, textarea {
+      width: 100%;
+      padding: 8px;
+      margin-bottom: 10px;
+      box-sizing: border-box;
+  }
+
+  button {
+      background-color: #4caf50;
+      color: white;
+      padding: 10px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+  }
+***/

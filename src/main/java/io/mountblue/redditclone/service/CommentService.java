@@ -1,6 +1,7 @@
 package io.mountblue.redditclone.service;
 
 import io.mountblue.redditclone.entity.Comment;
+import jakarta.persistence.criteria.CriteriaBuilder;
 
 import java.util.List;
 import java.util.Optional;
