@@ -69,4 +69,7 @@ public class Post {
 
     @OneToMany(mappedBy="post", cascade = CascadeType.ALL)
     List<VotePost> votePosts;
+
+    @OneToMany(mappedBy="post", cascade = CascadeType.ALL)
+    List<VoteComment> voteComments;
 }
