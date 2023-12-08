@@ -63,6 +63,7 @@ public class SubRedditController {
     @GetMapping("/community/{subRedditName}")
     public String showSubReddit(Model model,
                                 @PathVariable("subRedditName") String subRedditName,
+
                                 @AuthenticationPrincipal UserDetails userDetails) throws IOException {
         SubReddit subReddit = subRedditService.findByName(subRedditName);
         List<Post> postList = subReddit.getPostList();
@@ -73,6 +74,7 @@ public class SubRedditController {
                 Credentials credentials = GoogleCredentials.fromStream(new FileInputStream("./serviceAccountKey.json"));
                 Storage storage = StorageOptions.newBuilder().setCredentials(credentials).build().getService();
                 Blob blob = storage.get(BlobId.of("reddit-clone-f5e1d.appspot.com", fileName));
+
 
                 String contentType = post.getPhotoType();
                 String base64Image = Base64.getEncoder().encodeToString(blob.getContent());
@@ -94,11 +96,16 @@ public class SubRedditController {
             ids.add(bookmark.getPost().getId());
         }
         model.addAttribute("bookmark", ids);
+
         if (subReddit.getSubscribers().contains(users)) {
+
             model.addAttribute("subscribedUser", true);
+        }
+
 
             if (userDetails != null) {
                 User user = userService.findByUsername(userDetails.getUsername());
+
 
                 boolean isAdmin = user.getId() == subReddit.getAdminUserId();
                 boolean isMod = isAdmin || subReddit.getModerators().contains(user);
@@ -106,9 +113,9 @@ public class SubRedditController {
                 model.addAttribute("isAdmin", isAdmin);
                 model.addAttribute("isMod", isMod);
 
-                if (subReddit.getSubscribers().contains(user)) {
-                    model.addAttribute("subscribedUser", true);
-                }
+
+            if (subReddit.getSubscribers().contains(user)) {
+                model.addAttribute("subscribedUser", true);
 
             }
         }
@@ -122,7 +129,7 @@ public class SubRedditController {
 
     @PostMapping("community/deleteCommunity/{subRedditId}")
     public String deleteSubReddit(@PathVariable("subRedditId") Integer subRedditId,
-                                  @AuthenticationPrincipal UserDetails userDetails){
+                                  @AuthenticationPrincipal UserDetails userDetails) {
         boolean isUserAuthorized = subRedditService.checkUserAuthorized(userDetails, subRedditId);
 
         if(isUserAuthorized){

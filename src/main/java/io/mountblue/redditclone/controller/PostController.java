@@ -100,8 +100,10 @@ public class PostController {
             return "createNewPost";
 
         }
+
         String userName = userDetails.getUsername();
         User user = userService.findByUsername(userName);
+
         List<Post> posts = user.getPosts();
 
         if(file.isEmpty()){
