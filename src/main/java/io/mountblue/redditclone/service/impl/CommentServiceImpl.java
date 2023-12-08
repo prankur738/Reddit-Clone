@@ -47,7 +47,7 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
-    public void UpdateComment(Integer commentId,String editComment,Integer postId) {
+    public void updateComment(Integer commentId, String editComment, Integer postId) {
 
         Optional<Comment> comment = commentRepository.findById(commentId);
         comment.get().setText(editComment);
@@ -63,5 +63,14 @@ public class CommentServiceImpl implements CommentService {
     @Override
     public List<Comment> findCommentsBySearchQuery(String query) {
         return commentRepository.getCommentsBySearch(query);
+    }
+
+    @Override
+    public void updateComment(Integer commentId, Integer voteCountChange) {
+
+        Comment comment = commentRepository.findById(commentId).get();
+        comment.setVoteCount(comment.getVoteCount()+voteCountChange);
+
+        commentRepository.save(comment);
     }
 }

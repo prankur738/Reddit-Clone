@@ -112,7 +112,7 @@ public class CommentController {
         Post post = postService.findById(postId);
         SubReddit subreddit = post.getSubReddit();
         String subredditName = subreddit.getName();
-        commentService.UpdateComment(commentId,editComment,postId);
+        commentService.updateComment(commentId,editComment,postId);
 
 
 

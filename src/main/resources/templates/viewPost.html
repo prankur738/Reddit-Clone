@@ -122,7 +122,29 @@
                             </form>
 
                             <div th:unless="${commentId != null and commentId eq comments.id}" >
+                                <div style="display: flex">
+                                <div  class = "vote">
+                                    <form  th:action="@{/processCommentVote}" method="post">
+                                        <input type="hidden" name="postId" th:value="${comments.getPost().getId()}">
+                                        <input type="hidden" name="commentId" th:value="${comments.getId()}">
+                                        <input type="hidden" name="vote" value="1">
+                                        <!-- Styled button with Font Awesome icon -->
+                                        <button type="submit" class="icon-button"><i class="fa-solid fa-up-long"></i></button>
+                                    </form>
+
+                                    <span  th:text="${comments.getVoteCount()}">  </span>
+
+                                    <form  th:action="@{/processCommentVote}" method="post">
+                                        <input type="hidden" name="postId" th:value="${comments.getPost().getId()}">
+                                        <input type="hidden" name="commentId" th:value="${comments.getId()}">
+                                        <input type="hidden" name="vote" value="-1">
+                                        <!-- Styled button with Font Awesome icon -->
+                                        <button type="submit" class="icon-button"><i class="fa-solid fa-down-long"></i></button>
+                                    </form>
+                                </div>
+
                                 <p th:text="${comments.text}"></p>
+                                </div>
                                 <!--                            <a th:if="${#authentication.principal.username eq comments.getUser().getUsername()}"-->
                                 <!--                               th:href="@{/comment/{postId}/{commentId}/edit(postId=${post.id},commentId=${comments.id})}" class="button">Edit</a>-->
                                 <!--                            <a th:if="${#authentication.principal.username eq comments.getUser().getUsername()}"-->
@@ -130,7 +152,7 @@
 
 
                                 <span th:if="${#authorization.expression('isAuthenticated()')}">
-      <span th:if = "${#authentication.principal.username == post.getUser().getUsername() }">
+      <span th:if = "${#authentication.principal.username == post.getUser().getUsername() || #authentication.principal.username == comments.getUser().getUsername()}">
       <a th:href="@{/comment/{postId}/{commentId}/edit(postId=${post.id},commentId=${comments.id})}"   class="button" >Edit</a>
       <a th:href="@{/comment/{postId}/{commentId}/delete(postId=${post.id},commentId=${comments.id})}"  class="button" >Delete</a>
       </span>

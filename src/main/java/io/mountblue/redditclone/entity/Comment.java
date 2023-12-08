@@ -11,6 +11,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDateTime;
 import java.util.Date;
+import java.util.List;
 
 @Entity
 @Getter
@@ -25,6 +26,9 @@ public class Comment {
 
     @Column(name = "text")
     String text;
+
+    @Column(name = "vote_count")
+    Integer voteCount = 0;
 
     @Column(name = "created_at")
     @CreationTimestamp
@@ -41,6 +45,9 @@ public class Comment {
     @ManyToOne
     @JoinColumn(name = "post_id")
     Post post;
+
+    @OneToMany(mappedBy="comment", cascade = CascadeType.ALL)
+    List<VoteComment> voteComments;
 
 
 
