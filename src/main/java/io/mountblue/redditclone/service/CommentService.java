@@ -21,4 +21,6 @@ public interface CommentService {
     List<Comment> findCommentsBySearchQuery(String query);
 
     void updateComment(Integer commentId, Integer voteCountChange);
+
+    List<Comment> getAllByPostIdOrderByVotesDesc(Integer postId);
 }

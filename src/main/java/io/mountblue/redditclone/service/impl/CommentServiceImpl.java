@@ -73,4 +73,9 @@ public class CommentServiceImpl implements CommentService {
 
         commentRepository.save(comment);
     }
+
+    @Override
+    public List<Comment> getAllByPostIdOrderByVotesDesc(Integer postId) {
+        return commentRepository.findCommentsByPostIdOrderByVotesDesc(postId);
+    }
 }

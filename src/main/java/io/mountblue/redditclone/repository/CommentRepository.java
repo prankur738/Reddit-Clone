@@ -17,4 +17,7 @@ public interface CommentRepository extends JpaRepository<Comment, Integer> {
     )
     List<Comment> getCommentsBySearch(@Param("query") String query);
 
+    @Query("SELECT c FROM Comment c WHERE c.post.id = :postId ORDER BY c.voteCount DESC")
+    List<Comment> findCommentsByPostIdOrderByVotesDesc(@Param("postId") Integer postId);
+
 }

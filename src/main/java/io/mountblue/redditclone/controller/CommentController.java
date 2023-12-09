@@ -77,11 +77,13 @@ public class CommentController {
         List<Comment> commentList = post.getCommentList();
         Boolean editMode = false;
 
+        List<Comment> commentsOrderByVotesDesc = commentService.getAllByPostIdOrderByVotesDesc(postId);
+
         model.addAttribute("commentCount", commentList.size());
         model.addAttribute("post", post);
         model.addAttribute("postId", postId);
         model.addAttribute("newComment", new Comment());
-        model.addAttribute("commentList", commentList);
+        model.addAttribute("commentList", commentsOrderByVotesDesc);
         model.addAttribute("subReddit", subReddit);
         model.addAttribute("subredditName", subredditName);
         model.addAttribute("editMode", editMode);
