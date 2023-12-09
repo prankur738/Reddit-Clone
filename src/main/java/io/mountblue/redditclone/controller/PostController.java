@@ -136,12 +136,26 @@ public class PostController {
 
                 String DOWNLOAD_URL = "https://firebasestorage.googleapis.com/v0/b/drive-db-415a1/o/%s?alt=media";
 
-                //saving metadata in file entity
+                String contentType = file.getContentType();
+                if(contentType.equals("video/3gpp") || contentType.equals("video/x-msvideo") ||
+                contentType.equals("video/x-matroska") || contentType.equals("video/x-ms-wmv") || contentType.equals("video/x-flv") ||
+                contentType.equals("video/quicktime") || contentType.equals("video/webm") || contentType.equals("video/dvd") ||
+                contentType.equals("video/ogg") || contentType.equals("video/mpeg")){
 
-                post.setPhotoName(file.getOriginalFilename());
-                post.setPhotoLink(String.format(DOWNLOAD_URL, URLEncoder.encode(fileName, StandardCharsets.UTF_8)));
-                post.setPhotoSize(file.getSize());  // Set the file size
-                post.setPhotoType(file.getContentType());
+                    contentType= "video/mp4";
+                    post.setPhotoName(file.getOriginalFilename());
+                    post.setPhotoLink(String.format(DOWNLOAD_URL, URLEncoder.encode(fileName, StandardCharsets.UTF_8)));
+                    post.setPhotoSize(file.getSize());  // Set the file size
+                    post.setPhotoType(contentType);
+                }
+                else {
+
+
+                    post.setPhotoName(file.getOriginalFilename());
+                    post.setPhotoLink(String.format(DOWNLOAD_URL, URLEncoder.encode(fileName, StandardCharsets.UTF_8)));
+                    post.setPhotoSize(file.getSize());  // Set the file size
+                    post.setPhotoType(file.getContentType());
+                }
 
 
             } catch (IOException e) {
@@ -153,6 +167,7 @@ public class PostController {
             }
 
         }
+
 
 
 
