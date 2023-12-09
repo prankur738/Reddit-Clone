@@ -167,7 +167,7 @@
 
 
         <table th:if="${isAdmin}">
-            <caption>Moderator Controls</caption>
+            <caption>Subscriber Controls</caption>
             <tr th:each="user : ${subReddit.getSubscribers()}">
                 <td>[[${user.getUsername()}]]</td>
                 <td th:unless="${user.getId() != subReddit.getAdminUserId()}">Admin</td>

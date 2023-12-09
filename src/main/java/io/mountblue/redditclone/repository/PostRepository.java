@@ -40,6 +40,8 @@ public interface PostRepository extends JpaRepository<Post,Integer> {
     )
     List<Post> getPostsBySearch(@Param("query") String query);
 
+
+
     @Query("SELECT COUNT(p) FROM Post p WHERE p.user = :user AND p.subReddit = :subReddit AND p.createdAt >= :startDate")
     Integer countPostsByUserInSubredditLast24Hours(
             @Param("user") User user,
