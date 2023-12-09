@@ -386,9 +386,24 @@ public class PostController {
     @GetMapping("/search/{action}")
     public String showSearchResultPage(Model model,@AuthenticationPrincipal UserDetails userDetails,
                                        @RequestParam(value = "query", required = false) String query,
-                                       @PathVariable("action") String action){
+                                       @PathVariable("action") String action) throws IOException {
         if(action.equals("posts")){
             List<Post> posts = postService.findPostsBySearchQuery(query);
+
+            for(Post post : posts){
+                if(post.getPhotoName()!= null){
+                    String fileName = post.getPhotoName();
+                    // Download file from Firebase Storage
+                    Credentials credentials = GoogleCredentials.fromStream(new FileInputStream("./serviceAccountKey.json"));
+                    Storage storage = StorageOptions.newBuilder().setCredentials(credentials).build().getService();
+                    Blob blob = storage.get(BlobId.of("reddit-clone-f5e1d.appspot.com", fileName));
+
+                    String contentType = post.getPhotoType();
+                    String base64Image = Base64.getEncoder().encodeToString(blob.getContent());
+                    post.setPhotoType(contentType);
+                    post.setImage(base64Image);
+                }
+            }
             model.addAttribute("allPosts", posts);
         }
         else if(action.equals("community")){
