@@ -131,7 +131,7 @@ public class PostController {
             file.transferTo(tempFile.toPath()); // transfer data to io.File
 
             // Accessing serviceAccount file for firebase Authentication
-            try (FileInputStream serviceAccount = new FileInputStream("./serviceAccountKey.json")) {
+            try (FileInputStream serviceAccount = new FileInputStream("serviceAccountKey.json")) {
                 //Creates a BlobId and BlobInfo for the file in firebase Storage.
                 //BlobId is unique identifier of Blob object in firebase
                 BlobId blobId = BlobId.of("reddit-clone-f5e1d.appspot.com", fileName);
