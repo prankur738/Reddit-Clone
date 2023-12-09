@@ -63,9 +63,14 @@ public class SubRedditController {
     @GetMapping("/community/{subRedditName}")
     public String showSubReddit(Model model,
                                 @PathVariable("subRedditName") String subRedditName,
-
                                 @AuthenticationPrincipal UserDetails userDetails) throws IOException {
+        User user = userService.findByUsername(userDetails.getUsername());
         SubReddit subReddit = subRedditService.findByName(subRedditName);
+
+        if (subReddit.getBannedUsers().contains(user)) {
+            return "accessDenied";
+        }
+
         List<Post> postList = subReddit.getPostList();
         for(Post post : postList){
             if(post.getPhotoName()!= null){
@@ -85,8 +90,7 @@ public class SubRedditController {
         model.addAttribute("subRedditId",subReddit.getId());
 
 
-        User users = userService.findByUsername(userDetails.getUsername());
-        List<Bookmark> bookmarkList = users.getBookmarkList();
+        List<Bookmark> bookmarkList = user.getBookmarkList();
         List<Integer> ids = new ArrayList<>();
 
         for (Bookmark bookmark : bookmarkList) {
@@ -94,32 +98,32 @@ public class SubRedditController {
         }
         model.addAttribute("bookmark", ids);
 
-        if (subReddit.getSubscribers().contains(users)) {
+        if (subReddit.getSubscribers().contains(user)) {
 
             model.addAttribute("subscribedUser", true);
         }
 
 
 
-            if (userDetails != null) {
-                User user = userService.findByUsername(userDetails.getUsername());
+        if (userDetails != null) {
+            user = userService.findByUsername(userDetails.getUsername());
 
-                boolean isAdmin = user.getId() == subReddit.getAdminUserId();
-                boolean isMod = isAdmin || subReddit.getModerators().contains(user);
+            boolean isAdmin = user.getId() == subReddit.getAdminUserId();
+            boolean isMod = isAdmin || subReddit.getModerators().contains(user);
 
-                model.addAttribute("isAdmin", isAdmin);
-                model.addAttribute("isMod", isMod);
+            model.addAttribute("isAdmin", isAdmin);
+            model.addAttribute("isMod", isMod);
 
-                if (subReddit.getSubscribers().contains(user)) {
-                    model.addAttribute("subscribedUser", true);
-                }
+            if (subReddit.getSubscribers().contains(user)) {
+                model.addAttribute("subscribedUser", true);
+            }
         }
 
-            model.addAttribute("admin", userService.findById(subReddit.getAdminUserId()));
-            model.addAttribute("allUsers", userService.findAll());
+        model.addAttribute("admin", userService.findById(subReddit.getAdminUserId()));
+        model.addAttribute("allUsers", userService.findAll());
 
-            return "viewSubReddit";
-        }
+        return "viewSubReddit";
+    }
     
 
     @PostMapping("community/deleteCommunity/{subRedditId}")

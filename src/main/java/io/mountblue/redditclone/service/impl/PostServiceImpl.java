@@ -117,14 +117,15 @@ public class PostServiceImpl implements PostService {
     @Override
     public boolean checkUserAuthorized(UserDetails userDetails, Integer postId) {
         Post post = findById(postId);
+        SubReddit subReddit = post.getSubReddit();
 
         boolean isAuthorized = false;
 
-        if( userDetails==null){
+        if ( userDetails==null){
             return false;
-        }
-        else if (userDetails.getUsername().equals(post.getUser().getUsername())) {
-            isAuthorized = true;
+        } else {
+            User user = userService.findByUsername(userDetails.getUsername());
+            isAuthorized = subReddit.getModerators().contains(user) || user.getId() == post.getUser().getId();
         }
 
         return isAuthorized;

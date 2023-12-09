@@ -16,6 +16,8 @@ import io.mountblue.redditclone.service.PostService;
 import io.mountblue.redditclone.service.SubRedditService;
 import io.mountblue.redditclone.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -53,26 +55,26 @@ public class CommentController {
 
 
     @GetMapping("/{subredditName}/posts/{postId}/comments")
-    public String showComments(@PathVariable("subredditName")String subredditName, Model model, @PathVariable("postId")Integer postId) throws IOException {
+    public String showComments(@PathVariable("subredditName")String subredditName, Model model,
+                               @PathVariable("postId")Integer postId,
+                               @AuthenticationPrincipal UserDetails userDetails) throws IOException {
 
         Post post = postService.findById(postId);
 
-            if(post.getPhotoName()!= null){
-                String fileName = post.getPhotoName();
-                // Download file from Firebase Storage
-                Credentials credentials = GoogleCredentials.fromStream(new FileInputStream("./serviceAccountKey.json"));
-                Storage storage = StorageOptions.newBuilder().setCredentials(credentials).build().getService();
-                Blob blob = storage.get(BlobId.of("reddit-clone-f5e1d.appspot.com", fileName));
+        if(post.getPhotoName()!= null){
+            String fileName = post.getPhotoName();
+            // Download file from Firebase Storage
+            Credentials credentials = GoogleCredentials.fromStream(new FileInputStream("./serviceAccountKey.json"));
+            Storage storage = StorageOptions.newBuilder().setCredentials(credentials).build().getService();
+            Blob blob = storage.get(BlobId.of("reddit-clone-f5e1d.appspot.com", fileName));
 
-                String contentType = post.getPhotoType();
-                String base64Image = Base64.getEncoder().encodeToString(blob.getContent());
+            String contentType = post.getPhotoType();
+            String base64Image = Base64.getEncoder().encodeToString(blob.getContent());
 
-                post.setPhotoType(contentType);
-                post.setImage(base64Image);
-
-
-
+            post.setPhotoType(contentType);
+            post.setImage(base64Image);
         }
+
         SubReddit subReddit = post.getSubReddit();
         List<Comment> commentList = post.getCommentList();
         Boolean editMode = false;
@@ -89,6 +91,16 @@ public class CommentController {
         model.addAttribute("editMode", editMode);
         model.addAttribute("commentId",model.getAttribute("commentId"));
         model.addAttribute("commentbody",model.getAttribute("commentbody"));
+
+        boolean isAuthor = false, isMod = false;
+        if (userDetails != null) {
+            User currentUser = userService.findByUsername(userDetails.getUsername());
+            isAuthor = post.getUser().getId() == currentUser.getId();
+            isMod = subReddit.getModerators().contains(currentUser);
+        }
+
+        model.addAttribute("isAuthor", isAuthor);
+        model.addAttribute("isMod", isMod);
 
         return "viewPost";
     }

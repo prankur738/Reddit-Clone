@@ -89,6 +89,15 @@
                                  + ${post.image}"
                                   width="500px" height="350px" class="show_img">
                         </div>
+                      
+                        <form th:if="${isAuthor}" class="edit-post-form"
+                              th:action="@{'/posts/editPost/' + ${postId}}">
+                            <button type="submit" class="button">Edit</button>
+                        </form>
+                        <form th:if="${isAuthor || isMod}" class="delete-post-form"
+                              th:action="@{'/posts/deletePost/' + ${postId}}" method="POST">
+                            <button type="submit" class="button">Delete</button>
+                        </form>
 
                         <div th:unless="${post.image != null && (post.photoType == 'image/png'  || post.photoType == 'image/jpg'
                                 || post.photoType == 'image/jpeg' || post.photoType == 'image/bmp')  } ">
@@ -97,6 +106,7 @@
                                         type="video/mp4">
                             </video>
                         </div>
+                  
                         <div class="comment-count">
                             <i class="fa-regular fa-message"></i>
                             <span th:text="${commentCount}"></span><span> comments</span>

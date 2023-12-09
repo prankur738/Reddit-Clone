@@ -39,14 +39,12 @@
 
 <div class="body">
     <aside id="filter">
-        <h2>Filter Section</h2>
-        <div><h2>Popular</h2></div>
-        <div>Popular</div>
     </aside>
 
     <main id="post-form-container">
         <form id="post-form" th:action="@{/posts/savePost}" th:object="${post}" method="POST" enctype="multipart/form-data">
             <h1>Create new Post</h1>
+            <span class="error">[[${limitError}]]</span>
             <select th:if="${subReddit == null}" name="subRedditName" required>
                 <option value="">-- Select Community --</option>
                 <option th:each="community : ${allSubReddits}"
