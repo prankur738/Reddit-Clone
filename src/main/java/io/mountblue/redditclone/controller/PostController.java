@@ -93,17 +93,28 @@ public class PostController {
                                  @RequestParam("subRedditName") String subRedditName,
                                  @AuthenticationPrincipal UserDetails userDetails,
                                  @RequestParam(name="tagNames", required = false) String tagNames,
-                                 @RequestParam(value = "imageName",required = false
-                                 ) MultipartFile file) throws IOException {
+                                 @RequestParam(value = "imageName",required = false) MultipartFile file,
+                                 Model model) throws IOException {
 
         String username = userDetails.getUsername();
+        User user = userService.findByUsername(username);
+        SubReddit subReddit = subRedditService.findByName(subRedditName);
         LocalDateTime startDate = LocalDateTime.now().minusHours(24);
         Integer postCountInLast24Hrs = postService.getPostsByUserInSubRedditInLast24Hours(username, subRedditName, startDate);
         Integer postLimit = subRedditService.findByName(subRedditName).getPostLimit();
+
         if(postCountInLast24Hrs >= postLimit){
+            model.addAttribute("limitError", "Post limit exceeded for the day");
+            model.addAttribute("post", new Post());
+            model.addAttribute("allSubReddits", subRedditService.findAll());
+
+            return "createNewPost";
+        }
+
+        if (subReddit.getBannedUsers().contains(user)) {
             return "accessDenied";
         }
-       
+
 
         if (bindingResult.hasErrors()) {
             return "createNewPost";
@@ -112,9 +123,7 @@ public class PostController {
 
 
         if(file.isEmpty()){
-            SubReddit subReddit = subRedditService.findByName(subRedditName);
             postService.createNewPost(post, subReddit.getId(), userDetails.getUsername(), tagNames);
-
         }
         else{
             String fileName = file.getOriginalFilename();
@@ -154,10 +163,8 @@ public class PostController {
 
         }
 
+        postService.createNewPost(post, subReddit.getId(), userDetails.getUsername(), tagNames);
 
-
-            SubReddit subReddit = subRedditService.findByName(subRedditName);
-            postService.createNewPost(post, subReddit.getId(), userDetails.getUsername(), tagNames);
         return "redirect:/community/" + subRedditName;
     }
 

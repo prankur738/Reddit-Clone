@@ -281,3 +281,8 @@ input[type=submit]{
     top: 70px;
     right:55px;
 }
+
+.edit-post-form, .delete-post-form {
+    display: inline-block;
+    margin: 5px 10px 20px 0;
+}
