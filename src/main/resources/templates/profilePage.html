@@ -85,6 +85,7 @@
                                     <div class="content">
                                         <p th:text="${post.getDescription()}"></p>
                                     </div>
+                                    <div th:if="${post.image != null}">
                                     <div th:if="${post.image != null && (post.photoType == 'image/png'  || post.photoType == 'image/jpg'
                                 || post.photoType == 'image/jpeg' || post.photoType == 'image/bmp')  } ">
                                         <img  th:src="'data:' + ${post.photoType} + ';base64,'
@@ -98,6 +99,7 @@
                                             <source th:src="'data:' + ${post.photoType} + ';base64,' + ${post.image}"
                                                     type="video/mp4">
                                         </video>
+                                    </div>
                                     </div>
                                 </a>
                             </div>
